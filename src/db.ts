@@ -1,8 +1,6 @@
 import type { GreekParsingResponse, MorphologyWordInput, MorphologyWordRecord, VerseInput, VerseRecord } from "./types";
 import { normalizeGreekForComparison } from "./greek";
 
-let greekVerseCache: VerseRecord[] | null = null;
-
 export async function upsertVerse(db: D1Database, verse: VerseInput): Promise<VerseRecord> {
   await db
     .prepare(
@@ -35,7 +33,6 @@ export async function upsertVerse(db: D1Database, verse: VerseInput): Promise<Ve
     .first<VerseRow>();
 
   if (!row) throw new Error(`Unable to read inserted verse ${verse.book} ${verse.chapter}:${verse.verse}`);
-  greekVerseCache = null;
   return mapVerse(row);
 }
 
@@ -135,27 +132,52 @@ export async function searchVerseByGreekText(
 ): Promise<{ verse: VerseRecord; morphology: MorphologyWordRecord[] } | null> {
   const escaped = escapeLike(normalized);
   const pattern = `%${escaped}%`;
-  const row = await db
-    .prepare("SELECT * FROM verses WHERE greek LIKE ? ESCAPE '\\' AND greek IS NOT NULL AND greek != '' LIMIT 1")
+  let row = await db
+    .prepare("SELECT * FROM verses WHERE greek LIKE ? ESCAPE '\\' AND greek IS NOT NULL AND greek != '' LIMIT 5")
     .bind(pattern)
-    .first<VerseRow>();
+    .all<VerseRow>();
 
-  const likeMatch = row ? await buildGreekTextMatch(db, mapVerse(row), normalized, "overlap") : null;
-  if (likeMatch) return likeMatch;
-
-  const candidates = await getGreekVerseCandidates(db);
-
-  for (const candidate of candidates) {
-    const match = await buildGreekTextMatch(db, candidate, normalized, "phrase");
-    if (match) return match;
+  if (row.results.length === 0) {
+    const consonantPattern = buildGreekConsonantLikePattern(normalized);
+    if (consonantPattern) {
+      row = await db
+        .prepare("SELECT * FROM verses WHERE greek LIKE ? ESCAPE '\\' AND greek IS NOT NULL AND greek != '' LIMIT 5")
+        .bind(consonantPattern)
+        .all<VerseRow>();
+    } else if (normalized.length > 1) {
+      row = await db
+        .prepare("SELECT * FROM verses WHERE greek LIKE ? ESCAPE '\\' AND greek IS NOT NULL AND greek != '' LIMIT 5")
+        .bind(pattern)
+        .all<VerseRow>();
+    }
   }
 
-  for (const candidate of candidates) {
-    const match = await buildGreekTextMatch(db, candidate, normalized, "overlap");
-    if (match) return match;
+  if (row.results.length === 0) return null;
+
+  const inputWords = normalized.split(/\s+/).filter(Boolean);
+  let best: { verse: VerseRecord; score: number; start: number } | null = null;
+  for (const r of row.results) {
+    const verse = mapVerse(r);
+    const normalizedVerse = normalizeGreekForComparison(verse.greek ?? "");
+    const verseWords = normalizedVerse.split(/\s+/).filter(Boolean);
+
+    if (inputWords.length === 0) continue;
+
+    const matchCount = inputWords.filter((word) => verseWords.includes(word)).length;
+    const score = matchCount / inputWords.length;
+
+    if (score >= 0.6 && score > (best?.score ?? 0)) {
+      best = { verse, score, start: findContiguousWordStart(verseWords, inputWords) };
+    }
   }
 
-  return null;
+  if (!best) return null;
+
+  const morphology = await getMorphology(db, best.verse.id);
+  if (morphology.length === 0) return null;
+  const matchedMorphology =
+    best.start >= 0 ? morphology.slice(best.start, best.start + inputWords.length) : morphology;
+  return { verse: best.verse, morphology: matchedMorphology };
 }
 
 export async function getGreekCache(db: D1Database, greek: string): Promise<GreekParsingResponse | null> {
@@ -255,43 +277,23 @@ function escapeLike(value: string): string {
   return value.replace(/[\\%_]/g, "\\$&");
 }
 
-async function buildGreekTextMatch(
-  db: D1Database,
-  verse: VerseRecord,
-  normalized: string,
-  mode: "phrase" | "overlap"
-): Promise<{ verse: VerseRecord; morphology: MorphologyWordRecord[] } | null> {
-  const normalizedVerse = normalizeGreekForComparison(verse.greek ?? "");
-  const inputWords = normalized.split(/\s+/).filter(Boolean);
-  const verseWords = normalizedVerse.split(/\s+/).filter(Boolean);
+function buildGreekConsonantLikePattern(normalized: string): string | null {
+  const parts = normalized
+    .split(/\s+/)
+    .map((word) => escapeLike(word).replace(/[αεηιουω]/g, "_").replace(/_+/g, "_"))
+    .filter((word) => /[βγδζθκλμνξπρσςτφχψ]/.test(word));
 
-  if (inputWords.length === 0) return null;
-  if (normalizedVerse.includes(normalized) && (inputWords.length >= 3 || normalizedVerse.startsWith(normalized))) {
-    return buildMorphologyMatch(db, verse);
+  if (parts.length === 0) return null;
+  return `${parts.join(" ")}%`;
+}
+
+function findContiguousWordStart(verseWords: string[], inputWords: string[]): number {
+  if (inputWords.length === 0 || inputWords.length > verseWords.length) return -1;
+
+  for (let i = 0; i <= verseWords.length - inputWords.length; i++) {
+    const matches = inputWords.every((word, offset) => verseWords[i + offset] === word);
+    if (matches) return i;
   }
-  if (mode === "phrase" || inputWords.length < 3) return null;
 
-  const matchCount = inputWords.filter((word) => verseWords.includes(word)).length;
-  if (matchCount / inputWords.length < 0.6) return null;
-
-  return buildMorphologyMatch(db, verse);
-}
-
-async function buildMorphologyMatch(
-  db: D1Database,
-  verse: VerseRecord
-): Promise<{ verse: VerseRecord; morphology: MorphologyWordRecord[] } | null> {
-  const morphology = await getMorphology(db, verse.id);
-  if (morphology.length === 0) return null;
-  return { verse, morphology };
-}
-
-async function getGreekVerseCandidates(db: D1Database): Promise<VerseRecord[]> {
-  if (greekVerseCache) return greekVerseCache;
-
-  const candidates = await db
-    .prepare("SELECT * FROM verses WHERE greek IS NOT NULL AND greek != '' ORDER BY book_number, chapter, verse")
-    .all<VerseRow>();
-  greekVerseCache = candidates.results.map(mapVerse);
-  return greekVerseCache;
+  return -1;
 }

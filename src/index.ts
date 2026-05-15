@@ -18,7 +18,9 @@ import type {
   AskRequest,
   Env,
   ExplainRequest,
+  GreekWordParsing,
   MorphologyRequest,
+  MorphologyWordRecord,
   MorphologyWordInput,
   SemanticSearchRequest,
   UploadChapterRequest,
@@ -177,23 +179,46 @@ async function handleSemanticSearch(request: Request, env: Env): Promise<Respons
 }
 
 async function handleGreekParse(request: Request, env: Env): Promise<Response> {
-  const body = await readJson<{ greek?: string }>(request);
-  const greek = body.greek?.trim();
-  if (!greek) return json({ error: "greek is required" }, 400);
+  try {
+    const body = await readJson<{ greek?: string }>(request);
+    const greek = body.greek?.trim();
+    if (!greek) return json({ error: "greek is required" }, 400);
 
-  const normalized = normalizeGreekForComparison(greek);
-  const match = await searchVerseByGreekText(env.DB, normalized);
-  if (match) {
-    const words = alignGreekWordsWithMorphology(match.verse.greek ?? "", match.morphology);
-    return json({ words, cached: true, source: "morphology" });
+    let match: { verse: VerseRecord; morphology: MorphologyWordRecord[] } | null = null;
+    try {
+      const normalized = normalizeGreekForComparison(greek);
+      match = await searchVerseByGreekText(env.DB, normalized);
+    } catch {
+      match = null;
+    }
+
+    if (match) {
+      const words = alignGreekWordsWithMorphology(greek, match.morphology);
+      return json({ words, cached: true, source: "morphology" });
+    }
+
+    try {
+      const cached = await getGreekCache(env.DB, greek);
+      if (cached) return json(cached);
+
+      const parsing = await parseGreekWithAi(env.AI, greek);
+      await setGreekCache(env.DB, greek, parsing);
+      return json({ ...parsing, cached: false });
+    } catch (llmError) {
+      const message = llmError instanceof Error ? llmError.message : "LLM unavailable";
+      return json({ error: `AI parsing failed: ${message}`, words: fallbackWordSplit(greek) });
+    }
+  } catch (outerError) {
+    const message = outerError instanceof Error ? outerError.message : "Parse failed";
+    return json({ error: message }, 500);
   }
+}
 
-  const cached = await getGreekCache(env.DB, greek);
-  if (cached) return json(cached);
-
-  const parsing = await parseGreekWithAi(env.AI, greek);
-  await setGreekCache(env.DB, greek, parsing);
-  return json({ ...parsing, cached: false });
+function fallbackWordSplit(greek: string): GreekWordParsing[] {
+  return greek
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((word) => ({ word, lemma: "", pos: "", parsing: "", gloss: "" }));
 }
 
 async function handleAsk(request: Request, env: Env): Promise<Response> {
