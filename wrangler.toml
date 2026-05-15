@@ -1,0 +1,23 @@
+name = "bible-ai-api"
+compatibility_date = "2026-05-13"
+compatibility_flags = ["nodejs_compat"]
+main = "src/index.ts"
+
+[observability]
+enabled = true
+
+[assets]
+directory = "./dist"
+binding = "ASSETS"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "bible-ai-db"
+database_id = "1a732bfd-cee0-4d89-b1a2-6940b8417e5d"
+
+[ai]
+binding = "AI"
+
+[[vectorize]]
+binding = "VECTORIZE"
+index_name = "bible-verse-embeddings"
