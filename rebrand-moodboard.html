@@ -247,15 +247,31 @@
         <h2>Name Candidates</h2>
         <div class="grid">
             <!-- Candidate 1 -->
-            <div class="card">
-                <h3>LogOS</h3>
-                <p class="tagline">"The Operating System for Truth"</p>
-                <h4>Meaning & Linguistics</h4>
-                <p>A portmanteau of <strong>Logos</strong> (Greek: The Word, divine reason) and <strong>OS</strong> (Operating System).</p>
-                <h4>Biblical Resonance</h4>
-                <p>"In the beginning was the Word (Logos)..." (John 1:1). Represents Christ as the creative force and ultimate truth.</p>
-                <h4>Brand Feel</h4>
-                <p>Highly modern and tech-forward, yet deeply rooted in foundational theology. It frames the platform not just as a tool, but as the underlying infrastructure for a believer's spiritual study.</p>
+            <div class="card" style="grid-column: 1 / -1; display: flex; flex-direction: column; gap: 15px;">
+                <div style="display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px solid var(--border); padding-bottom: 10px;">
+                    <h3 style="font-size: 2.5rem; margin: 0;">LogOS</h3>
+                    <p class="tagline" style="margin: 0;">"The Operating System for Truth"</p>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 10px;">
+                    <div>
+                        <h4>Meaning & Linguistics</h4>
+                        <p>A portmanteau of <strong>Logos</strong> (Greek: The Word, divine reason, the creative order) and <strong>OS</strong> (Operating System). It emphasizes the platform as a foundational layer rather than just an application.</p>
+                        
+                        <h4 style="margin-top: 15px;">Biblical Resonance</h4>
+                        <p>"In the beginning was the Word (Logos)..." (John 1:1). Represents Christ as the creative force and ultimate truth. Just as an OS runs a computer, the Logos is the underlying logic of the universe.</p>
+                    </div>
+                    <div>
+                        <h4>Brand Feel</h4>
+                        <p>Highly modern, authoritative, and tech-forward, yet deeply rooted in foundational theology. It appeals to power-users, pastors, and deep-divers who want a robust "engine" for their study.</p>
+                        
+                        <h4 style="margin-top: 15px;">Ecosystem Naming</h4>
+                        <ul style="list-style-position: inside; color: var(--text-primary); font-size: 0.95rem; margin-top: 5px;">
+                            <li><strong style="color: var(--accent-gold);">LogOS Core</strong> (The Main Hub)</li>
+                            <li><strong style="color: var(--accent-blue);">LogOS Shepherd</strong> (Kids / Guided)</li>
+                            <li><strong style="color: var(--accent-blue);">LogOS Roundtable</strong> (Sermon Collab)</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
 
             <!-- Candidate 2 -->
@@ -373,15 +389,42 @@
         <h2>Logo Concepts</h2>
         <div class="logo-grid">
             <!-- Logo Concept 1 -->
-            <div class="logo-card">
-                <svg viewBox="0 0 100 100">
-                    <!-- Path merging into an open book -->
-                    <path d="M20,80 Q50,40 50,20 Q50,40 80,80" stroke="var(--accent-gold)" fill="none" stroke-width="4"/>
-                    <path d="M50,20 L50,80" stroke="var(--accent-gold)" fill="none" stroke-width="4" stroke-dasharray="4 4"/>
-                    <path d="M10,20 Q30,10 50,20 Q70,10 90,20 L90,80 Q70,70 50,80 Q30,70 10,80 Z" stroke="var(--accent-blue)" fill="none" stroke-width="2"/>
-                </svg>
-                <h3>The Open Path</h3>
-                <p class="logo-desc">A winding road that perfectly shapes the pages of an open Bible, drawing the eye upwards towards the horizon.</p>
+            <div class="logo-card" style="grid-column: 1 / -1; display: grid; grid-template-columns: auto 1fr; gap: 40px; text-align: left;">
+                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                    <svg viewBox="0 0 100 100" style="width: 150px; height: 150px; margin-bottom: 0;">
+                        <!-- Path merging into an open book -->
+                        <path d="M20,80 Q50,40 50,20 Q50,40 80,80" stroke="var(--accent-gold)" fill="none" stroke-width="4"/>
+                        <path d="M50,20 L50,80" stroke="var(--accent-gold)" fill="none" stroke-width="4" stroke-dasharray="4 4"/>
+                        <path d="M10,20 Q30,10 50,20 Q70,10 90,20 L90,80 Q70,70 50,80 Q30,70 10,80 Z" stroke="var(--accent-blue)" fill="none" stroke-width="2"/>
+                    </svg>
+                    <div style="display: flex; gap: 10px; margin-top: 20px;">
+                        <!-- Variation 1: Solid Gold -->
+                        <svg viewBox="0 0 100 100" style="width: 40px; height: 40px; margin-bottom: 0; stroke: var(--accent-gold);">
+                            <path d="M20,80 Q50,40 50,20 Q50,40 80,80" fill="none" stroke-width="4"/>
+                            <path d="M50,20 L50,80" fill="none" stroke-width="4" stroke-dasharray="4 4"/>
+                            <path d="M10,20 Q30,10 50,20 Q70,10 90,20 L90,80 Q70,70 50,80 Q30,70 10,80 Z" fill="none" stroke-width="2"/>
+                        </svg>
+                        <!-- Variation 2: Minimal Outline -->
+                        <svg viewBox="0 0 100 100" style="width: 40px; height: 40px; margin-bottom: 0; stroke: var(--text-primary);">
+                            <path d="M20,80 Q50,40 50,20 Q50,40 80,80" fill="none" stroke-width="2"/>
+                            <path d="M10,20 Q30,10 50,20 Q70,10 90,20 L90,80 Q70,70 50,80 Q30,70 10,80 Z" fill="none" stroke-width="2"/>
+                        </svg>
+                    </div>
+                </div>
+                <div style="display: flex; flex-direction: column; justify-content: center;">
+                    <h3 style="font-size: 2rem;">The Open Path</h3>
+                    <p class="logo-desc" style="font-size: 1rem; margin-top: 10px;">A winding road that perfectly shapes the pages of an open Bible, drawing the eye upwards towards the horizon. The central dotted line represents both the spine of the book and the "straight path" ahead.</p>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+                        <div>
+                            <h4 style="font-family: var(--font-body); font-size: 0.85rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 5px;">Symbolism</h4>
+                            <p style="font-size: 0.9rem; color: var(--text-primary);"><strong>The Book:</strong> The foundation of scripture.<br><strong>The Road:</strong> The journey of study and understanding.<br><strong>The Horizon:</strong> Revelation and deeper connection with God.</p>
+                        </div>
+                        <div>
+                            <h4 style="font-family: var(--font-body); font-size: 0.85rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 5px;">Application</h4>
+                            <p style="font-size: 0.9rem; color: var(--text-primary);">This logo works exceptionally well as a standalone app icon. It can scale down smoothly and fits perfectly within a circular or rounded-square app container.</p>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Logo Concept 2 -->
