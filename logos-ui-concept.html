@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LogOS Ecosystem - UI Concept</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+
+        :root {
+            --bg-base: #0b0d0e;
+            --bg-panel: #131618;
+            --bg-elevated: #1a1d21;
+            
+            --ink-primary: #e8e6e1;
+            --ink-secondary: #a0a0a5;
+            --ink-tertiary: #6e6e73;
+            
+            --brand-gold: #d4af37;
+            --brand-gold-dim: rgba(212, 175, 55, 0.2);
+            --brand-blue: #4da8da;
+            --brand-blue-dim: rgba(77, 168, 218, 0.2);
+            --brand-green: #a3e635;
+            --brand-green-dim: rgba(163, 230, 53, 0.2);
+            
+            --border-subtle: #2a2d31;
+            --border-focus: #3d4148;
+            
+            --font-serif: 'Playfair Display', serif;
+            --font-sans: 'Inter', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-base);
+            color: var(--ink-primary);
+            font-family: var(--font-sans);
+            line-height: 1.5;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Ecosystem Sidebar */
+        .ecosystem-nav {
+            width: 72px;
+            background-color: var(--bg-panel);
+            border-right: 1px solid var(--border-subtle);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 24px 0;
+            gap: 32px;
+            z-index: 100;
+        }
+
+        .app-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+        
+        .app-icon svg {
+            width: 28px;
+            height: 28px;
+        }
+
+        .app-icon:hover {
+            transform: scale(1.05);
+        }
+
+        .app-icon.active::before {
+            content: '';
+            position: absolute;
+            left: -12px;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 24px;
+            width: 4px;
+            border-radius: 0 4px 4px 0;
+            background-color: currentColor;
+        }
+
+        /* Core Nav Item */
+        .nav-core {
+            color: var(--brand-gold);
+            background-color: var(--brand-gold-dim);
+            border: 1px solid var(--brand-gold);
+        }
+        
+        /* Shepherd Nav Item */
+        .nav-shepherd {
+            color: var(--brand-green);
+            background-color: transparent;
+            border: 1px solid transparent;
+        }
+        .nav-shepherd:hover { background-color: var(--brand-green-dim); }
+        
+        /* Roundtable Nav Item */
+        .nav-roundtable {
+            color: var(--brand-blue);
+            background-color: transparent;
+            border: 1px solid transparent;
+        }
+        .nav-roundtable:hover { background-color: var(--brand-blue-dim); }
+
+        /* Main Workspace Area */
+        .workspace-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* App Views */
+        .app-view {
+            display: none;
+            height: 100%;
+            flex-direction: column;
+        }
+        
+        .app-view.active {
+            display: flex;
+        }
+
+        /* --- LOGOS CORE SPECIFIC --- */
+        .core-layout {
+            display: flex;
+            height: 100%;
+        }
+
+        .core-sidebar {
+            width: 320px;
+            background-color: var(--bg-base);
+            border-right: 1px solid var(--border-subtle);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .core-main {
+            flex: 1;
+            background-color: var(--bg-base);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .core-header {
+            padding: 24px 32px;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .core-header h1 {
+            font-family: var(--font-serif);
+            font-size: 1.5rem;
+            color: var(--brand-gold);
+            font-weight: 600;
+        }
+
+        .search-container {
+            padding: 24px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        
+        .search-input {
+            width: 100%;
+            background-color: var(--bg-elevated);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            padding: 12px 16px;
+            color: var(--ink-primary);
+            font-family: var(--font-sans);
+            font-size: 0.95rem;
+            outline: none;
+        }
+        
+        .search-input:focus {
+            border-color: var(--brand-gold);
+        }
+
+        .history-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px 0;
+        }
+
+        .history-item {
+            padding: 12px 24px;
+            cursor: pointer;
+            border-left: 2px solid transparent;
+        }
+        
+        .history-item:hover {
+            background-color: var(--bg-elevated);
+        }
+        
+        .history-item.active {
+            border-left-color: var(--brand-gold);
+            background-color: var(--bg-elevated);
+        }
+
+        .history-title {
+            font-weight: 500;
+            margin-bottom: 4px;
+            font-size: 0.95rem;
+        }
+        
+        .history-meta {
+            font-size: 0.8rem;
+            color: var(--ink-secondary);
+        }
+
+        .verse-display {
+            padding: 48px;
+            max-width: 800px;
+            margin: 0 auto;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .verse-ref {
+            font-family: var(--font-sans);
+            color: var(--brand-gold);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+
+        .verse-text {
+            font-family: var(--font-serif);
+            font-size: 2.5rem;
+            line-height: 1.4;
+            margin-bottom: 32px;
+            color: var(--ink-primary);
+        }
+
+        .verse-word {
+            display: inline-block;
+            cursor: pointer;
+            border-bottom: 1px dotted transparent;
+            transition: all 0.2s;
+        }
+
+        .verse-word:hover {
+            color: var(--brand-gold);
+            border-bottom-color: var(--brand-gold);
+        }
+        
+        .verse-word.selected {
+            color: var(--brand-gold);
+            background-color: var(--brand-gold-dim);
+            border-bottom: none;
+            border-radius: 4px;
+            padding: 0 4px;
+            margin: 0 -4px;
+        }
+
+        /* AI Analysis Panel */
+        .ai-panel {
+            width: 400px;
+            background-color: var(--bg-panel);
+            border-left: 1px solid var(--border-subtle);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .ai-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .ai-header-icon {
+            color: var(--brand-gold);
+        }
+
+        .ai-content {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+        }
+
+        .morph-card {
+            background-color: var(--bg-elevated);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+        .morph-greek {
+            font-family: var(--font-serif);
+            font-size: 1.8rem;
+            color: var(--brand-gold);
+            margin-bottom: 8px;
+        }
+        
+        .morph-lemma {
+            font-style: italic;
+            color: var(--ink-secondary);
+            margin-bottom: 16px;
+            font-size: 0.95rem;
+        }
+
+        .morph-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .morph-table td {
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        .morph-table tr:last-child td { border-bottom: none; }
+        .morph-table td:first-child { color: var(--ink-secondary); width: 40%; }
+        .morph-table td:last-child { color: var(--ink-primary); font-weight: 500; }
+
+        .ai-chat-prompt {
+            padding: 16px;
+            background-color: var(--bg-elevated);
+            border-radius: 8px;
+            margin-top: 16px;
+            border: 1px solid var(--border-subtle);
+        }
+        
+        .ai-chat-bubble {
+            margin-top: 16px;
+            padding: 16px;
+            border-left: 2px solid var(--brand-gold);
+            background-color: rgba(212, 175, 55, 0.05);
+            font-size: 0.95rem;
+            color: var(--ink-primary);
+            line-height: 1.6;
+        }
+
+        .ai-input-area {
+            padding: 16px 24px;
+            border-top: 1px solid var(--border-subtle);
+        }
+        
+        .ai-input-box {
+            display: flex;
+            background-color: var(--bg-base);
+            border: 1px solid var(--border-focus);
+            border-radius: 20px;
+            padding: 8px 16px;
+            align-items: center;
+        }
+        
+        .ai-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--ink-primary);
+            outline: none;
+            font-family: var(--font-sans);
+            font-size: 0.9rem;
+        }
+
+
+        /* --- LOGOS SHEPHERD SPECIFIC --- */
+        .shepherd-layout {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            background-color: var(--bg-base);
+            background-image: radial-gradient(circle at 50% 0%, rgba(163, 230, 53, 0.05) 0%, transparent 50%);
+        }
+        
+        .shepherd-header {
+            padding: 24px 48px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .shepherd-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--brand-green);
+            font-family: var(--font-serif);
+            font-size: 1.8rem;
+        }
+
+        .shepherd-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 48px;
+        }
+
+        .journey-card {
+            background-color: var(--bg-panel);
+            border: 2px solid var(--brand-green-dim);
+            border-radius: 24px;
+            padding: 48px;
+            max-width: 600px;
+            text-align: center;
+            position: relative;
+        }
+
+        .journey-star {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 60px;
+            background-color: var(--bg-base);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fde047; /* bright yellow star */
+            border: 2px solid var(--brand-green-dim);
+        }
+
+        .shepherd-verse {
+            font-family: var(--font-sans);
+            font-size: 1.5rem;
+            line-height: 1.5;
+            color: var(--ink-primary);
+            margin-bottom: 24px;
+            font-weight: 500;
+        }
+
+        .shepherd-explain {
+            background-color: var(--brand-green-dim);
+            padding: 24px;
+            border-radius: 16px;
+            font-size: 1.1rem;
+            color: var(--ink-primary);
+            text-align: left;
+            margin-bottom: 32px;
+        }
+
+        .stepping-stones {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 32px;
+        }
+
+        .stone-btn {
+            background-color: var(--bg-elevated);
+            border: 2px solid var(--border-subtle);
+            color: var(--ink-primary);
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-family: var(--font-sans);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .stone-btn:hover {
+            border-color: var(--brand-green);
+            background-color: rgba(163, 230, 53, 0.1);
+        }
+
+
+        /* --- LOGOS ROUNDTABLE SPECIFIC --- */
+        .roundtable-layout {
+            display: flex;
+            height: 100%;
+            background-color: var(--bg-base);
+        }
+
+        .rt-sidebar {
+            width: 280px;
+            background-color: var(--bg-panel);
+            border-right: 1px solid var(--border-subtle);
+            padding: 24px;
+        }
+
+        .rt-header {
+            color: var(--brand-blue);
+            font-family: var(--font-serif);
+            font-size: 1.5rem;
+            margin-bottom: 32px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .rt-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .rt-toolbar {
+            height: 64px;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            gap: 16px;
+        }
+
+        .rt-canvas {
+            flex: 1;
+            padding: 32px;
+            background-image: 
+                linear-gradient(var(--border-subtle) 1px, transparent 1px),
+                linear-gradient(90deg, var(--border-subtle) 1px, transparent 1px);
+            background-size: 40px 40px;
+            background-position: -1px -1px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .node-card {
+            position: absolute;
+            background-color: var(--bg-elevated);
+            border: 1px solid var(--brand-blue-dim);
+            border-radius: 12px;
+            padding: 20px;
+            width: 300px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+        }
+        
+        .node-primary {
+            top: 100px;
+            left: 50px;
+            border-color: var(--brand-blue);
+            border-top: 4px solid var(--brand-blue);
+        }
+
+        .node-secondary {
+            top: 250px;
+            left: 450px;
+            border-top: 4px solid var(--brand-gold);
+        }
+        
+        .node-ai {
+            top: 80px;
+            left: 500px;
+            border: 1px dashed var(--ink-tertiary);
+            background-color: var(--bg-panel);
+        }
+
+        .node-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 1rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .node-text {
+            font-size: 0.9rem;
+            color: var(--ink-secondary);
+            line-height: 1.5;
+        }
+        
+        .connector-line {
+            position: absolute;
+            background-color: var(--brand-blue-dim);
+            height: 2px;
+            transform-origin: 0 0;
+            z-index: 0;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Ecosystem App Switcher -->
+    <nav class="ecosystem-nav">
+        <!-- LogOS Core -->
+        <div class="app-icon nav-core active" onclick="switchApp('core')" title="LogOS Core">
+            <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20,80 Q50,40 50,20 Q50,40 80,80" />
+                <path d="M50,20 L50,80" stroke-dasharray="8 8"/>
+                <path d="M10,20 Q30,10 50,20 Q70,10 90,20 L90,80 Q70,70 50,80 Q30,70 10,80 Z" stroke-width="3"/>
+            </svg>
+        </div>
+        
+        <!-- LogOS Shepherd -->
+        <div class="app-icon nav-shepherd" onclick="switchApp('shepherd')" title="LogOS Shepherd">
+            <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20,90 Q50,60 40,40 T60,20" />
+                <circle cx="65" cy="15" r="8" fill="currentColor"/>
+                <circle cx="35" cy="75" r="4" fill="currentColor" stroke="none"/>
+                <circle cx="48" cy="65" r="4" fill="currentColor" stroke="none"/>
+                <circle cx="42" cy="50" r="4" fill="currentColor" stroke="none"/>
+            </svg>
+        </div>
+
+        <!-- LogOS Roundtable -->
+        <div class="app-icon nav-roundtable" onclick="switchApp('roundtable')" title="LogOS Roundtable">
+            <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="50" cy="50" r="10" />
+                <circle cx="50" cy="20" r="6" fill="currentColor" stroke="none"/>
+                <circle cx="50" cy="80" r="6" fill="currentColor" stroke="none"/>
+                <circle cx="20" cy="50" r="6" fill="currentColor" stroke="none"/>
+                <circle cx="80" cy="50" r="6" fill="currentColor" stroke="none"/>
+                <line x1="50" y1="30" x2="50" y2="40"/>
+                <line x1="50" y1="60" x2="50" y2="70"/>
+                <line x1="30" y1="50" x2="40" y2="50"/>
+                <line x1="60" y1="50" x2="70" y2="50"/>
+                <circle cx="50" cy="50" r="35" stroke-dasharray="6 6" stroke-width="2"/>
+            </svg>
+        </div>
+    </nav>
+
+    <div class="workspace-container">
+        
+        <!-- ================= LOGOS CORE ================= -->
+        <div id="app-core" class="app-view active">
+            <div class="core-layout">
+                <!-- Search/History Sidebar -->
+                <div class="core-sidebar">
+                    <div class="search-container">
+                        <input type="text" class="search-input" placeholder="Search verses, concepts, greek...">
+                    </div>
+                    <div class="history-list">
+                        <div class="history-item active">
+                            <div class="history-title">John 1:1</div>
+                            <div class="history-meta">In the beginning was the Word...</div>
+                        </div>
+                        <div class="history-item">
+                            <div class="history-title">Semantic: "Light in darkness"</div>
+                            <div class="history-meta">12 results found</div>
+                        </div>
+                        <div class="history-item">
+                            <div class="history-title">Genesis 1:1-5</div>
+                            <div class="history-meta">Creation narrative</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Reading Area -->
+                <div class="core-main">
+                    <div class="core-header">
+                        <h1>LogOS Core</h1>
+                        <div style="font-size: 0.9rem; color: var(--ink-tertiary);">The Operating System for Truth</div>
+                    </div>
+                    
+                    <div class="verse-display">
+                        <div class="verse-ref">John 1:1 (BSB)</div>
+                        <div class="verse-text">
+                            In the <span class="verse-word selected">beginning</span> was the <span class="verse-word">Word</span>, and the Word was <span class="verse-word">with</span> God, and the Word <span class="verse-word">was</span> God.
+                        </div>
+                        
+                        <div class="verse-ref" style="margin-top: 48px;">Original Greek</div>
+                        <div class="verse-text" style="font-size: 2rem;">
+                            Ἐν <span class="verse-word selected">ἀρχῇ</span> ἦν ὁ λόγος, καὶ ὁ λόγος ἦν πρὸς τὸν θεόν, καὶ θεὸς ἦν ὁ λόγος.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI / Parsing Panel -->
+                <div class="ai-panel">
+                    <div class="ai-header">
+                        <div class="ai-header-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                        </div>
+                        <span style="font-weight: 600; font-size: 0.95rem; color: var(--ink-primary);">Deep Dive</span>
+                    </div>
+                    
+                    <div class="ai-content">
+                        <div class="morph-card">
+                            <div class="morph-greek">ἀρχῇ</div>
+                            <div class="morph-lemma">archē (noun)</div>
+                            <table class="morph-table">
+                                <tr><td>Case</td><td>Dative</td></tr>
+                                <tr><td>Gender</td><td>Feminine</td></tr>
+                                <tr><td>Number</td><td>Singular</td></tr>
+                                <tr><td>Gloss</td><td>beginning, origin, ruler</td></tr>
+                            </table>
+                        </div>
+
+                        <div style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: var(--ink-secondary); margin-bottom: 12px; font-weight: 600;">AI Analysis</div>
+                        
+                        <div class="ai-chat-bubble">
+                            The word <em>archē</em> implies not just a temporal start, but the active cause or origin of all things. In this context, it echoes Genesis 1:1 ("In the beginning"), establishing the pre-existence of the Logos before time itself.
+                        </div>
+                    </div>
+                    
+                    <div class="ai-input-area">
+                        <div class="ai-input-box">
+                            <input type="text" class="ai-input" placeholder="Ask AI about this verse...">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--ink-secondary)" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= LOGOS SHEPHERD ================= -->
+        <div id="app-shepherd" class="app-view">
+            <div class="shepherd-layout">
+                <div class="shepherd-header">
+                    <div class="shepherd-logo">
+                        <svg viewBox="0 0 100 100" style="width:32px; height:32px;" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20,90 Q50,60 40,40 T60,20" />
+                            <circle cx="65" cy="15" r="8" fill="currentColor"/>
+                        </svg>
+                        LogOS Shepherd
+                    </div>
+                    <div style="background-color: var(--bg-panel); padding: 8px 16px; border-radius: 20px; font-size: 0.9rem; border: 1px solid var(--border-subtle);">
+                        Parent Companion Mode
+                    </div>
+                </div>
+                
+                <div class="shepherd-content">
+                    <div class="journey-card">
+                        <div class="journey-star">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                        </div>
+                        
+                        <div style="color: var(--brand-green); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; font-size: 0.85rem; margin-bottom: 16px;">Today's Memory Verse</div>
+                        
+                        <div class="shepherd-verse">
+                            "The Lord is my shepherd; I shall not want."
+                        </div>
+                        <div style="color: var(--ink-secondary); font-size: 0.9rem; margin-bottom: 32px;">Psalm 23:1</div>
+                        
+                        <div class="shepherd-explain">
+                            <strong>AI Guide:</strong> Imagine a shepherd watching over his sheep. He makes sure they have green grass to eat and safe water to drink. David is saying that God takes care of us just like that!
+                        </div>
+                        
+                        <div style="font-size: 0.9rem; color: var(--ink-secondary); margin-bottom: 16px;">What do you want to explore next?</div>
+                        
+                        <div class="stepping-stones">
+                            <button class="stone-btn">What does "want" mean here?</button>
+                            <button class="stone-btn">Tell me a story about sheep</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= LOGOS ROUNDTABLE ================= -->
+        <div id="app-roundtable" class="app-view">
+            <div class="roundtable-layout">
+                <div class="rt-sidebar">
+                    <div class="rt-header">
+                        <svg viewBox="0 0 100 100" style="width:28px; height:28px;" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="50" cy="50" r="10" />
+                            <circle cx="50" cy="20" r="6" fill="currentColor" stroke="none"/>
+                            <circle cx="50" cy="80" r="6" fill="currentColor" stroke="none"/>
+                            <circle cx="20" cy="50" r="6" fill="currentColor" stroke="none"/>
+                            <circle cx="80" cy="50" r="6" fill="currentColor" stroke="none"/>
+                            <line x1="50" y1="30" x2="50" y2="40"/>
+                            <line x1="50" y1="60" x2="50" y2="70"/>
+                            <line x1="30" y1="50" x2="40" y2="50"/>
+                            <line x1="60" y1="50" x2="70" y2="50"/>
+                        </svg>
+                        Roundtable
+                    </div>
+                    
+                    <div style="margin-bottom: 24px;">
+                        <div style="font-size: 0.85rem; color: var(--ink-secondary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; font-weight: 600;">Sermon Projects</div>
+                        
+                        <div style="padding: 12px; background-color: var(--brand-blue-dim); border: 1px solid var(--brand-blue); border-radius: 8px; color: var(--ink-primary); font-size: 0.95rem; cursor: pointer;">
+                            The Logos Doctrine (John 1)
+                        </div>
+                        <div style="padding: 12px; color: var(--ink-secondary); font-size: 0.95rem; cursor: pointer; margin-top: 8px;">
+                            Sermon on the Mount
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div style="font-size: 0.85rem; color: var(--ink-secondary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; font-weight: 600;">Collaborators</div>
+                        <div style="display: flex; gap: 8px;">
+                            <div style="width: 32px; height: 32px; border-radius: 50%; background-color: #3b82f6; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: bold;">PW</div>
+                            <div style="width: 32px; height: 32px; border-radius: 50%; background-color: #10b981; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: bold;">JD</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="rt-main">
+                    <div class="rt-toolbar">
+                        <button style="background-color: var(--bg-elevated); border: 1px solid var(--border-subtle); color: var(--ink-primary); padding: 6px 12px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg> Add Node
+                        </button>
+                        <button style="background-color: transparent; border: 1px solid var(--border-subtle); color: var(--ink-secondary); padding: 6px 12px; border-radius: 6px; cursor: pointer;">Export Outline</button>
+                    </div>
+                    
+                    <div class="rt-canvas">
+                        <!-- Connectors -->
+                        <div class="connector-line" style="top: 150px; left: 350px; width: 150px; transform: rotate(0deg);"></div>
+                        <div class="connector-line" style="top: 150px; left: 200px; width: 260px; transform: rotate(25deg);"></div>
+                        
+                        <!-- Nodes -->
+                        <div class="node-card node-primary">
+                            <div class="node-title">
+                                Core Text: John 1:1
+                                <span style="color: var(--ink-secondary);">#1</span>
+                            </div>
+                            <div class="node-text">
+                                "In the beginning was the Word, and the Word was with God, and the Word was God."
+                            </div>
+                        </div>
+                        
+                        <div class="node-card node-ai">
+                            <div class="node-title">
+                                <span style="color: var(--brand-gold); display: flex; align-items: center; gap: 6px;">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> AI Suggestion
+                                </span>
+                            </div>
+                            <div class="node-text">
+                                Consider contrasting the Greek "Logos" (reason/word) with the Hebrew "Dabar" (action/event). This bridges the intellectual and the active nature of Christ.
+                            </div>
+                        </div>
+                        
+                        <div class="node-card node-secondary">
+                            <div class="node-title">
+                                Supporting: Genesis 1:3
+                            </div>
+                            <div class="node-text">
+                                "And God said, 'Let there be light,' and there was light." (The spoken word in action).
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+    <script>
+        function switchApp(appId) {
+            // Update icons
+            document.querySelectorAll('.app-icon').forEach(icon => {
+                icon.classList.remove('active');
+            });
+            document.querySelector('.nav-' + appId).classList.add('active');
+            
+            // Update views
+            document.querySelectorAll('.app-view').forEach(view => {
+                view.classList.remove('active');
+            });
+            document.getElementById('app-' + appId).classList.add('active');
+        }
+    </script>
+</body>
+</html>
