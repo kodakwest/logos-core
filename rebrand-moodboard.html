@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rebranding Mood Board - Bible AI Search</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap');
+
+        :root {
+            --bg-dark: #0b0d0e;
+            --bg-card: #16191b;
+            --accent-gold: #d4af37;
+            --accent-blue: #4da8da;
+            --text-primary: #f4f4f5;
+            --text-muted: #82828b;
+            --border: #272a2d;
+            
+            --font-heading: 'Playfair Display', serif;
+            --font-body: 'Inter', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            line-height: 1.6;
+            padding: 40px;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: var(--font-heading);
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            color: var(--accent-gold);
+        }
+
+        h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+            margin-top: 50px;
+        }
+
+        p.subtitle {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin-bottom: 40px;
+            font-family: var(--font-body);
+            font-weight: 300;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-gold);
+        }
+
+        .card h3 {
+            color: var(--accent-blue);
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card h4 {
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-top: 16px;
+            margin-bottom: 4px;
+        }
+
+        .card p {
+            color: var(--text-primary);
+            font-size: 0.95rem;
+        }
+
+        .card .tagline {
+            font-style: italic;
+            color: var(--accent-gold);
+            margin-top: 10px;
+            font-family: var(--font-heading);
+            font-size: 1.1rem;
+        }
+
+        /* Color Palette */
+        .color-palette {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .color-swatch {
+            width: 120px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            background-color: var(--bg-card);
+        }
+
+        .color-box {
+            height: 100px;
+            width: 100%;
+        }
+
+        .color-info {
+            padding: 10px;
+            text-align: center;
+            font-size: 0.85rem;
+        }
+
+        .color-info strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        /* Typography */
+        .typo-section {
+            background-color: var(--bg-card);
+            padding: 30px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            margin-bottom: 24px;
+        }
+        
+        .typo-heading {
+            font-family: var(--font-heading);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .typo-body {
+            font-family: var(--font-body);
+            font-size: 1rem;
+            color: var(--text-muted);
+        }
+
+        /* Logos */
+        .logo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+        }
+
+        .logo-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .logo-card svg {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 20px;
+            stroke: var(--accent-gold);
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        
+        .logo-desc {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-top: 15px;
+        }
+
+        /* Family */
+        .family-grid {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+        .family-card {
+            flex: 1;
+            min-width: 250px;
+            background: linear-gradient(145deg, var(--bg-card) 0%, var(--bg-dark) 100%);
+            border: 1px solid var(--border);
+            padding: 24px;
+            border-radius: 12px;
+        }
+        .family-card h3 {
+            color: var(--accent-gold);
+        }
+
+        /* Visual Direction */
+        .mood-words {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        .mood-tag {
+            background-color: rgba(77, 168, 218, 0.1);
+            color: var(--accent-blue);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            border: 1px solid rgba(77, 168, 218, 0.3);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Making Straight the Paths</h1>
+        <p class="subtitle">Brand identity and naming exploration for a unified biblical study platform (formerly Bible AI Search)</p>
+    </header>
+
+    <section>
+        <h2>Name Candidates</h2>
+        <div class="grid">
+            <!-- Candidate 1 -->
+            <div class="card">
+                <h3>LogOS</h3>
+                <p class="tagline">"The Operating System for Truth"</p>
+                <h4>Meaning & Linguistics</h4>
+                <p>A portmanteau of <strong>Logos</strong> (Greek: The Word, divine reason) and <strong>OS</strong> (Operating System).</p>
+                <h4>Biblical Resonance</h4>
+                <p>"In the beginning was the Word (Logos)..." (John 1:1). Represents Christ as the creative force and ultimate truth.</p>
+                <h4>Brand Feel</h4>
+                <p>Highly modern and tech-forward, yet deeply rooted in foundational theology. It frames the platform not just as a tool, but as the underlying infrastructure for a believer's spiritual study.</p>
+            </div>
+
+            <!-- Candidate 2 -->
+            <div class="card">
+                <h3>Hodos</h3>
+                <p class="tagline">"Your Pathway to the Word"</p>
+                <h4>Meaning & Linguistics</h4>
+                <p>Greek (ὁδός) for <strong>way, path, road, or journey</strong>.</p>
+                <h4>Biblical Resonance</h4>
+                <p>Early Christians were known as followers of "The Way" (Hodos). Isaiah 40:3 commands to "make straight in the desert a highway (hodos in the Septuagint) for our God." Jesus says, "I am the way (hodos)..."</p>
+                <h4>Brand Feel</h4>
+                <p>Navigational, guiding, and active. It feels like an invitation to explore and walk through scripture rather than just searching it. Clean, memorable, and distinctive.</p>
+            </div>
+
+            <!-- Candidate 3 -->
+            <div class="card">
+                <h3>Kleidion</h3>
+                <p class="tagline">"Unlock the Scriptures"</p>
+                <h4>Meaning & Linguistics</h4>
+                <p>Greek (κλειδίον) meaning <strong>small key</strong> or simply <strong>key</strong>.</p>
+                <h4>Biblical Resonance</h4>
+                <p>Jesus speaks of the "key of knowledge" (Luke 11:52) and giving the "keys of the kingdom" (Matthew 16:19). It represents unlocking mysteries and gaining access to divine truth.</p>
+                <h4>Brand Feel</h4>
+                <p>Revelatory, secure, and empowering. It implies the AI is the key that opens up difficult or historical texts for the modern reader.</p>
+            </div>
+
+            <!-- Candidate 4 -->
+            <div class="card">
+                <h3>Euthys</h3>
+                <p class="tagline">"The Direct Path to Scripture"</p>
+                <h4>Meaning & Linguistics</h4>
+                <p>Greek (εὐθύς) meaning <strong>straight</strong> or <strong>immediately</strong>.</p>
+                <h4>Biblical Resonance</h4>
+                <p>Used heavily in the Gospel of Mark to denote immediate action, and famously by John the Baptist: "Make straight (euthys) the way of the Lord."</p>
+                <h4>Brand Feel</h4>
+                <p>Dynamic, efficient, and clarifying. It emphasizes the AI's ability to cut through noise and deliver direct, straight answers and pathways to biblical understanding.</p>
+            </div>
+
+            <!-- Candidate 5 -->
+            <div class="card">
+                <h3>Derech</h3>
+                <p class="tagline">"The Ancient Path, Anew"</p>
+                <h4>Meaning & Linguistics</h4>
+                <p>Hebrew (דֶּרֶךְ) for <strong>way, road, distance, journey, or manner</strong>.</p>
+                <h4>Biblical Resonance</h4>
+                <p>Proverbs 3:6: "In all your ways (derech) acknowledge Him, and He shall direct your paths." Psalm 119:105: "Your word is a lamp to my feet and a light to my path (derech)."</p>
+                <h4>Brand Feel</h4>
+                <p>Earthy, ancient, and deeply reverent. It connects the high-tech AI platform to the ancient, historical roots of the biblical text, bridging the gap between millennia.</p>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2>Visual Direction</h2>
+        <p class="subtitle">Dark, modern, contemplative. Like reading a sacred text by the warm glow of a lamp, augmented by the sharp clarity of modern technology.</p>
+        <div class="mood-words">
+            <div class="mood-tag">Sacred</div>
+            <div class="mood-tag">Illuminating</div>
+            <div class="mood-tag">Navigational</div>
+            <div class="mood-tag">High-Tech</div>
+            <div class="mood-tag">Deep Space / Void</div>
+            <div class="mood-tag">Gold Foil</div>
+        </div>
+        
+        <h3 style="margin-top: 30px; margin-bottom: 15px;">Color Palette</h3>
+        <div class="color-palette">
+            <div class="color-swatch">
+                <div class="color-box" style="background-color: var(--bg-dark);"></div>
+                <div class="color-info">
+                    <strong>Deep Void</strong>
+                    #0b0d0e
+                </div>
+            </div>
+            <div class="color-swatch">
+                <div class="color-box" style="background-color: var(--bg-card);"></div>
+                <div class="color-info">
+                    <strong>Surface Dark</strong>
+                    #16191b
+                </div>
+            </div>
+            <div class="color-swatch">
+                <div class="color-box" style="background-color: var(--accent-gold);"></div>
+                <div class="color-info">
+                    <strong>Divine Gold</strong>
+                    #d4af37
+                </div>
+            </div>
+            <div class="color-swatch">
+                <div class="color-box" style="background-color: var(--accent-blue);"></div>
+                <div class="color-info">
+                    <strong>Living Water</strong>
+                    #4da8da
+                </div>
+            </div>
+            <div class="color-swatch">
+                <div class="color-box" style="background-color: var(--text-primary);"></div>
+                <div class="color-info">
+                    <strong>Parchment White</strong>
+                    #f4f4f5
+                </div>
+            </div>
+        </div>
+
+        <h3 style="margin-top: 30px; margin-bottom: 15px;">Typography</h3>
+        <div class="typo-section">
+            <div class="typo-heading">Playfair Display</div>
+            <p class="typo-body" style="margin-bottom: 20px;">For Headings, Titles, and Sacred Text. Brings a classic, editorial, and historical weight to the brand. Echoes the typography of traditional printed Bibles.</p>
+            
+            <div class="typo-heading" style="font-family: var(--font-body); font-weight: 600;">Inter</div>
+            <p class="typo-body">For UI elements, body copy, and technical details. Highly legible, modern, and clean. Provides the "Tech/OS" balance to the classical headings.</p>
+        </div>
+    </section>
+
+    <section>
+        <h2>Logo Concepts</h2>
+        <div class="logo-grid">
+            <!-- Logo Concept 1 -->
+            <div class="logo-card">
+                <svg viewBox="0 0 100 100">
+                    <!-- Path merging into an open book -->
+                    <path d="M20,80 Q50,40 50,20 Q50,40 80,80" stroke="var(--accent-gold)" fill="none" stroke-width="4"/>
+                    <path d="M50,20 L50,80" stroke="var(--accent-gold)" fill="none" stroke-width="4" stroke-dasharray="4 4"/>
+                    <path d="M10,20 Q30,10 50,20 Q70,10 90,20 L90,80 Q70,70 50,80 Q30,70 10,80 Z" stroke="var(--accent-blue)" fill="none" stroke-width="2"/>
+                </svg>
+                <h3>The Open Path</h3>
+                <p class="logo-desc">A winding road that perfectly shapes the pages of an open Bible, drawing the eye upwards towards the horizon.</p>
+            </div>
+
+            <!-- Logo Concept 2 -->
+            <div class="logo-card">
+                <svg viewBox="0 0 100 100">
+                    <!-- Node network forming a cross / star -->
+                    <circle cx="50" cy="50" r="8" fill="var(--accent-gold)" stroke="none"/>
+                    <circle cx="50" cy="20" r="4" fill="var(--accent-blue)" stroke="none"/>
+                    <circle cx="50" cy="80" r="4" fill="var(--accent-blue)" stroke="none"/>
+                    <circle cx="20" cy="50" r="4" fill="var(--accent-blue)" stroke="none"/>
+                    <circle cx="80" cy="50" r="4" fill="var(--accent-blue)" stroke="none"/>
+                    <line x1="50" y1="28" x2="50" y2="42" stroke="var(--accent-gold)" stroke-width="2"/>
+                    <line x1="50" y1="58" x2="50" y2="76" stroke="var(--accent-gold)" stroke-width="2"/>
+                    <line x1="24" y1="50" x2="42" y2="50" stroke="var(--accent-gold)" stroke-width="2"/>
+                    <line x1="58" y1="50" x2="76" y2="50" stroke="var(--accent-gold)" stroke-width="2"/>
+                    
+                    <circle cx="50" cy="50" r="40" stroke="rgba(77, 168, 218, 0.2)" stroke-width="1" fill="none" stroke-dasharray="4 4"/>
+                </svg>
+                <h3>The Networked Truth</h3>
+                <p class="logo-desc">AI nodes and connections forming a subtle cross or a star of Bethlehem, representing technology guiding the way.</p>
+            </div>
+
+            <!-- Logo Concept 3 -->
+            <div class="logo-card">
+                <svg viewBox="0 0 100 100">
+                    <!-- Minimalist Key / Gate -->
+                    <circle cx="50" cy="30" r="15" stroke="var(--accent-gold)" stroke-width="4" fill="none"/>
+                    <line x1="50" y1="45" x2="50" y2="90" stroke="var(--accent-gold)" stroke-width="4"/>
+                    <line x1="50" y1="75" x2="70" y2="75" stroke="var(--accent-gold)" stroke-width="4"/>
+                    <line x1="50" y1="85" x2="65" y2="85" stroke="var(--accent-gold)" stroke-width="4"/>
+                    <path d="M45,30 L55,30" stroke="var(--accent-blue)" stroke-width="3"/>
+                    <path d="M50,25 L50,35" stroke="var(--accent-blue)" stroke-width="3"/>
+                </svg>
+                <h3>The Key of Logos</h3>
+                <p class="logo-desc">An ancient key silhouette with a modern, geometric finish. The handle subtly incorporates an inner cross.</p>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2>Brand Family Ecosystem</h2>
+        <p class="subtitle">How the naming convention extends across the unified product suite.</p>
+        <div class="family-grid">
+            <div class="family-card">
+                <h3>[Brand] Core</h3>
+                <h4>The Central Hub</h4>
+                <p style="margin-top: 10px;">The primary entry point. Formerly 'Bible AI Search'. This is the central repository, search engine, and AI chat interface for deep theological study and exploration of the text.</p>
+            </div>
+            <div class="family-card">
+                <h3>[Brand] Shepherd</h3>
+                <h4>Kids Ministry</h4>
+                <p style="margin-top: 10px;">A guided, simplified, and visually engaging pathway for children. The 'Shepherd' branding fits perfectly within the 'Way/Path' concept, as a shepherd leads the flock along the right paths.</p>
+            </div>
+            <div class="family-card">
+                <h3>[Brand] Roundtable</h3>
+                <h4>Sermon Study</h4>
+                <p style="margin-top: 10px;">A collaborative, in-depth analysis tool for sermons and pastoral prep. Fits into the ecosystem as the 'gathering place' along the journey, where believers pause to dissect the Word together.</p>
+            </div>
+        </div>
+    </section>
+
+</body>
+</html>
