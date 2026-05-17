@@ -2,7 +2,7 @@
 
 > **Goal:** Deployable Cloudflare Workers + Pages app that ingests Bible chapters from local BTB data, enables semantic search, and performs Greek parsing via Workers AI.
 >
-> **Project root:** `S:\Projects\bible-ai-search\` (mounts at `/mnt/s/Projects/bible-ai-search/` in WSL)
+> **Project root:** `S:\Projects\logos-core\` (mounts at `/mnt/s/Projects/logos-core/` in WSL)
 > **Workers subdomain:** `logos-core` (deploys to `logos-core.kodakwest.workers.dev`)
 > **Deploy target:** Cloudflare Workers (not Pages for the API; static frontend served by Worker or Pages)
 
@@ -39,7 +39,7 @@
 ## Files to Create
 
 ```
-bible-ai-search/
+logos-core/
 ├── .gitignore
 ├── README.md
 ├── package.json
@@ -267,8 +267,8 @@ vars = { BTB_PATH = "/home/tsrwest/BTB" }
 
 ## Deployment Steps
 
-1. `npm create vite@latest bible-ai-search -- --template react-ts`
-2. `cd bible-ai-search && npm install`
+1. `npm create vite@latest logos-core -- --template react-ts`
+2. `cd logos-core && npm install`
 3. `wrangler d1 create bible-ai-db` → get database_id, insert into wrangler.toml
 4. `wrangler vectorize create bible-verse-embeddings --dimensions 768 --metric cosine`
 5. Apply D1 migrations

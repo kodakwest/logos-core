@@ -56,6 +56,21 @@ export default {
       if (url.pathname === "/api/ask" && request.method === "POST") return withAuth(request, env, () => handleAsk(request, env));
       if (url.pathname === "/api/explain" && request.method === "POST") return withAuth(request, env, () => handleExplain(request, env));
       if (url.pathname.startsWith("/api/")) return json({ error: "Not found" }, 404);
+
+      if (url.pathname === "/login" || url.pathname === "/login.html") return fetchAsset(request, env, "/login.html");
+      if (url.pathname.startsWith("/assets/")) return env.ASSETS.fetch(request);
+
+      const user = await authenticateRequest(request, env);
+      if (!user) {
+        return new Response(null, {
+          status: 302,
+          headers: {
+            "Location": "/login",
+            "Cache-Control": "no-store"
+          }
+        });
+      }
+
       return env.ASSETS.fetch(request);
     } catch (error) {
       const message = error instanceof Error ? error.message : "Unexpected error";
@@ -337,6 +352,12 @@ function html(body: string, status = 200): Response {
       "Cache-Control": "no-store"
     }
   });
+}
+
+function fetchAsset(request: Request, env: Env, pathname: string): Promise<Response> {
+  const assetUrl = new URL(request.url);
+  assetUrl.pathname = pathname;
+  return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
 }
 
 function authErrorPage(status: "invalid" | "expired" | "consumed"): string {

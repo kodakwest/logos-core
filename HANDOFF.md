@@ -11,7 +11,7 @@ status: active
 # LogOS Core — Project Handoff
 
 ## Project Location
-`/mnt/s/Projects/bible-ai-search/` — git repo on `main`, 2 commits, no remote
+`/mnt/s/Projects/logos-core/` — git repo on `main`, 2 commits, no remote
 
 ## Live URL
 https://logos-core.kodakwest.workers.dev

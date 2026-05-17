@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LogOS Core - Login</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Base */
+      --bg-base: #0b0d0e;
+      --bg-panel: #131618;
+      --bg-elevated: #1a1d21;
+
+      /* Ink */
+      --ink-primary: #e8e6e1;
+      --ink-secondary: #a0a0a5;
+      --ink-tertiary: #6e6e73;
+
+      /* Borders */
+      --border-subtle: #2a2d31;
+
+      /* Typography */
+      --font-serif: 'Playfair Display', serif;
+      --font-sans: 'Inter', sans-serif;
+
+      /* Radii */
+      --radius-md: 8px;
+      --radius-lg: 12px;
+
+      /* Brand */
+      --brand-gold: #d4af37;
+      --brand-primary: #d4af37;
+      --brand-dim: rgba(212, 175, 55, 0.2);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-base);
+      color: var(--ink-primary);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card {
+      background-color: var(--bg-panel);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 48px;
+      width: 100%;
+      max-width: 420px;
+      text-align: center;
+      position: relative;
+    }
+
+    .logo-container {
+      margin-bottom: 32px;
+    }
+
+    .logo-mark {
+      width: 40px;
+      height: 40px;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      font-family: var(--font-serif);
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: var(--brand-primary);
+      margin-bottom: 4px;
+    }
+
+    .tagline {
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      color: var(--ink-secondary);
+      margin-bottom: 32px;
+    }
+
+    .input-wrapper {
+      position: relative;
+      margin-bottom: 16px;
+    }
+
+    .email-label {
+      position: absolute;
+      top: -10px;
+      left: 12px;
+      background: var(--bg-panel);
+      padding: 0 4px;
+      font-size: 0.75rem;
+      color: var(--ink-secondary);
+    }
+
+    input[type="email"] {
+      width: 100%;
+      background-color: var(--bg-elevated);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 12px 16px;
+      color: var(--ink-primary);
+      font-family: var(--font-sans);
+      font-size: 1rem;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    input[type="email"]::placeholder {
+      color: var(--ink-tertiary);
+    }
+
+    input[type="email"]:focus {
+      border-color: var(--brand-primary);
+      box-shadow: 0 0 0 1px var(--brand-primary);
+    }
+
+    input[type="email"]:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    button {
+      width: 100%;
+      background-color: var(--brand-primary);
+      color: #0b0d0e;
+      border: none;
+      border-radius: var(--radius-md);
+      padding: 12px;
+      font-family: var(--font-sans);
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    button:hover:not(:disabled) {
+      background-color: #e5c455;
+    }
+
+    button:disabled {
+      background-color: var(--brand-primary);
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* States Wrapper */
+    .state {
+      display: none;
+      animation: fadeIn 0.3s ease-in-out forwards;
+    }
+
+    .state.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* Loading Spinner */
+    .spinner {
+      width: 20px;
+      height: 20px;
+      border: 2px solid rgba(11, 13, 14, 0.3);
+      border-top: 2px solid #0b0d0e;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Success State */
+    .success-icon {
+      color: #22c55e;
+      width: 48px;
+      height: 48px;
+      margin-bottom: 16px;
+    }
+
+    .success-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--ink-primary);
+      margin-bottom: 8px;
+    }
+
+    .success-desc {
+      font-size: 0.95rem;
+      color: var(--ink-secondary);
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+
+    .send-again {
+      color: var(--brand-primary);
+      font-size: 0.85rem;
+      text-decoration: none;
+      transition: opacity 0.2s;
+      background: none;
+      border: none;
+      padding: 0;
+      width: auto;
+      display: inline;
+    }
+
+    .send-again:hover {
+      opacity: 0.8;
+      background: none;
+    }
+
+    /* Rate Limit State */
+    .error-icon {
+      color: #ef4444;
+      width: 48px;
+      height: 48px;
+      margin-bottom: 16px;
+    }
+
+    .warning-icon {
+      color: #f59e0b;
+      width: 48px;
+      height: 48px;
+      margin-bottom: 16px;
+    }
+
+    .error-title {
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: #ef4444;
+      margin-bottom: 8px;
+    }
+
+    .warning-title {
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: #f59e0b;
+      margin-bottom: 8px;
+    }
+
+    .error-desc {
+      font-size: 0.9rem;
+      color: var(--ink-secondary);
+      margin-bottom: 24px;
+    }
+
+    .form-error {
+      color: #ef4444;
+      font-size: 0.85rem;
+      line-height: 1.4;
+      margin-bottom: 16px;
+      text-align: left;
+    }
+
+    .form-error[hidden] {
+      display: none;
+    }
+
+    /* Mobile */
+    @media (max-width: 480px) {
+      .card {
+        padding: 24px;
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      .logo-mark {
+        width: 32px;
+        height: 32px;
+      }
+
+      h1 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <div class="logo-container">
+      <svg class="logo-mark" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20,80 Q50,40 50,20 Q50,40 80,80" stroke="#d4af37" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M50,20 L50,80" stroke="#d4af37" stroke-width="4" stroke-dasharray="8 8" fill="none"/>
+        <path d="M10,20 Q30,10 50,20 Q70,10 90,20 L90,80 Q70,70 50,80 Q30,70 10,80 Z" stroke="#d4af37" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <h1>LogOS Core</h1>
+      <div class="tagline">The Operating System for Truth</div>
+    </div>
+
+    <!-- State 1: Initial -->
+    <form id="state-initial" class="state active">
+      <div class="input-wrapper">
+        <span class="email-label">Email</span>
+        <input type="email" placeholder="you@example.com" id="email-input" autocomplete="email" required>
+      </div>
+      <div id="form-error" class="form-error" role="alert" hidden>Unable to send login link. Try again later.</div>
+      <button id="btn-send" type="submit">Send Login Link</button>
+    </form>
+
+    <!-- State 2: Sending -->
+    <div id="state-sending" class="state" aria-live="polite">
+      <div class="input-wrapper">
+        <span class="email-label">Email</span>
+        <input type="email" id="sending-email" value="" disabled>
+      </div>
+      <button disabled>
+        <div class="spinner"></div>
+      </button>
+    </div>
+
+    <!-- State 3: Success -->
+    <div id="state-success" class="state" aria-live="polite">
+      <svg class="success-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+      </svg>
+      <div class="success-title">Check your email</div>
+      <div class="success-desc">We sent a login link to your email address.</div>
+      <button class="send-again" type="button" data-reset>Send again</button>
+    </div>
+
+    <!-- State 4: Rate Limited -->
+    <div id="state-rate-limited" class="state" aria-live="polite">
+      <svg class="warning-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="8" x2="12" y2="12"></line>
+        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+      </svg>
+      <div class="warning-title">Too many requests</div>
+      <div class="error-desc">Please try again later.</div>
+      <button class="send-again" type="button" data-reset>Try again</button>
+    </div>
+
+  </div>
+
+  <script>
+    const form = document.getElementById('state-initial');
+    const emailInput = document.getElementById('email-input');
+    const sendingEmail = document.getElementById('sending-email');
+    const formError = document.getElementById('form-error');
+
+    function switchState(stateId) {
+      document.querySelectorAll('.state').forEach((el) => el.classList.remove('active'));
+      document.getElementById(stateId).classList.add('active');
+    }
+
+    function resetForm() {
+      formError.hidden = true;
+      switchState('state-initial');
+      emailInput.focus();
+    }
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      formError.hidden = true;
+
+      if (!emailInput.reportValidity()) return;
+
+      const email = emailInput.value.trim();
+      sendingEmail.value = email;
+      switchState('state-sending');
+
+      try {
+        const response = await fetch('/api/auth/send', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+
+        if (response.ok) {
+          switchState('state-success');
+          return;
+        }
+
+        if (response.status === 429) {
+          switchState('state-rate-limited');
+          return;
+        }
+
+        formError.textContent = 'Unable to send login link. Try again later.';
+        formError.hidden = false;
+        switchState('state-initial');
+      } catch {
+        formError.textContent = 'Unable to send login link. Try again later.';
+        formError.hidden = false;
+        switchState('state-initial');
+      }
+    });
+
+    document.querySelectorAll('[data-reset]').forEach((button) => {
+      button.addEventListener('click', resetForm);
+    });
+  </script>
+</body>
+</html>

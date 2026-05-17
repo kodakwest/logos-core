@@ -69,14 +69,14 @@ Three variants cycle via slow fade (7.5s loop, 2.5s each):
 
 | Asset | Location |
 |-------|----------|
-| Brand Media Kit (v3) | `/mnt/s/Projects/bible-ai-search/rebrand-moodboard.html` |
-| Loading Animation (final) | `/mnt/s/Projects/bible-ai-search/logos-loading-animation.html` |
-| Ecosystem Landscape | `/mnt/s/Projects/bible-ai-search/logos-rebrand-and-ecosystem-landscape.html` |
-| Product Blueprints | `/mnt/s/Projects/bible-ai-search/logos-product-blueprints.html` |
-| Shared Backend Analysis | `/mnt/s/Projects/bible-ai-search/logos-shared-backend-analysis.html` |
-| UI Concepts (Jules) | `/mnt/s/Projects/bible-ai-search/logos-ui-concept.html` |
-| API Landscape Diagram | `/mnt/s/Projects/bible-ai-search/logos-api-landscape.html` |
-| Bible API Research KB | `/mnt/s/Projects/bible-ai-search/bible-api-research-kb/` |
+| Brand Media Kit (v3) | `/mnt/s/Projects/logos-core/rebrand-moodboard.html` |
+| Loading Animation (final) | `/mnt/s/Projects/logos-core/logos-loading-animation.html` |
+| Ecosystem Landscape | `/mnt/s/Projects/logos-core/logos-rebrand-and-ecosystem-landscape.html` |
+| Product Blueprints | `/mnt/s/Projects/logos-core/logos-product-blueprints.html` |
+| Shared Backend Analysis | `/mnt/s/Projects/logos-core/logos-shared-backend-analysis.html` |
+| UI Concepts (Jules) | `/mnt/s/Projects/logos-core/logos-ui-concept.html` |
+| API Landscape Diagram | `/mnt/s/Projects/logos-core/logos-api-landscape.html` |
+| Bible API Research KB | `/mnt/s/Projects/logos-core/bible-api-research-kb/` |
 
 ---
 
@@ -401,7 +401,7 @@ Findings from 3 research sessions (May 15-17):
 | Auth Plan | `.hermes/plans/2026-05-15_bible-graph-shepherd-auth-plan.md` | Two-tier auth, CORS, rate limiting, deep-dive scope |
 | Unification Strategy | `.hermes/plans/bible-unification-strategy.md` | Phase 1/2 rollout, gap analysis |
 | Ecosystem Handoff | `knowledge/logos-ecosystem-handoff.md` | Session handoff, architecture decisions, execution order |
-| Architecture Review | `knowledge/bible-ai-search-kb/architecture-review.md` | Codex audit — 23 findings (1C, 7H, 10M, 5L) |
+| Architecture Review | `knowledge/logos-core-kb/architecture-review.md` | Codex audit — 23 findings (1C, 7H, 10M, 5L) |
 | Shared Backend Analysis | `logos-shared-backend-analysis.html` | Options A–E for shared backend (MCP Gateway selected) |
 | API Research KB | `bible-api-research-kb/index.html` | Full KB with diagram of all external API candidates |
 | Harvest Ridge Sermon Map | `S:\Resources\harvest-ridge-sermon-map.html` | 28 series, 124 sermons, 525 videos — Roundtable seed data |

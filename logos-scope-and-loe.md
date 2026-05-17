@@ -7,7 +7,7 @@ Rebrand "Bible AI Search" → **LogOS Core**, unify with **LogOS Shepherd** (kid
 
 ## Workstream 1: LogOS Core Rebrand
 
-**Current state:** Workers project at logos-core.kodakwest.workers.dev, repo kodakwest/bible-ai-search, Vite React frontend with 3 views (search, parse, upload).
+**Current state:** Workers project at logos-core.kodakwest.workers.dev, repo kodakwest/logos-core, Vite React frontend with 3 views (search, parse, upload).
 
 ### Tasks
 1.1 Rename GitHub repo to `logos-core` (or create new + migrate)

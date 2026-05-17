@@ -6,7 +6,13 @@ export default defineConfig({
   root: "src/frontend",
   build: {
     outDir: "../../dist",
-    emptyOutDir: true
+    emptyOutDir: true,
+    rollupOptions: {
+      input: {
+        app: "src/frontend/index.html",
+        login: "src/frontend/login.html"
+      }
+    }
   },
   server: {
     port: 5173
