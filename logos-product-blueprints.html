@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LogOS Product Blueprints</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #0b0d0e;
+  color: #f4f4f5;
+  font-family: 'Inter', sans-serif;
+  line-height: 1.6;
+  padding: 40px 20px;
+}
+.container { max-width: 1000px; margin: 0 auto; }
+
+h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: #d4af37;
+  margin-bottom: 6px;
+}
+.subtitle {
+  color: #82828b;
+  font-size: 0.95rem;
+  margin-bottom: 36px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #1f2a2e;
+}
+
+h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #d4af37;
+  margin-top: 44px;
+  margin-bottom: 16px;
+}
+h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #f4f4f5;
+  margin-top: 28px;
+  margin-bottom: 10px;
+}
+
+.card {
+  background: #131618;
+  border: 1px solid #1f2a2e;
+  border-radius: 10px;
+  padding: 24px;
+  margin-bottom: 20px;
+}
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.card-header .icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.card-header h3 { margin: 0; font-family: 'Playfair Display', serif; }
+.card-header .phase-tag {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 2px 8px;
+  border-radius: 3px;
+  margin-left: auto;
+}
+
+.cols-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+@media (max-width: 640px) { .cols-2 { grid-template-columns: 1fr; } }
+
+.icon-core { background: rgba(212,175,55,0.15); color: #d4af37; }
+.icon-shepherd { background: rgba(77,168,218,0.15); color: #4da8da; }
+.icon-roundtable { background: rgba(167,139,250,0.15); color: #a78bfa; }
+
+.phase-p1 { background: rgba(34,197,94,0.15); color: #22c55e; }
+.phase-p2 { background: rgba(234,179,8,0.15); color: #eab308; }
+.phase-p3 { background: rgba(167,139,250,0.15); color: #a78bfa; }
+
+.data-flow {
+  background: #0a0c0d;
+  border: 1px solid #1f2a2e;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 16px 0;
+  overflow-x: auto;
+}
+.data-flow pre {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  line-height: 1.7;
+  color: #c0c0c8;
+}
+
+.feature-list {
+  list-style: none;
+  display: grid;
+  gap: 8px;
+}
+.feature-list li {
+  padding: 10px 14px;
+  background: #0f1113;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  border-left: 2px solid #2a3a3e;
+}
+.feature-list li .feat-icon { margin-right: 8px; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0;
+  font-size: 0.85rem;
+}
+th {
+  text-align: left;
+  padding: 8px 10px;
+  background: #0f1113;
+  color: #82828b;
+  font-weight: 500;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-bottom: 1px solid #1f2a2e;
+}
+td { padding: 8px 10px; border-bottom: 1px solid #1a1e1f; }
+tr:hover td { background: #0f1113; }
+
+.verdict-box {
+  background: linear-gradient(135deg, rgba(212,175,55,0.08), rgba(212,175,55,0.02));
+  border: 1px solid rgba(212,175,55,0.2);
+  border-radius: 8px;
+  padding: 24px;
+  margin: 24px 0;
+}
+.verdict-box h4 { color: #d4af37; margin-bottom: 10px; font-size: 1.1rem; }
+.verdict-box p { font-size: 0.9rem; color: #c0c0c8; }
+
+.footer {
+  text-align: center;
+  padding: 24px 0;
+  border-top: 1px solid #1f2a2e;
+  color: #4a4a4a;
+  font-size: 0.75rem;
+  margin-top: 40px;
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>LogOS Product Blueprints</h1>
+<div class="subtitle">What each product actually needs · May 16 2026</div>
+
+<h2>Ecosystem Overview</h2>
+
+<div class="cols-2">
+  <div class="card" style="border-left: 3px solid #d4af37;">
+    <div class="card-header">
+      <div class="icon icon-core">C</div>
+      <h3 style="color:#d4af37;">LogOS Core</h3>
+      <span class="phase-tag phase-p1">Phase 1</span>
+    </div>
+    <p style="color:#c0c0c8;">Central Bible search, AI Q&A, Greek tools. The data foundation for the entire ecosystem.</p>
+    <p style="color:#82828b;font-size:0.85rem;margin-top:10px;">Cloudflare Workers · D1 · Vectorize · Workers AI</p>
+  </div>
+  <div class="card" style="border-left: 3px solid #4da8da;">
+    <div class="card-header">
+      <div class="icon icon-shepherd">S</div>
+      <h3 style="color:#4da8da;">LogOS Shepherd</h3>
+      <span class="phase-tag phase-p1">Phase 1</span>
+    </div>
+    <p style="color:#c0c0c8;">Kids ministry. 13 parenting topics, 98 verses, 7 age tiers.</p>
+    <p style="color:#82828b;font-size:0.85rem;margin-top:10px;">Static SPA (needs Bible search from Core)</p>
+  </div>
+  <div class="card" style="border-left: 3px solid #a78bfa; grid-column: 1 / -1;">
+    <div class="card-header">
+      <div class="icon icon-roundtable">R</div>
+      <h3 style="color:#a78bfa;">LogOS Roundtable</h3>
+      <span class="phase-tag phase-p2">Phase 2</span>
+    </div>
+    <p style="color:#c0c0c8;">Comprehensive sermon knowledge system. Full graph + vector database of Kevin's sermons, cross-referenced with YouTube and Spotify. Interactive discussion guides with tasteful gamification.</p>
+    <p style="color:#82828b;font-size:0.85rem;margin-top:10px;">Workers · D1 · Vectorize · Workers AI · AI Search · YouTube API · Spotify API</p>
+  </div>
+</div>
+
+<!-- LogOS Core -->
+<h2>LogOS Core — The Data Foundation</h2>
+<div class="card">
+  <p style="color:#c0c0c8;">Core is already built. It needs rebranding, auth, and a hub portal frontend. No major backend changes — it already has everything Shepherd and Roundtable will consume.</p>
+  <table>
+    <tr><th>Resource</th><th>API</th><th>Consumed By</th></tr>
+    <tr><td>Verse search (keyword)</td><td><code>/api/verses/search</code></td><td>Shepherd, Roundtable</td></tr>
+    <tr><td>Semantic search</td><td><code>/api/verses/semantic</code></td><td>Shepherd, Roundtable, Hub</td></tr>
+    <tr><td>AI Q&A</td><td><code>/api/ask</code></td><td>Hub, Roundtable guide gen</td></tr>
+    <tr><td>Verse deep-dive</td><td><code>/api/explain</code></td><td>Hub, Roundtable</td></tr>
+    <tr><td>Greek parsing</td><td><code>/api/parse/greek</code></td><td>Hub</td></tr>
+    <tr><td>Batch verse lookup</td><td><code>/api/verses/by-ref</code> (new)</td><td>Shepherd build pipeline</td></tr>
+    <tr><td>Cross-product search</td><td><code>/api/search/all</code> (new)</td><td>Hub portal</td></tr>
+  </table>
+  <p style="color:#82828b;font-size:0.85rem;margin-top:10px;">Auth on AI endpoints. Public read on verse data. Rate limits everywhere.</p>
+</div>
+
+<!-- Shepherd -->
+<h2>LogOS Shepherd — What It Needs</h2>
+<div class="card">
+  <p style="color:#c0c0c8;">Shepherd is a Gold MVP — 13 topics, 98 verses, 7 age tiers, full lesson system. It doesn't need a backend rebuild. It needs <strong>two things from LogOS Core:</strong></p>
+  <div class="cols-2" style="margin-top:16px;">
+    <div style="background:#0f1113;border-radius:6px;padding:16px;">
+      <h4 style="color:#4da8da;font-size:0.95rem;margin-bottom:6px;">1. Bible Search Access</h4>
+      <p style="color:#82828b;font-size:0.85rem;">Shepherd's Scripture Explorer (cross-topic verse browser) currently uses baked-in data. Route it to LogOS Core's search API instead — same search experience as the hub, but inside Shepherd's UI.</p>
+    </div>
+    <div style="background:#0f1113;border-radius:6px;padding:16px;">
+      <h4 style="color:#4da8da;font-size:0.95rem;margin-bottom:6px;">2. Build-Time Verse Pipeline</h4>
+      <p style="color:#82828b;font-size:0.85rem;">At build time, fetch verse text from LogOS Core instead of parsing BTB files. Single source of truth for all Bible text. No change to Shepherd's runtime architecture.</p>
+    </div>
+  </div>
+  <div style="background:rgba(77,168,218,0.06);border-left:3px solid #4da8da;padding:14px;border-radius:4px;margin-top:12px;">
+    <p style="color:#c0c0c8;font-size:0.9rem;"><strong>Verdict:</strong> Shepherd stays a static SPA. It calls Core APIs at build time. The only runtime change is the Scripture Explorer which queries Core's search endpoint instead of local data.</p>
+  </div>
+</div>
+
+<!-- Roundtable -->
+<h2>LogOS Roundtable — Full Blueprint</h2>
+<div class="card">
+  <p style="color:#c0c0c8;">This is a <strong>substantial product</strong> — not just static guides. A sermon knowledge system with graph + vector search, media cross-referencing, and interactive gamified guides.</p>
+
+  <h3 style="margin-top:20px;">Data Architecture</h3>
+  <div class="data-flow">
+    <pre>
+┌──────────────────────────────────────────────────────────────┐
+│                    LogOS Roundtable (Workers)                  │
+│                                                              │
+│  D1 Tables:                                                  │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐       │
+│  │  sermons      │  │  series       │  │  guides       │       │
+│  │  ├ title      │  │  ├ name       │  │  ├ title      │       │
+│  │  ├ date       │  │  ├ start_date │  │  ├ sections[] │       │
+│  │  ├ series_id  │  │  ├ end_date   │  │  ├ questions[]│       │
+│  │  ├ youtube_id │  │  └ description│  │  ├ gamification│      │
+│  │  ├ spotify_id │  │               │  │  └ responses   │       │
+│  │  ├ transcript │  │  ┌──────────┐ │  │               │       │
+│  │  ├ outline    │  │  │sermon_   │ │  │  ┌──────────┐ │       │
+│  │  └ embedding  │  │  │verses    │ │  │  │guide_    │ │       │
+│  │               │  │  ├ sermon_id│ │  │  │responses │ │       │
+│  │  ┌──────────┐ │  │  └ verse_ref│ │  │  ├ guide_id │ │       │
+│  │  │  topics   │ │  └──────────┘ │  │  ├ user_id   │ │       │
+│  │  └──────────┘ │               │  │  └ responses[]│ │       │
+│  └──────────────┘  └──────────────┘  └──────────────┘       │
+│                                                              │
+│  Vectorize Index: "sermon-embeddings" (semantic sermon search)│
+│  AI Search: "logos-roundtable" (managed RAG for guides)       │
+│  Workers AI: Llama 4 Scout (guide generation, analysis)      │
+└──────────────────────────────────────────────────────────────┘</pre>
+  </div>
+
+  <h3>Core Features</h3>
+  <div class="cols-2">
+    <div>
+      <h4 style="color:#a78bfa;font-size:0.95rem;margin-bottom:8px;">Sermon Knowledge Graph</h4>
+      <ul class="feature-list">
+        <li>📖 <strong>Sermon → Verse</strong> — Every sermon cross-referenced to the Bible passages it covers</li>
+        <li>📺 <strong>Sermon → YouTube</strong> — Video embeds, timestamps linked to outline sections</li>
+        <li>🎧 <strong>Sermon → Spotify</strong> — Episode player, audio sections</li>
+        <li>🔗 <strong>Sermon → Series</strong> — Full series navigation, chronological ordering</li>
+        <li>🧠 <strong>Semantic search</strong> — Find sermons by topic, theme, or passage</li>
+        <li>📊 <strong>Topic clustering</strong> — Auto-group sermons by theme across series</li>
+      </ul>
+    </div>
+    <div>
+      <h4 style="color:#a78bfa;font-size:0.95rem;margin-bottom:8px;">Interactive Guides + Gamification</h4>
+      <ul class="feature-list">
+        <li>📝 <strong>Discussion forms</strong> — Answer questions inline, save responses per session</li>
+        <li>✅ <strong>Progress tracking</strong> — Series completion, section-by-section check-off</li>
+        <li>🏆 <strong>Achievements</strong> — "Completed the Battle of the Mind series", "Answered every question"</li>
+        <li>👥 <strong>Group mode</strong> — Share responses with your small group</li>
+        <li>📅 <strong>Session scheduling</strong> — "Next meeting: Wednesday" with guide pre-loaded</li>
+        <li>🎨 <strong>Tasteful UI</strong> — Progress rings, subtle animations, no cheesy graphics</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Content Pipeline</h3>
+  <div class="data-flow">
+    <pre>
+Sermon Sunday
+    │
+    ├── Transcript / Notes
+    │       │
+    │       ▼
+    │   Workers AI: Extract outline, key verses, themes
+    │       │
+    │       ├──→ D1: sermons table (metadata, outline)
+    │       ├──→ D1: sermon_verses (cross-reference)
+    │       └──→ Vectorize: sermon embedding
+    │
+    ├── YouTube Upload
+    │       │
+    │       └──→ D1: youtube_id, timestamps
+    │
+    ├── Spotify Episode
+    │       │
+    │       └──→ D1: spotify_id
+    │
+    └── Generate Discussion Guide
+            │
+            ▼
+        Workers AI: Guide from sermon outline + verses
+            │
+            ├──→ D1: guides table
+            └──→ Review → Publish</pre>
+  </div>
+
+  <h3>Backend Architecture</h3>
+  <table>
+    <tr><th>Component</th><th>Purpose</th><th>Notes</th></tr>
+    <tr><td>Cloudflare Workers</td><td>API routes + guide generation</td><td>Same pattern as Core</td></tr>
+    <tr><td>D1</td><td>Relational data (sermons, series, guides, responses)</td><td>New database or shared? Recommend separate D1</td></tr>
+    <tr><td>Vectorize</td><td>Semantic sermon search</td><td>Separate index from Core</td></tr>
+    <tr><td>Workers AI</td><td>Guide generation, transcript analysis, topic extraction</td><td>Shared binding with Core</td></tr>
+    <tr><td>AI Search (option)</td><td>Managed RAG for guide content</td><td>Evaluate when content volume grows</td></tr>
+    <tr><td>YouTube Data API</td><td>Fetch video metadata, duration, thumbnails</td><td>Read-only, API key needed</td></tr>
+    <tr><td>Spotify API</td><td>Episode metadata, embed player</td><td>Read-only, already have auth</td></tr>
+  </table>
+</div>
+
+<!-- MCP Gateway -->
+<h2>The Glue: LogOS MCP Gateway</h2>
+<div class="card">
+  <p style="color:#c0c0c8;">An MCP server deployed as a Cloudflare Worker that exposes the entire ecosystem as tools any AI agent can call. This is the architectural layer that ties everything together without coupling the products.</p>
+  <div class="data-flow">
+    <pre>
+┌─────────────────────────────────────────────────────────────┐
+│                    LogOS MCP Gateway                          │
+│                                                             │
+│  Tools exposed:                                              │
+│                                                             │
+│  Core:                                                       │
+│  │  get_verse(ref)            → verse text + metadata        │
+│  │  search_verses(query)      → semantic search results      │
+│  │  ask_bible(query, deep)    → AI Q&A with citations        │
+│  │  explain_verse(ref)        → verse deep-dive + context    │
+│  │  parse_greek(text)         → morphology analysis           │
+│  │  search_all(query)         → cross-product search         │
+│                                                             │
+│  Shepherd:                                                   │
+│  │  get_topic(id)             → parenting topic + lesson     │
+│  │  search_topics(query)      → find relevant parenting      │
+│                                                             │
+│  Roundtable:                                                 │
+│  │  get_sermon(ref)           → sermon + outline + media     │
+│  │  search_sermons(query)     → semantic sermon search       │
+│  │  get_guide(id)             → discussion guide + questions │
+│  │  generate_guide(sermon_id) → AI guide from transcript     │
+│  │  get_series(id)            → full series with sermons     │
+│                                                             │
+│  Resources (URI schema):                                     │
+│    logos://verses/{ref}                                      │
+│    logos://shepherd/topics/{id}                              │
+│    logos://roundtable/sermons/{id}                           │
+│    logos://roundtable/guides/{id}                            │
+│    logos://roundtable/series/{id}                            │
+└─────────────────────────────────────────────────────────────┘</pre>
+  </div>
+  <p style="color:#c0c0c8;margin-top:12px;">The MCP Gateway doesn't replace the REST API — it wraps it. REST stays for frontend apps. MCP is for AI agents. Same backend, two protocols, one auth boundary.</p>
+</div>
+
+<!-- Ecosystem Stack Comparison -->
+<h2>Ecosystem Stack</h2>
+<table>
+  <tr><th></th><th style="color:#d4af37;">LogOS Core</th><th style="color:#4da8da;">LogOS Shepherd</th><th style="color:#a78bfa;">LogOS Roundtable</th></tr>
+  <tr><td>Frontend</td><td>Vite React SPA</td><td>Vite React SPA</td><td>Vite React SPA</td></tr>
+  <tr><td>Backend</td><td>Workers + D1</td><td><em>None (static)</em></td><td>Workers + D1 <span style="color:#a78bfa;">(new)</span></td></tr>
+  <tr><td>Database</td><td>bible-ai-db</td><td>—</td><td>roundtable-db <span style="color:#a78bfa;">(new)</span></td></tr>
+  <tr><td>Vector Search</td><td>Vectorize (15.9K)</td><td>—</td><td>Vectorize <span style="color:#a78bfa;">(new)</span></td></tr>
+  <tr><td>AI</td><td>Workers AI (Llama 4)</td><td>—</td><td>Workers AI (shared)</td></tr>
+  <tr><td>Search</td><td>Keyword + Semantic</td><td>Uses Core API</td><td>Semantic + Graph</td></tr>
+  <tr><td>Media</td><td>—</td><td>—</td><td>YouTube + Spotify</td></tr>
+  <tr><td>Auth</td><td>Phase 1</td><td>—</td><td>Phase 2</td></tr>
+  <tr><td>MCP</td><td colspan="3" style="text-align:center;color:#d4af37;">Shared MCP Gateway (wraps all three)</td></tr>
+</table>
+
+<!-- Vision -->
+<h2>How It All Connects</h2>
+<div class="verdict-box">
+  <h4>Roundtable is the product that needs the most architecture</h4>
+  <p>It's not just a guide viewer — it's a sermon knowledge system with a graph database, vector search, media cross-referencing, AI-powered content generation, and gamified interactive sessions. That warrants its own Workers backend (same pattern as Core).</p>
+  <p style="margin-top:10px;"><strong>Shepherd</strong> stays light — static SPA that calls Core's search API at runtime for Scripture Explorer, and fetches verse text from Core at build time.</p>
+  <p style="margin-top:10px;"><strong>Core</strong> stays the data foundation — auth, verse data, AI, and the search layer that Shepherd and Roundtable both consume.</p>
+  <p style="margin-top:10px;"><strong>MCP Gateway</strong> wraps all three so any AI agent (TARS, Jules, future tools) can query the entire ecosystem through one protocol. No REST endpoints to learn, no auth headers to manage — just MCP tool discovery.</p>
+</div>
+
+<div class="footer">
+  LogOS Product Blueprints · TARS · May 16 2026
+</div>
+
+</div>
+</body>
+</html>

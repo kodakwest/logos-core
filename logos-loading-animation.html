@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LogOS Loading Sequence</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #0b0d0e;
+  color: #f4f4f5;
+  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+}
+
+/* The Open Path Logo (background) */
+.logo-mark {
+  width: 100px;
+  height: 100px;
+  stroke: #d4af37;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.15;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(2.5);
+  pointer-events: none;
+}
+
+/* Animation container */
+.cycle-container {
+  position: relative;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-variant {
+  position: absolute;
+  font-family: 'Playfair Display', serif;
+  font-size: 5rem;
+  font-weight: 600;
+  letter-spacing: 4px;
+  opacity: 0;
+}
+
+.logo-variant .gold { color: #d4af37; }
+.logo-variant .blue { color: #4da8da; }
+.logo-variant .desc {
+  display: block;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 400;
+  font-style: italic;
+  letter-spacing: 2px;
+  text-align: center;
+  margin-top: 8px;
+  color: #82828b;
+}
+
+@keyframes fadeVariant {
+  0% { opacity: 0; }
+  4% { opacity: 1; }
+  31% { opacity: 1; }
+  35% { opacity: 0; }
+  100% { opacity: 0; }
+}
+
+.v1 { animation: fadeVariant 7.5s ease-in-out infinite; }
+.v2 { animation: fadeVariant 7.5s ease-in-out 2.5s infinite; }
+.v3 { animation: fadeVariant 7.5s ease-in-out 5s infinite; }
+
+/* Tagline beneath */
+.tagline {
+  font-size: 0.9rem;
+  color: #82828b;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  font-weight: 300;
+}
+
+/* Status dots */
+.status-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #d4af37;
+  animation: pulse 1.2s ease-in-out infinite;
+}
+.dot:nth-child(2) { animation-delay: 0.2s; }
+.dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.2; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+.status-text {
+  font-size: 0.75rem;
+  color: #82828b;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-left: 12px;
+}
+</style>
+</head>
+<body>
+
+<div class="loader">
+  <svg class="logo-mark" viewBox="0 0 100 100">
+    <path d="M20,80 Q50,40 50,20 Q50,40 80,80" stroke-width="4"/>
+    <path d="M50,20 L50,80" stroke-width="4" stroke-dasharray="4 4"/>
+    <path d="M10,20 Q30,10 50,20 Q70,10 90,20 L90,80 Q70,70 50,80 Q30,70 10,80 Z" stroke="#4da8da" stroke-width="2"/>
+  </svg>
+
+  <div class="cycle-container">
+    <div class="logo-variant v1">
+      <span class="gold">L<span class="blue">ó</span>gOS</span>
+      <span class="desc">The Illuminated Word</span>
+    </div>
+    <div class="logo-variant v2">
+      <span class="gold">Λ</span><span class="gold">ogOS</span>
+      <span class="desc">The Upward Path</span>
+    </div>
+    <div class="logo-variant v3">
+      <span class="gold">LogO</span><span class="blue">Σ</span>
+      <span class="desc">The Foundational System</span>
+    </div>
+  </div>
+
+  <div class="tagline">The Operating System for Truth</div>
+
+  <div class="status-row">
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <span class="status-text">Assembling response</span>
+  </div>
+</div>
+
+</body>
+</html>

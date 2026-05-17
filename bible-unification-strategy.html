@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bible Ecosystem Unification Strategy</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #0b0d0e;
+  color: #e8e6e1;
+  font-family: 'Inter', -apple-system, sans-serif;
+  line-height: 1.6;
+  padding: 40px 20px;
+}
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+}
+h1 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  margin-bottom: 8px;
+  color: #f0ede5;
+}
+.subtitle {
+  color: #8a8a84;
+  font-size: 1rem;
+  margin-bottom: 40px;
+  border-bottom: 1px solid #1f2a2e;
+  padding-bottom: 20px;
+}
+h2 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-top: 48px;
+  margin-bottom: 16px;
+  color: #56b6a7;
+  letter-spacing: -0.02em;
+}
+h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-top: 32px;
+  margin-bottom: 12px;
+  color: #e0ddd2;
+}
+.section-card {
+  background: #131618;
+  border: 1px solid #1f2a2e;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+.principle-list {
+  list-style: none;
+  display: grid;
+  gap: 12px;
+}
+.principle-list li {
+  padding: 14px 18px;
+  background: #0f1113;
+  border-left: 3px solid #56b6a7;
+  border-radius: 6px;
+  font-size: 0.95rem;
+}
+.principle-list li strong {
+  color: #56b6a7;
+}
+.tag {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: 'JetBrains Mono', monospace;
+  margin-right: 6px;
+}
+.tag-red { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
+.tag-yellow { background: rgba(234, 179, 8, 0.15); color: #eab308; }
+.tag-green { background: rgba(34, 197, 94, 0.15); color: #22c55e; }
+.tag-blue { background: rgba(59, 130, 246, 0.15); color: #3b82f6; }
+.tag-cyan { background: rgba(34, 211, 238, 0.15); color: #22d3ee; }
+.tag-violet { background: rgba(167, 139, 250, 0.15); color: #a78bfa; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 0.9rem;
+}
+th {
+  text-align: left;
+  padding: 10px 12px;
+  background: #0f1113;
+  border-bottom: 1px solid #1f2a2e;
+  color: #8a8a84;
+  font-weight: 500;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #1a1e1f;
+}
+tr:hover td { background: #0f1113; }
+
+.task-list {
+  list-style: none;
+}
+.task-list li {
+  padding: 10px 14px;
+  margin-bottom: 6px;
+  background: #0f1113;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  border-left: 2px solid #2a3a3e;
+}
+.task-list li .task-num {
+  color: #56b6a7;
+  font-weight: 600;
+  font-family: 'JetBrains Mono', monospace;
+  margin-right: 8px;
+}
+
+.decision-grid {
+  display: grid;
+  gap: 16px;
+  margin: 16px 0;
+}
+.decision-card {
+  background: #0f1113;
+  border: 1px solid #1f2a2e;
+  border-radius: 8px;
+  padding: 18px;
+}
+.decision-card h4 {
+  color: #f0ede5;
+  font-weight: 600;
+  margin-bottom: 6px;
+  font-size: 1rem;
+}
+.decision-card p {
+  color: #8a8a84;
+  font-size: 0.9rem;
+}
+
+.phase-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.phase-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: 'JetBrains Mono', monospace;
+}
+.phase-badge.phase-1 { background: rgba(34, 211, 238, 0.12); color: #22d3ee; border: 1px solid rgba(34, 211, 238, 0.2); }
+.phase-badge.phase-2 { background: rgba(167, 139, 250, 0.12); color: #a78bfa; border: 1px solid rgba(167, 139, 250, 0.2); }
+
+.gap-item {
+  display: flex;
+  gap: 12px;
+  padding: 12px 14px;
+  margin-bottom: 8px;
+  background: #0f1113;
+  border-radius: 6px;
+  align-items: flex-start;
+}
+.gap-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-top: 5px;
+  flex-shrink: 0;
+}
+.gap-dot.red { background: #ef4444; }
+.gap-dot.yellow { background: #eab308; }
+.gap-dot.green { background: #22c55e; }
+.gap-content { flex: 1; }
+.gap-content strong { display: block; font-size: 0.95rem; }
+.gap-content span { color: #8a8a84; font-size: 0.85rem; }
+
+.project-table td:first-child { font-weight: 600; }
+
+.arch-svg-wrap {
+  background: #0a0c0d;
+  border: 1px solid #1f2a2e;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 16px 0;
+  overflow-x: auto;
+}
+
+.future-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+@media (max-width: 640px) {
+  .future-grid { grid-template-columns: 1fr; }
+}
+.future-item {
+  background: #0f1113;
+  border: 1px solid #1f2a2e;
+  border-radius: 6px;
+  padding: 14px;
+  font-size: 0.85rem;
+}
+.future-item strong { color: #e0ddd2; }
+.future-item em { color: #8a8a84; font-style: normal; font-size: 0.8rem; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>Bible Ecosystem Unification Strategy</h1>
+<div class="subtitle">
+  Bible AI Search → Shepherd → Roundtable &bull; May 16 2026
+</div>
+
+<!-- Guiding Principles -->
+<h2>Guiding Principles</h2>
+<div class="section-card">
+  <ol class="principle-list">
+    <li><strong>No deep integration</strong> — each app stands on its own. The hub links to them, doesn't absorb them.</li>
+    <li><strong>Bible knowledge from one source</strong> — Bible AI Search D1 DB is the single source of truth for scripture data.</li>
+    <li><strong>Sermon knowledge from one source (future)</strong> — all sermon content eventually comes from a unified source. Plan for it, don't overbuild yet.</li>
+    <li><strong>Shepherd is ready now</strong> — links go live immediately from the hub.</li>
+    <li><strong>Roundtable comes later</strong> — Coming Soon placeholder with vision/roadmap page until ready.</li>
+  </ol>
+</div>
+
+<!-- Current State -->
+<h2>Current State</h2>
+<div class="section-card">
+  <table>
+    <tr><th>Project</th><th>Status</th><th>Role</th><th>What's Ready</th><th>What's Missing</th></tr>
+    <tr>
+      <td>Bible AI Search</td>
+      <td><span class="tag tag-yellow">Hub</span></td>
+      <td>Central portal + API</td>
+      <td>9 API endpoints, D1+Vectorize+AI, 7,959 verses, 139K morphology</td>
+      <td><span class="tag tag-red">Auth</span> Frontend is minimal, no Q&A/Explain UI</td>
+    </tr>
+    <tr>
+      <td>Shepherd</td>
+      <td><span class="tag tag-green">Gold MVP</span></td>
+      <td>Kids Ministry tool</td>
+      <td>13 topics, 98 verses, 7 age tiers, deployed, full lesson system</td>
+      <td>No API layer, fully static SPA</td>
+    </tr>
+    <tr>
+      <td>Roundtable</td>
+      <td><span class="tag tag-yellow">Scaffold</span></td>
+      <td>Sermon Study tool</td>
+      <td>4 sample guides, same stack as Shepherd, builds clean</td>
+      <td><span class="tag tag-red">Not deployed</span> Missing export, deeperDive, 2 guides, wrangler.toml uncommitted</td>
+    </tr>
+  </table>
+</div>
+
+<!-- Gap Analysis -->
+<h2>Gap Analysis</h2>
+<div class="section-card">
+  <div class="gap-item">
+    <div class="gap-dot red"></div>
+    <div class="gap-content">
+      <strong>No auth on Bible AI Search</strong>
+      <span>Every endpoint is public — upload, Workers AI, verse data. CORS is *. Blocks public launch.</span>
+    </div>
+  </div>
+  <div class="gap-item">
+    <div class="gap-dot red"></div>
+    <div class="gap-content">
+      <strong>AI cost exposure</strong>
+      <span>Without auth, anyone can hit /api/ask and burn Workers AI credits.</span>
+    </div>
+  </div>
+  <div class="gap-item">
+    <div class="gap-dot yellow"></div>
+    <div class="gap-content">
+      <strong>No hub frontend</strong>
+      <span>Bible AI Search has 3 basic views (search, parse, upload). No portal navigation, no landing page.</span>
+    </div>
+  </div>
+  <div class="gap-item">
+    <div class="gap-dot yellow"></div>
+    <div class="gap-content">
+      <strong>No Q&A or Explain UI</strong>
+      <span>Both /api/ask and /api/explain work but have no frontend interface.</span>
+    </div>
+  </div>
+  <div class="gap-item">
+    <div class="gap-dot yellow"></div>
+    <div class="gap-content">
+      <strong>Roundtable not deployed</strong>
+      <span>Can't link to something that doesn't exist at a URL. wrangler.toml not committed.</span>
+    </div>
+  </div>
+  <div class="gap-item">
+    <div class="gap-dot green"></div>
+    <div class="gap-content">
+      <strong>Sermon study section doesn't exist</strong>
+      <span>No content model yet. Roundtable will fill this when ready.</span>
+    </div>
+  </div>
+  <div class="gap-item">
+    <div class="gap-dot green"></div>
+    <div class="gap-content">
+      <strong>No unified sermon knowledge source</strong>
+      <span>Future concern — sermon transcripts, guides, series metadata all need a home.</span>
+    </div>
+  </div>
+</div>
+
+<!-- Phase 1 -->
+<h2>Phase 1: Harden &amp; Hub-ify Bible AI Search</h2>
+<div class="section-card">
+  <div class="phase-header">
+    <span class="phase-badge phase-1">PHASE 1</span>
+    <span style="color:#8a8a84;font-size:0.9rem;">Bible AI Search becomes the central portal with secure endpoints</span>
+  </div>
+  <ol class="task-list">
+    <li><span class="task-num">1.1</span> <strong>Auth layer on API endpoints</strong> — Protect AI-cost endpoints (/api/ask, /api/explain, /api/upload/*). Public read on verse search data.</li>
+    <li><span class="task-num">1.2</span> <strong>Redesign frontend as portal</strong> — Landing page with section navigation. Keep existing Search + Parse views intact.</li>
+    <li><span class="task-num">1.3</span> <strong>Add Q&amp;A interface</strong> — Frontend UI for POST /api/ask. Ask bar, cited answer display.</li>
+    <li><span class="task-num">1.4</span> <strong>Add verse deep-dive UI</strong> — Frontend UI for POST /api/explain. Verse card with context, morphology, analysis.</li>
+    <li><span class="task-num">1.5</span> <strong>Kids Ministry section → Shepherd</strong> — Hub section with description + direct link to shepherdparentcompanion.pages.dev</li>
+    <li><span class="task-num">1.6</span> <strong>Sermon Study section → Coming Soon</strong> — Hub section with vision description + roadmap page. Links to Roundtable when ready.</li>
+    <li><span class="task-num">1.7</span> <strong>Responsive portal navigation</strong> — Mobile-friendly nav between Bible Study, Kids Ministry, Sermon Study sections.</li>
+  </ol>
+</div>
+
+<!-- Phase 2 -->
+<h2>Phase 2: Complete &amp; Connect Roundtable</h2>
+<div class="section-card">
+  <div class="phase-header">
+    <span class="phase-badge phase-2">PHASE 2</span>
+    <span style="color:#8a8a84;font-size:0.9rem;">Roundtable is built, deployed, and linked from the hub</span>
+  </div>
+  <ol class="task-list">
+    <li><span class="task-num">2.1</span> <strong>Finish Roundtable</strong> — Markdown export, deeperDive rendering, remaining guides, commit wrangler.toml</li>
+    <li><span class="task-num">2.2</span> <strong>Deploy to CF Pages</strong> — Make it live at a URL</li>
+    <li><span class="task-num">2.3</span> <strong>Update hub Sermon Study section</strong> — Replace Coming Soon with live links to Roundtable</li>
+    <li><span class="task-num">2.4</span> <strong>Plan unified sermon knowledge source</strong> — Design how sermon guides, transcripts, and series data can come from one source</li>
+  </ol>
+</div>
+
+<!-- Future -->
+<h2>Future (Deferred)</h2>
+<div class="section-card">
+  <div class="future-grid">
+    <div class="future-item">
+      <strong>OT Hebrew ingestion</strong><br>
+      <em>After auth + hub portal are solid</em>
+    </div>
+    <div class="future-item">
+      <strong>BibleFlow → Roundtable pipeline</strong><br>
+      <em>After Roundtable is deployed and proven</em>
+    </div>
+    <div class="future-item">
+      <strong>Analytics</strong><br>
+      <em>After launch, when there's traffic</em>
+    </div>
+    <div class="future-item">
+      <strong>Shared database</strong><br>
+      <em>Only if deep integration needed</em>
+    </div>
+  </div>
+</div>
+
+<!-- Architecture Diagram -->
+<h2>Architecture</h2>
+<div class="arch-svg-wrap">
+<svg viewBox="0 0 880 620" width="100%" style="max-width:880px;display:block;margin:0 auto;" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1a1e1f" stroke-width="0.5"/>
+    </pattern>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#3b4a4e"/>
+    </marker>
+    <marker id="arrow-cyan" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#22d3ee"/>
+    </marker>
+  </defs>
+  <rect width="880" height="620" fill="url(#grid)"/>
+
+  <!-- User Browser -->
+  <rect x="340" y="20" width="200" height="44" rx="8" fill="#0f172a"/>
+  <rect x="340" y="20" width="200" height="44" rx="8" fill="rgba(8,51,68,0.4)" stroke="#22d3ee" stroke-width="1.5"/>
+  <text x="440" y="47" text-anchor="middle" fill="#e8e6e1" font-family="Inter,sans-serif" font-size="13" font-weight="500">User's Browser</text>
+
+  <!-- Arrow: User → Hub -->
+  <line x1="440" y1="64" x2="440" y2="100" stroke="#22d3ee" stroke-width="1.5" marker-end="url(#arrow-cyan)"/>
+
+  <!-- HUB Boundary -->
+  <rect x="80" y="100" width="720" height="380" rx="12" fill="none" stroke="#2a3a3e" stroke-width="1.5" stroke-dasharray="8,4"/>
+  <text x="100" y="120" fill="#8a8a84" font-family="JetBrains Mono,monospace" font-size="9">Cloudflare Workers — bible-ai-api.kodakwest.workers.dev</text>
+
+  <!-- Auth Layer -->
+  <rect x="110" y="130" width="180" height="50" rx="6" fill="#0f172a"/>
+  <rect x="110" y="130" width="180" height="50" rx="6" fill="rgba(136,19,55,0.4)" stroke="#fb7185" stroke-width="1.5"/>
+  <text x="200" y="152" text-anchor="middle" fill="#e8e6e1" font-family="Inter,sans-serif" font-size="12" font-weight="500">Auth Layer</text>
+  <text x="200" y="168" text-anchor="middle" fill="#fb7185" font-family="Inter,sans-serif" font-size="9">Rate limits + API auth</text>
+
+  <!-- Frontend Portal -->
+  <rect x="320" y="130" width="460" height="170" rx="6" fill="#0f172a"/>
+  <rect x="320" y="130" width="460" height="170" rx="6" fill="rgba(8,51,68,0.4)" stroke="#22d3ee" stroke-width="1.5"/>
+  <text x="550" y="152" text-anchor="middle" fill="#22d3ee" font-family="Inter,sans-serif" font-size="12" font-weight="500">Frontend Portal (Vite React SPA)</text>
+
+  <rect x="340" y="162" width="130" height="54" rx="4" fill="#0f172a"/>
+  <rect x="340" y="162" width="130" height="54" rx="4" fill="rgba(8,51,68,0.3)" stroke="#22d3ee" stroke-width="1" stroke-dasharray="2,2"/>
+  <text x="405" y="184" text-anchor="middle" fill="#e8e6e1" font-family="Inter,sans-serif" font-size="10" font-weight="500">Bible Study</text>
+  <text x="405" y="198" text-anchor="middle" fill="#8a8a84" font-family="Inter,sans-serif" font-size="8">Search · Parse · Q&A · Explain</text>
+
+  <rect x="485" y="162" width="130" height="54" rx="4" fill="#0f172a"/>
+  <rect x="485" y="162" width="130" height="54" rx="4" fill="rgba(8,51,68,0.3)" stroke="#22d3ee" stroke-width="1" stroke-dasharray="2,2"/>
+  <text x="550" y="184" text-anchor="middle" fill="#e8e6e1" font-family="Inter,sans-serif" font-size="10" font-weight="500">Kids Ministry</text>
+  <text x="550" y="198" text-anchor="middle" fill="#8a8a84" font-family="Inter,sans-serif" font-size="8">Link → Shepherd</text>
+
+  <rect x="630" y="162" width="130" height="54" rx="4" fill="#0f172a"/>
+  <rect x="630" y="162" width="130" height="54" rx="4" fill="rgba(8,51,68,0.3)" stroke="#22d3ee" stroke-width="1" stroke-dasharray="2,2"/>
+  <text x="695" y="184" text-anchor="middle" fill="#e8e6e1" font-family="Inter,sans-serif" font-size="10" font-weight="500">Sermon Study</text>
+  <text x="695" y="198" text-anchor="middle" fill="#eab308" font-family="Inter,sans-serif" font-size="8">Coming Soon ⏳</text>
+
+  <!-- Vision Roadmap page -->
+  <text x="550" y="280" text-anchor="middle" fill="#8a8a84" font-family="Inter,sans-serif" font-size="9">+ Vision / Roadmap page with full ecosystem plan</text>
+
+  <!-- Separator line -->
+  <line x1="110" y1="315" x2="780" y2="315" stroke="#1f2a2e" stroke-width="1"/>
+
+  <!-- API Routes -->
+  <text x="110" y="338" fill="#8a8a84" font-family="JetBrains Mono,monospace" font-size="10">API Routes</text>
+  <text x="110" y="358" fill="#22c55e" font-family="JetBrains Mono,monospace" font-size="9">GET  /api/verses/*      Public read</text>
+  <text x="110" y="374" fill="#eab308" font-family="JetBrains Mono,monospace" font-size="9">POST /api/ask           Auth required</text>
+  <text x="110" y="390" fill="#eab308" font-family="JetBrains Mono,monospace" font-size="9">POST /api/explain       Auth required</text>
+  <text x="110" y="406" fill="#ef4444" font-family="JetBrains Mono,monospace" font-size="9">POST /api/upload/*      Admin only</text>
+  <text x="110" y="422" fill="#22c55e" font-family="JetBrains Mono,monospace" font-size="9">POST /api/parse/greek   Public (TBD)</text>
+  <text x="110" y="438" fill="#22c55e" font-family="JetBrains Mono,monospace" font-size="9">GET  /api/status        Public</text>
+
+  <!-- Data layer label -->
+  <text x="500" y="338" fill="#8a8a84" font-family="JetBrains Mono,monospace" font-size="10">Data Layer</text>
+
+  <!-- D1 -->
+  <rect x="400" y="350" width="120" height="50" rx="6" fill="#0f172a"/>
+  <rect x="400" y="350" width="120" height="50" rx="6" fill="rgba(76,29,149,0.4)" stroke="#a78bfa" stroke-width="1.5"/>
+  <text x="460" y="372" text-anchor="middle" fill="#e8e6e1" font-family="Inter,sans-serif" font-size="11" font-weight="500">D1 Database</text>
+  <text x="460" y="388" text-anchor="middle" fill="#a78bfa" font-family="Inter,sans-serif" font-size="8">7,959 verses · 139K morphology</text>
+
+  <!-- Vectorize -->
+  <rect x="540" y="350" width="120" height="50" rx="6" fill="#0f172a"/>
+  <rect x="540" y="350" width="120" height="50" rx="6" fill="rgba(76,29,149,0.4)" stroke="#a78bfa" stroke-width="1.5"/>
+  <text x="600" y="372" text-anchor="middle" fill="#e8e6e1" font-family="Inter,sans-serif" font-size="11" font-weight="500">Vectorize</text>
+  <text x="600" y="388" text-anchor="middle" fill="#a78bfa" font-family="Inter,sans-serif" font-size="8">15.9K vectors · 768-dim</text>
+
+  <!-- Workers AI -->
+  <rect x="680" y="350" width="100" height="50" rx="6" fill="#0f172a"/>
+  <rect x="680" y="350" width="100" height="50" rx="6" fill="rgba(120,53,15,0.3)" stroke="#fbbf24" stroke-width="1.5"/>
+  <text x="730" y="372" text-anchor="middle" fill="#e8e6e1" font-family="Inter,sans-serif" font-size="11" font-weight="500">Workers AI</text>
+  <text x="730" y="388" text-anchor="middle" fill="#fbbf24" font-family="Inter,sans-serif" font-size="8">Llama 4 Scout</text>
+
+  <!-- Arrows: API → Data -->
+  <line x1="280" y1="380" x2="390" y2="380" stroke="#3b4a4e" stroke-width="1" marker-end="url(#arrow)"/>
+  <line x1="280" y1="400" x2="530" y2="400" stroke="#3b4a4e" stroke-width="1" marker-end="url(#arrow)"/>
+  <line x1="280" y1="420" x2="670" y2="420" stroke="#3b4a4e" stroke-width="1" marker-end="url(#arrow)"/>
+
+  <!-- Shepherd -->
+  <rect x="160" y="510" width="240" height="60" rx="8" fill="#0f172a"/>
+  <rect x="160" y="510" width="240" height="60" rx="8" fill="rgba(8,51,68,0.4)" stroke="#22d3ee" stroke-width="1.5"/>
+  <text x="280" y="534" text-anchor="middle" fill="#e8e6e1" font-family="Inter,sans-serif" font-size="12" font-weight="600">Shepherd</text>
+  <text x="280" y="550" text-anchor="middle" fill="#22d3ee" font-family="Inter,sans-serif" font-size="9">Kids Ministry · Live → shepherdparentcompanion.pages.dev</text>
+  <text x="280" y="562" text-anchor="middle" fill="#8a8a84" font-family="Inter,sans-serif" font-size="8">Static SPA · React 19 · Tailwind 4 · CF Pages</text>
+
+  <!-- Coming Soon -->
+  <rect x="480" y="510" width="240" height="60" rx="8" fill="#0f172a"/>
+  <rect x="480" y="510" width="240" height="60" rx="8" fill="rgba(30,41,59,0.5)" stroke="#eab308" stroke-width="1.5" stroke-dasharray="4,4"/>
+  <text x="600" y="534" text-anchor="middle" fill="#eab308" font-family="Inter,sans-serif" font-size="12" font-weight="600">Roundtable ⏳</text>
+  <text x="600" y="550" text-anchor="middle" fill="#8a8a84" font-family="Inter,sans-serif" font-size="9">Sermon Study · Coming Soon</text>
+  <text x="600" y="562" text-anchor="middle" fill="#8a8a84" font-family="Inter,sans-serif" font-size="8">Separate CF Pages deploy</text>
+
+  <!-- Arrows: Hub → Apps -->
+  <line x1="280" y1="490" x2="280" y2="505" stroke="#22d3ee" stroke-width="1.5" marker-end="url(#arrow-cyan)" stroke-dasharray="4,2"/>
+  <text x="240" y="502" text-anchor="end" fill="#22d3ee" font-family="Inter,sans-serif" font-size="8">Link</text>
+  <line x1="600" y1="490" x2="600" y2="505" stroke="#eab308" stroke-width="1.5" marker-end="url(#arrow)" stroke-dasharray="4,2"/>
+  <text x="610" y="502" fill="#eab308" font-family="Inter,sans-serif" font-size="8">Coming Soon</text>
+
+  <!-- Legend -->
+  <rect x="660" y="500" width="140" height="85" rx="6" fill="#0f1113" stroke="#1f2a2e" stroke-width="1"/>
+  <text x="670" y="518" fill="#8a8a84" font-family="Inter,sans-serif" font-size="8" font-weight="600">Legend</text>
+  <rect x="670" y="526" width="8" height="8" rx="2" fill="rgba(34,211,238,0.6)"/>
+  <text x="684" y="534" fill="#8a8a84" font-family="Inter,sans-serif" font-size="8">Frontend</text>
+  <rect x="670" y="540" width="8" height="8" rx="2" fill="rgba(76,29,149,0.6)"/>
+  <text x="684" y="548" fill="#8a8a84" font-family="Inter,sans-serif" font-size="8">Database</text>
+  <rect x="670" y="554" width="8" height="8" rx="2" fill="rgba(136,19,55,0.6)"/>
+  <text x="684" y="562" fill="#8a8a84" font-family="Inter,sans-serif" font-size="8">Security/Auth</text>
+  <rect x="670" y="568" width="8" height="8" rx="2" fill="rgba(120,53,15,0.6)"/>
+  <text x="684" y="576" fill="#8a8a84" font-family="Inter,sans-serif" font-size="8">Cloud Service</text>
+</svg>
+</div>
+
+<!-- Decisions Needed -->
+<h2>Decisions Needed</h2>
+<div class="section-card">
+  <div class="decision-grid">
+    <div class="decision-card">
+      <h4>1. Auth Model</h4>
+      <p>Public read on verse data + auth on AI endpoints? Or full auth for everything?</p>
+    </div>
+    <div class="decision-card">
+      <h4>2. Roundtable Timeline</h4>
+      <p>Is "Coming Soon" weeks or months? Affects how the Sermon Study section is framed on the hub.</p>
+    </div>
+    <div class="decision-card">
+      <h4>3. Sermon Knowledge Source</h4>
+      <p>All sermon content from one source eventually — but what counts? Transcripts? Guides? Series metadata? Audio/video?</p>
+    </div>
+  </div>
+</div>
+
+<div style="text-align:center;margin-top:48px;padding:20px 0;border-top:1px solid #1f2a2e;color:#5a5a54;font-size:0.8rem;">
+  Bible Ecosystem Unification Strategy · TARS · May 16 2026
+</div>
+
+</div>
+</body>
+</html>

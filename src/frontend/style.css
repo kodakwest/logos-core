@@ -1,9 +1,21 @@
 :root {
   color-scheme: dark;
+  --bg-base: #0b0d0e;
+  --bg-panel: #131618;
+  --bg-elevated: #1a1d21;
+  --ink-primary: #e8e6e1;
+  --ink-secondary: #a0a0a5;
+  --ink-tertiary: #6e6e73;
+  --border-subtle: #2a2d31;
+  --brand-gold: #d4af37;
+  --brand-gold-dim: rgba(212, 175, 55, 0.2);
+  --brand-blue: #4da8da;
+  --font-serif: "Playfair Display", serif;
+  --font-sans: "Inter", sans-serif;
   font-family:
-    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background: #0d1117;
-  color: #e6edf3;
+    var(--font-sans), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: var(--bg-base);
+  color: var(--ink-primary);
 }
 
 * {
@@ -15,9 +27,13 @@ body {
   min-width: 320px;
   min-height: 100vh;
   background:
-    linear-gradient(135deg, rgba(20, 184, 166, 0.12), transparent 38%),
-    linear-gradient(315deg, rgba(245, 158, 11, 0.08), transparent 36%),
-    #0d1117;
+    linear-gradient(135deg, rgba(212, 175, 55, 0.12), transparent 38%),
+    linear-gradient(315deg, rgba(77, 168, 218, 0.08), transparent 36%),
+    var(--bg-base);
+}
+
+.app-core {
+  min-height: 100vh;
 }
 
 button,
@@ -38,17 +54,86 @@ textarea {
   flex-direction: column;
   gap: 24px;
   padding: 28px 20px;
-  background: rgba(8, 12, 18, 0.86);
-  border-right: 1px solid rgba(148, 163, 184, 0.18);
+  background: rgba(19, 22, 24, 0.9);
+  border-right: 1px solid var(--border-subtle);
 }
 
 .brand {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 12px;
-  color: #f8fafc;
+  color: var(--brand-gold);
   text-decoration: none;
-  font-weight: 750;
+}
+
+.open-path-logo {
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+}
+
+.brand-copy {
+  display: grid;
+  gap: 2px;
+}
+
+.brand-name {
+  color: var(--brand-gold);
+  font-family: var(--font-serif);
+  font-size: 1.45rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.brand-tagline {
+  color: var(--ink-secondary);
+  font-size: 0.78rem;
+  font-weight: 500;
+  line-height: 1.25;
+}
+
+.logo-cycle {
+  position: relative;
+  min-height: 58px;
+  padding: 12px;
+  border: 1px solid var(--brand-gold-dim);
+  border-radius: 8px;
+  background: rgba(212, 175, 55, 0.06);
+  overflow: hidden;
+}
+
+.logo-fade {
+  position: absolute;
+  inset: 12px;
+  display: grid;
+  align-content: center;
+  gap: 2px;
+  opacity: 0;
+  animation: fadeVariant 7.5s ease-in-out infinite;
+}
+
+.logo-fade:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.logo-fade:nth-child(2) {
+  animation-delay: 2.5s;
+}
+
+.logo-fade:nth-child(3) {
+  animation-delay: 5s;
+}
+
+.logo-fade strong {
+  color: var(--brand-gold);
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  line-height: 1.1;
+}
+
+.logo-fade span {
+  color: var(--ink-secondary);
+  font-size: 0.76rem;
 }
 
 .nav-list {
@@ -63,22 +148,22 @@ textarea {
   min-height: 44px;
   padding: 10px 12px;
   border-radius: 8px;
-  color: #b7c2d0;
+  color: var(--ink-secondary);
   text-decoration: none;
 }
 
 .nav-list a.active,
 .nav-list a:hover {
-  background: rgba(45, 212, 191, 0.12);
-  color: #f8fafc;
+  background: var(--brand-gold-dim);
+  color: var(--ink-primary);
 }
 
 .status-pill {
   margin-top: auto;
   padding: 12px;
-  border: 1px solid rgba(148, 163, 184, 0.18);
+  border: 1px solid var(--border-subtle);
   border-radius: 8px;
-  color: #9ca3af;
+  color: var(--ink-secondary);
   font-size: 0.88rem;
   line-height: 1.4;
 }
@@ -95,7 +180,7 @@ textarea {
 
 .view-header p {
   margin: 0 0 6px;
-  color: #5eead4;
+  color: var(--brand-gold);
   font-weight: 700;
   text-transform: uppercase;
   font-size: 0.76rem;
@@ -105,7 +190,8 @@ textarea {
 .view-header h1 {
   margin: 0;
   max-width: 760px;
-  color: #f8fafc;
+  color: var(--ink-primary);
+  font-family: var(--font-serif);
   font-size: 2.1rem;
   line-height: 1.12;
   letter-spacing: 0;
@@ -118,9 +204,9 @@ textarea {
   align-items: end;
   gap: 14px;
   padding: 18px;
-  border: 1px solid rgba(148, 163, 184, 0.18);
+  border: 1px solid var(--border-subtle);
   border-radius: 8px;
-  background: rgba(15, 23, 42, 0.72);
+  background: rgba(19, 22, 24, 0.82);
 }
 
 .upload-grid {
@@ -139,7 +225,7 @@ textarea {
 
 .field span,
 .form-actions span {
-  color: #9ca3af;
+  color: var(--ink-secondary);
   font-size: 0.86rem;
 }
 
@@ -148,10 +234,10 @@ textarea {
 .field textarea {
   width: 100%;
   min-height: 44px;
-  border: 1px solid rgba(148, 163, 184, 0.22);
+  border: 1px solid var(--border-subtle);
   border-radius: 8px;
-  background: rgba(2, 6, 23, 0.7);
-  color: #f8fafc;
+  background: rgba(11, 13, 14, 0.72);
+  color: var(--ink-primary);
   padding: 10px 12px;
   outline: none;
 }
@@ -165,8 +251,8 @@ textarea {
 .field input:focus,
 .field select:focus,
 .field textarea:focus {
-  border-color: #2dd4bf;
-  box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.14);
+  border-color: var(--brand-gold);
+  box-shadow: 0 0 0 3px var(--brand-gold-dim);
 }
 
 .toggle-row {
@@ -174,7 +260,7 @@ textarea {
   align-items: center;
   gap: 8px;
   min-height: 44px;
-  color: #d1d5db;
+  color: var(--ink-primary);
 }
 
 .primary-button,
@@ -191,8 +277,8 @@ textarea {
 
 .primary-button {
   padding: 0 16px;
-  background: #14b8a6;
-  color: #04111d;
+  background: var(--brand-gold);
+  color: #0b0d0e;
   font-weight: 760;
 }
 
@@ -203,8 +289,8 @@ textarea {
 
 .icon-button {
   min-width: 44px;
-  background: rgba(148, 163, 184, 0.14);
-  color: #e5e7eb;
+  background: rgba(232, 230, 225, 0.12);
+  color: var(--ink-primary);
 }
 
 .greek-toggle span {
@@ -212,7 +298,7 @@ textarea {
 }
 
 .results-meta {
-  color: #9ca3af;
+  color: var(--ink-secondary);
 }
 
 .result-list {
@@ -223,9 +309,9 @@ textarea {
 .verse-card,
 .response-panel,
 .table-wrap {
-  border: 1px solid rgba(148, 163, 184, 0.18);
+  border: 1px solid var(--border-subtle);
   border-radius: 8px;
-  background: rgba(15, 23, 42, 0.78);
+  background: rgba(19, 22, 24, 0.84);
 }
 
 .verse-card {
@@ -245,14 +331,14 @@ textarea {
 .verse-heading h2,
 .response-panel h2 {
   margin: 0;
-  color: #f8fafc;
+  color: var(--ink-primary);
   font-size: 1.02rem;
 }
 
 .verse-heading span {
   display: block;
   margin-top: 3px;
-  color: #5eead4;
+  color: var(--brand-gold);
   font-size: 0.8rem;
 }
 
@@ -264,11 +350,11 @@ textarea {
 }
 
 .translation {
-  color: #e5e7eb;
+  color: var(--ink-primary);
 }
 
 .secondary-text {
-  color: #aeb8c5;
+  color: var(--ink-secondary);
 }
 
 .greek-text,
@@ -276,6 +362,24 @@ textarea {
   color: #fde68a;
   font-family: "SBL Greek", "Noto Serif", Georgia, serif;
   font-size: 1.08rem;
+}
+
+@keyframes fadeVariant {
+  0% {
+    opacity: 0;
+  }
+  4% {
+    opacity: 1;
+  }
+  31% {
+    opacity: 1;
+  }
+  35% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
 }
 
 .response-panel {
@@ -293,11 +397,11 @@ textarea {
   display: grid;
   gap: 5px;
   padding-top: 12px;
-  border-top: 1px solid rgba(148, 163, 184, 0.14);
+  border-top: 1px solid var(--border-subtle);
 }
 
 .mini-verse span {
-  color: #b7c2d0;
+  color: var(--ink-secondary);
   line-height: 1.5;
 }
 
@@ -324,18 +428,18 @@ table {
 th,
 td {
   padding: 13px 14px;
-  border-bottom: 1px solid rgba(148, 163, 184, 0.14);
+  border-bottom: 1px solid var(--border-subtle);
   text-align: left;
   vertical-align: top;
 }
 
 th {
-  color: #9ca3af;
+  color: var(--ink-secondary);
   font-size: 0.82rem;
 }
 
 td {
-  color: #e5e7eb;
+  color: var(--ink-primary);
 }
 
 .parser-card-list {
@@ -346,9 +450,9 @@ td {
   display: grid;
   gap: 14px;
   padding: 16px;
-  border: 1px solid rgba(148, 163, 184, 0.18);
+  border: 1px solid var(--border-subtle);
   border-radius: 8px;
-  background: rgba(15, 23, 42, 0.78);
+  background: rgba(19, 22, 24, 0.84);
 }
 
 .parser-card h2 {
@@ -371,7 +475,7 @@ td {
 }
 
 .parser-card dt {
-  color: #9ca3af;
+  color: var(--ink-secondary);
   font-size: 0.76rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -379,7 +483,7 @@ td {
 
 .parser-card dd {
   margin: 0;
-  color: #e5e7eb;
+  color: var(--ink-primary);
   line-height: 1.45;
 }
 
@@ -397,6 +501,7 @@ td {
   }
 
   .brand,
+  .logo-cycle,
   .status-pill {
     display: none;
   }

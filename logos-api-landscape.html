@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LogOS — API Landscape: Current State → Future Architecture</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #020617;
+  color: #e2e8f0;
+  font-family: 'Inter', sans-serif;
+  line-height: 1.5;
+  padding: 0;
+}
+.wrapper { max-width: 1400px; margin: 0 auto; padding: 32px 24px; }
+
+/* Header */
+.hero {
+  text-align: center;
+  padding: 32px 0 24px;
+  border-bottom: 1px solid #1e293b;
+  margin-bottom: 32px;
+}
+.hero h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.8rem;
+  font-weight: 700;
+  color: #d4af37;
+  letter-spacing: 3px;
+}
+.hero .sub {
+  color: #64748b;
+  font-size: 0.9rem;
+  margin-top: 6px;
+  letter-spacing: 1px;
+}
+.hero .sub span { color: #94a3b8; }
+
+/* Tagline */
+.tagline-row {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin: 16px 0 24px;
+  flex-wrap: wrap;
+}
+.tag-badge {
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+.tag-badge.current { background: rgba(34,211,238,0.1); color: #22d3ee; border: 1px solid rgba(34,211,238,0.3); }
+.tag-badge.future { background: rgba(212,175,55,0.1); color: #d4af37; border: 1px solid rgba(212,175,55,0.3); }
+.tag-badge.transition { background: rgba(251,191,36,0.1); color: #fbbf24; border: 1px solid rgba(251,191,36,0.3); }
+
+/* Main diagram container */
+.landscape {
+  position: relative;
+  width: 100%;
+  min-height: 1000px;
+}
+
+/* SVG Diagram */
+svg { display: block; margin: 0 auto; }
+text { font-family: 'Inter', sans-serif; }
+
+/* Summary Cards below diagram */
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin: 32px 0;
+}
+.card {
+  background: #0f172a;
+  border: 1px solid #1e293b;
+  border-radius: 10px;
+  padding: 20px;
+}
+.card h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem;
+  color: #d4af37;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.card .dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.dot.cyan { background: #22d3ee; }
+.dot.gold { background: #d4af37; }
+.dot.amber { background: #fbbf24; }
+.card ul { list-style: none; }
+.card ul li {
+  font-size: 0.82rem;
+  color: #94a3b8;
+  padding: 4px 0;
+  border-bottom: 1px solid #1e293b;
+}
+.card ul li:last-child { border-bottom: none; }
+.card ul li strong { color: #e2e8f0; }
+.card ul li code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  background: #1e293b;
+  padding: 1px 6px;
+  border-radius: 3px;
+  color: #22d3ee;
+}
+
+/* Endpoint table */
+.endpoint-section { margin: 40px 0; }
+.endpoint-section h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.4rem;
+  color: #d4af37;
+  margin-bottom: 16px;
+}
+.endpoint-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+}
+.endpoint-table th {
+  text-align: left;
+  padding: 10px 14px;
+  background: #0f172a;
+  color: #64748b;
+  font-weight: 500;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-bottom: 1px solid #1e293b;
+}
+.endpoint-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid #1e293b;
+  vertical-align: top;
+}
+.endpoint-table td.path {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: #22d3ee;
+  white-space: nowrap;
+}
+.endpoint-table td.verb {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  font-weight: 600;
+}
+.verb-get { color: #34d399; }
+.verb-post { color: #fbbf24; }
+.verb-delete { color: #fb7185; }
+.endpoint-table td .status-badge {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 10px;
+  font-size: 0.65rem;
+  font-weight: 500;
+}
+.status-current { background: rgba(34,211,238,0.15); color: #22d3ee; }
+.status-new { background: rgba(212,175,55,0.15); color: #d4af37; }
+.status-evolving { background: rgba(251,191,36,0.15); color: #fbbf24; }
+.status-deprecated { background: rgba(239,68,68,0.15); color: #ef4444; }
+.endpoint-table td .note {
+  font-size: 0.72rem;
+  color: #64748b;
+  font-style: italic;
+}
+
+/* Legend */
+.legend {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 20px 0 32px;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.75rem;
+  color: #94a3b8;
+}
+.legend-swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  border: 1px solid;
+}
+
+.footer {
+  text-align: center;
+  padding: 24px 0;
+  border-top: 1px solid #1e293b;
+  color: #334155;
+  font-size: 0.7rem;
+  letter-spacing: 1px;
+  margin-top: 40px;
+}
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+<div class="hero">
+  <h1>LogOS · API Landscape</h1>
+  <div class="sub">Current State → <span>Future Architecture</span></div>
+  <div class="tagline-row">
+    <span class="tag-badge current">● Current: Bible AI Search</span>
+    <span class="tag-badge transition">→ Transition: API Enhancements</span>
+    <span class="tag-badge future">● Future: LogOS Ecosystem</span>
+  </div>
+</div>
+
+<!-- Main SVG Diagram: Current vs Future Architecture -->
+<svg viewBox="0 0 1360 820" width="100%" style="max-width:1360px" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1e293b" stroke-width="0.5"/>
+    </pattern>
+    <marker id="arw-current" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#22d3ee"/>
+    </marker>
+    <marker id="arw-future" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#d4af37"/>
+    </marker>
+    <marker id="arw-data" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#f2f0e8"/>
+    </marker>
+    <marker id="arw-issue" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#fb7185"/>
+    </marker>
+    <filter id="glow-gold">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <rect width="1360" height="820" fill="url(#grid)"/>
+
+  <!-- ============================================ -->
+  <!-- SECTION LABELS                               -->
+  <!-- ============================================ -->
+  <rect x="20" y="10" width="650" height="800" rx="12" fill="none" stroke="#22d3ee" stroke-width="1" stroke-dasharray="6,3" opacity="0.3"/>
+  <text x="36" y="34" fill="#22d3ee" font-family="Playfair Display,serif" font-size="15" font-weight="600" opacity="0.7">Current — Bible AI Search</text>
+
+  <rect x="690" y="10" width="650" height="800" rx="12" fill="none" stroke="#d4af37" stroke-width="1" stroke-dasharray="6,3" opacity="0.3"/>
+  <text x="706" y="34" fill="#d4af37" font-family="Playfair Display,serif" font-size="15" font-weight="600" opacity="0.7">Future — LogOS Ecosystem</text>
+
+  <!-- Transition arrow between panels -->
+  <line x1="670" y1="410" x2="690" y2="410" stroke="#fbbf24" stroke-width="2" stroke-dasharray="4,4" marker-end="url(#arw-future)"/>
+
+  <!-- ============================================ -->
+  <!-- CURRENT STATE — LAYER 1: USERS & CLIENTS     -->
+  <!-- ============================================ -->
+  <rect x="80" y="56" width="180" height="50" rx="6" fill="#0f172a"/>
+  <rect x="80" y="56" width="180" height="50" rx="6" fill="rgba(8,51,68,0.4)" stroke="#22d3ee" stroke-width="1.5"/>
+  <text x="170" y="78" text-anchor="middle" fill="#e2e8f0" font-size="11" font-weight="500">Browser / Obsidian User</text>
+  <text x="170" y="94" text-anchor="middle" fill="#64748b" font-size="8">Vite React SPA · code block refs</text>
+
+  <rect x="290" y="56" width="160" height="50" rx="6" fill="#0f172a"/>
+  <rect x="290" y="56" width="160" height="50" rx="6" fill="rgba(30,41,59,0.5)" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="2,2"/>
+  <text x="370" y="78" text-anchor="middle" fill="#e2e8f0" font-size="11" font-weight="500">External APIs (Reference)</text>
+  <text x="370" y="94" text-anchor="middle" fill="#64748b" font-size="8">bible-api.com · bolls.life · getbible.net</text>
+
+  <line x1="170" y1="106" x2="170" y2="136" stroke="#22d3ee" stroke-width="1.5" marker-end="url(#arw-current)"/>
+
+  <!-- ============================================ -->
+  <!-- CURRENT STATE — LAYER 2: API ENDPOINTS       -->
+  <!-- ============================================ -->
+  <rect x="40" y="136" width="600" height="44" rx="4" fill="#0f172a"/>
+  <rect x="40" y="136" width="600" height="44" rx="4" fill="rgba(6,78,59,0.4)" stroke="#34d399" stroke-width="1"/>
+  <text x="340" y="155" text-anchor="middle" fill="#34d399" font-size="10" font-weight="500">Cloudflare Worker · bible-ai-api.kodakwest.workers.dev</text>
+  <text x="340" y="170" text-anchor="middle" fill="#64748b" font-size="8">⚠ No Auth · Blanket CORS · Unbounded Inputs · Error Leakage</text>
+
+  <!-- Public Read Endpoints -->
+  <rect x="50" y="190" width="190" height="104" rx="4" fill="#0f172a"/>
+  <rect x="50" y="190" width="190" height="104" rx="4" fill="rgba(8,51,68,0.25)" stroke="#22d3ee" stroke-width="1" stroke-dasharray="2,2"/>
+  <text x="145" y="208" text-anchor="middle" fill="#22d3ee" font-size="9" font-weight="500">Public Read Endpoints</text>
+  <text x="60" y="226" fill="#64748b" font-size="8">GET /api/status</text>
+  <text x="60" y="242" fill="#64748b" font-size="8">GET /api/verses/search</text>
+  <text x="60" y="258" fill="#64748b" font-size="8">POST /api/verses/semantic</text>
+  <text x="60" y="274" fill="#64748b" font-size="8">POST /api/verse/morphology</text>
+
+  <!-- AI-Cost Endpoints -->
+  <rect x="250" y="190" width="190" height="104" rx="4" fill="#0f172a"/>
+  <rect x="250" y="190" width="190" height="104" rx="4" fill="rgba(251,146,60,0.2)" stroke="#fb923c" stroke-width="1" stroke-dasharray="2,2"/>
+  <text x="345" y="208" text-anchor="middle" fill="#fb923c" font-size="9" font-weight="500">AI-Cost Endpoints ⚠ No Auth</text>
+  <text x="260" y="226" fill="#64748b" font-size="8">POST /api/ask</text>
+  <text x="260" y="242" fill="#64748b" font-size="8">POST /api/explain</text>
+  <text x="260" y="258" fill="#64748b" font-size="8">POST /api/parse/greek</text>
+  <text x="260" y="274" fill="#64748b" font-size="8">POST /api/verses/semantic</text>
+
+  <!-- Admin Endpoints -->
+  <rect x="450" y="190" width="180" height="104" rx="4" fill="#0f172a"/>
+  <rect x="450" y="190" width="180" height="104" rx="4" fill="rgba(136,19,55,0.25)" stroke="#fb7185" stroke-width="1" stroke-dasharray="2,2"/>
+  <text x="540" y="208" text-anchor="middle" fill="#fb7185" font-size="9" font-weight="500">Admin Endpoints ⚠ Public</text>
+  <text x="460" y="226" fill="#64748b" font-size="8">POST /api/upload/chapter</text>
+  <text x="460" y="242" fill="#64748b" font-size="8">POST /api/upload/morphology</text>
+
+  <!-- CORS Issue -->
+  <line x1="540" y1="200" x2="630" y2="180" stroke="#fb7185" stroke-width="1.5" stroke-dasharray="3,3" marker-end="url(#arw-issue)"/>
+  <text x="635" y="178" fill="#fb7185" font-size="7">CORS:*</text>
+
+  <!-- ============================================ -->
+  <!-- CURRENT STATE — LAYER 3: DATA STORE          -->
+  <!-- ============================================ -->
+  <line x1="340" y1="294" x2="340" y2="330" stroke="#22d3ee" stroke-width="1.5" marker-end="url(#arw-current)"/>
+
+  <rect x="40" y="330" width="600" height="120" rx="8" fill="#0f172a"/>
+  <rect x="40" y="330" width="600" height="120" rx="8" fill="rgba(76,29,149,0.3)" stroke="#a78bfa" stroke-width="1.5"/>
+  <text x="340" y="352" text-anchor="middle" fill="#a78bfa" font-size="11" font-weight="500">Data Layer — Cloudflare</text>
+
+  <!-- D1 -->
+  <rect x="58" y="362" width="170" height="76" rx="4" fill="#0f172a"/>
+  <rect x="58" y="362" width="170" height="76" rx="4" fill="rgba(76,29,149,0.3)" stroke="#a78bfa" stroke-width="1"/>
+  <text x="143" y="380" text-anchor="middle" fill="#e2e8f0" font-size="9" font-weight="500">D1 · bible-ai-db</text>
+  <text x="68" y="396" fill="#94a3b8" font-size="7.5">7,959 verses (KJV+BSB+Greek)</text>
+  <text x="68" y="410" fill="#94a3b8" font-size="7.5">139,476 morphology records</text>
+  <text x="68" y="424" fill="#94a3b8" font-size="7.5">Greek cache table</text>
+
+  <!-- Vectorize -->
+  <rect x="245" y="362" width="170" height="76" rx="4" fill="#0f172a"/>
+  <rect x="245" y="362" width="170" height="76" rx="4" fill="rgba(76,29,149,0.3)" stroke="#a78bfa" stroke-width="1"/>
+  <text x="330" y="380" text-anchor="middle" fill="#e2e8f0" font-size="9" font-weight="500">Vectorize Index</text>
+  <text x="255" y="396" fill="#94a3b8" font-size="7.5">bible-verse-embeddings</text>
+  <text x="255" y="410" fill="#94a3b8" font-size="7.5">768-dim · bge-base-en-v1.5</text>
+  <text x="255" y="424" fill="#94a3b8" font-size="7.5">~15,920 vectors</text>
+
+  <!-- Workers AI -->
+  <rect x="430" y="362" width="195" height="76" rx="4" fill="#0f172a"/>
+  <rect x="430" y="362" width="195" height="76" rx="4" fill="rgba(251,146,60,0.2)" stroke="#fb923c" stroke-width="1"/>
+  <text x="527" y="380" text-anchor="middle" fill="#e2e8f0" font-size="9" font-weight="500">Workers AI</text>
+  <text x="440" y="396" fill="#94a3b8" font-size="7.5">@cf/meta/llama-4-scout-17b (synthesis)</text>
+  <text x="440" y="410" fill="#94a3b8" font-size="7.5">@cf/baai/bge-base-en-v1.5 (embeddings)</text>
+  <text x="440" y="424" fill="#94a3b8" font-size="7.5">⚠ No retry · No timeout budget</text>
+
+  <!-- ============================================ -->
+  <!-- CURRENT ISSUE FLAGS                          -->
+  <!-- ============================================ -->
+  <rect x="60" y="462" width="580" height="72" rx="4" fill="#0f172a"/>
+  <rect x="60" y="462" width="580" height="72" rx="4" fill="rgba(239,68,68,0.1)" stroke="#ef4444" stroke-width="1" stroke-dasharray="3,3"/>
+  <text x="340" y="480" text-anchor="middle" fill="#ef4444" font-size="9" font-weight="500">⛔ Critical & High Issues (from Codex Architecture Review)</text>
+  <text x="75" y="498" fill="#fb7185" font-size="8">• No auth on AI-cost/admin endpoints</text>
+  <text x="370" y="498" fill="#fb7185" font-size="8">• Serial D1→AI→Vectorize per verse (no rollback)</text>
+  <text x="75" y="514" fill="#fb7185" font-size="8">• Blanket CORS (*) on all endpoints</text>
+  <text x="370" y="514" fill="#fb7185" font-size="8">• Greek search uses LIKE '%...%' (no index)</text>
+  <text x="75" y="530" fill="#fb7185" font-size="8">• Error messages leak internals</text>
+  <text x="370" y="530" fill="#fb7185" font-size="8">• No offset/cursor pagination on searches</text>
+
+  <!-- ============================================ -->
+  <!-- DATA PIPELINE FROM LOCAL RESOURCES           -->
+  <!-- ============================================ -->
+  <rect x="80" y="552" width="520" height="66" rx="4" fill="#0f172a"/>
+  <rect x="80" y="552" width="520" height="66" rx="4" fill="rgba(30,41,59,0.5)" stroke="#94a3b8" stroke-width="1"/>
+  <text x="340" y="570" text-anchor="middle" fill="#94a3b8" font-size="9" font-weight="500">Local Data Pipeline — S:\Resources\Bible\</text>
+  <text x="95" y="590" fill="#64748b" font-size="7.5">BTB Interlinear (OT+NT)</text>
+  <text x="260" y="590" fill="#64748b" font-size="7.5">BSB Strong's Greek Lexicon</text>
+  <text x="445" y="590" fill="#64748b" font-size="7.5">NA28 OpenText XML (not yet ingested)</text>
+  <text x="95" y="606" fill="#64748b" font-size="7.5">parse_btb_morph.py — morphology pipeline</text>
+  <text x="350" y="606" fill="#64748b" font-size="7.5">Sermon Map (28 series, 124 sermons)</text>
+
+  <!-- Arrow from local data to D1 -->
+  <line x1="340" y1="618" x2="340" y2="640" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="3,3" marker-end="url(#arw-data)"/>
+
+  <!-- ============================================ -->
+  <!-- FUTURE STATE — LAYER 1: USERS & CLIENTS      -->
+  <!-- ============================================ -->
+  <rect x="750" y="56" width="200" height="50" rx="6" fill="#0f172a"/>
+  <rect x="750" y="56" width="200" height="50" rx="6" fill="rgba(8,51,68,0.4)" stroke="#22d3ee" stroke-width="1.5"/>
+  <text x="850" y="78" text-anchor="middle" fill="#e2e8f0" font-size="11" font-weight="500">Users (Browser / Mobile)</text>
+  <text x="850" y="94" text-anchor="middle" fill="#64748b" font-size="8">LogOS Hub Portal · Obsidian Plugin</text>
+
+  <rect x="980" y="56" width="200" height="50" rx="6" fill="#0f172a"/>
+  <rect x="980" y="56" width="200" height="50" rx="6" fill="rgba(30,41,59,0.5)" stroke="#94a3b8" stroke-width="1.5"/>
+  <text x="1080" y="78" text-anchor="middle" fill="#e2e8f0" font-size="11" font-weight="500">Developer / AI Agents</text>
+  <text x="1080" y="94" text-anchor="middle" fill="#64748b" font-size="8">MCP Client · Hermes Agent · curl</text>
+
+  <line x1="850" y1="106" x2="850" y2="136" stroke="#d4af37" stroke-width="1.5" marker-end="url(#arw-future)"/>
+
+  <!-- ============================================ -->
+  <!-- FUTURE STATE — LAYER 2: AUTH GATEWAY         -->
+  <!-- ============================================ -->
+  <!-- Auth Layer (new) -->
+  <rect x="750" y="136" width="540" height="40" rx="4" fill="#0f172a"/>
+  <rect x="750" y="136" width="540" height="40" rx="4" fill="rgba(136,19,55,0.3)" stroke="#fb7185" stroke-width="1.5"/>
+  <text x="1020" y="153" text-anchor="middle" fill="#fb7185" font-size="10" font-weight="500">Auth Gateway — NEW</text>
+  <text x="1020" y="168" text-anchor="middle" fill="#64748b" font-size="8">Cloudflare Access · JWT · Rate Limiting · Request Validation</text>
+
+  <!-- ============================================ -->
+  <!-- FUTURE STATE — LAYER 3: API GATEWAY          -->
+  <!-- ============================================ -->
+  <line x1="850" y1="176" x2="850" y2="206" stroke="#d4af37" stroke-width="1.5" marker-end="url(#arw-future)"/>
+
+  <rect x="750" y="206" width="540" height="44" rx="4" fill="#0f172a"/>
+  <rect x="750" y="206" width="540" height="44" rx="4" fill="rgba(6,78,59,0.4)" stroke="#34d399" stroke-width="1"/>
+  <text x="1020" y="225" text-anchor="middle" fill="#34d399" font-size="10" font-weight="500">LogOS Core API — Worker</text>
+  <text x="1020" y="240" text-anchor="middle" fill="#64748b" font-size="8">logos-api.kodakwest.workers.dev · Modular route handlers · CORS restricted</text>
+
+  <!-- Split endpoint groups -->
+  <rect x="760" y="258" width="185" height="98" rx="4" fill="#0f172a"/>
+  <rect x="760" y="258" width="185" height="98" rx="4" fill="rgba(8,51,68,0.3)" stroke="#22d3ee" stroke-width="1"/>
+  <text x="852" y="276" text-anchor="middle" fill="#22d3ee" font-size="9" font-weight="500">Public Read · No Auth</text>
+  <text x="770" y="294" fill="#64748b" font-size="7.5">GET /api/status</text>
+  <text x="770" y="310" fill="#64748b" font-size="7.5">GET /api/verses/search?q=</text>
+  <text x="770" y="326" fill="#64748b" font-size="7.5">GET /api/verses/:ref</text>
+  <text x="770" y="342" fill="#64748b" font-size="7.5">GET /api/verses/chapter</text>
+
+  <rect x="955" y="258" width="185" height="98" rx="4" fill="#0f172a"/>
+  <rect x="955" y="258" width="185" height="98" rx="4" fill="rgba(251,146,60,0.2)" stroke="#fb923c" stroke-width="1"/>
+  <text x="1047" y="276" text-anchor="middle" fill="#fb923c" font-size="9" font-weight="500">AI-Cost · Auth Required</text>
+  <text x="965" y="294" fill="#64748b" font-size="7.5">POST /api/ask</text>
+  <text x="965" y="310" fill="#64748b" font-size="7.5">POST /api/explain</text>
+  <text x="965" y="326" fill="#64748b" font-size="7.5">POST /api/parse/greek</text>
+  <text x="965" y="342" fill="#64748b" font-size="7.5">POST /api/verses/semantic</text>
+
+  <rect x="1150" y="258" width="130" height="98" rx="4" fill="#0f172a"/>
+  <rect x="1150" y="258" width="130" height="98" rx="4" fill="rgba(136,19,55,0.25)" stroke="#fb7185" stroke-width="1"/>
+  <text x="1215" y="276" text-anchor="middle" fill="#fb7185" font-size="9" font-weight="500">Admin · Auth + Key</text>
+  <text x="1160" y="294" fill="#64748b" font-size="7.5">POST /api/admin/upload</text>
+  <text x="1160" y="310" fill="#64748b" font-size="7.5">POST /api/admin/morphology</text>
+  <text x="1160" y="326" fill="#64748b" font-size="7.5">POST /api/admin/reindex</text>
+  <text x="1160" y="342" fill="#64748b" font-size="7.5">GET /api/admin/jobs/:id</text>
+
+  <!-- ============================================ -->
+  <!-- FUTURE STATE — LAYER 4: DATA STORE           -->
+  <!-- ============================================ -->
+  <line x1="1020" y1="356" x2="1020" y2="392" stroke="#d4af37" stroke-width="1.5" marker-end="url(#arw-future)"/>
+
+  <rect x="750" y="392" width="540" height="140" rx="8" fill="#0f172a"/>
+  <rect x="750" y="392" width="540" height="140" rx="8" fill="rgba(76,29,149,0.3)" stroke="#a78bfa" stroke-width="1.5"/>
+  <text x="1020" y="414" text-anchor="middle" fill="#a78bfa" font-size="11" font-weight="500">Data Layer — Expanded</text>
+
+  <rect x="765" y="426" width="125" height="96" rx="4" fill="#0f172a"/>
+  <rect x="765" y="426" width="125" height="96" rx="4" fill="rgba(76,29,149,0.3)" stroke="#a78bfa" stroke-width="1"/>
+  <text x="827" y="444" text-anchor="middle" fill="#e2e8f0" font-size="8.5" font-weight="500">D1 · LogOS Core</text>
+  <text x="772" y="460" fill="#94a3b8" font-size="7">All verses + morphology</text>
+  <text x="772" y="474" fill="#94a3b8" font-size="7">Content hashes</text>
+  <text x="772" y="488" fill="#94a3b8" font-size="7">FTS for Greek tokens</text>
+  <text x="772" y="502" fill="#94a3b8" font-size="7">Embedding metadata</text>
+  <text x="772" y="516" fill="#22d3ee" font-size="7">← content_hash + model_ver</text>
+
+  <rect x="900" y="426" width="125" height="96" rx="4" fill="#0f172a"/>
+  <rect x="900" y="426" width="125" height="96" rx="4" fill="rgba(76,29,149,0.3)" stroke="#a78bfa" stroke-width="1"/>
+  <text x="962" y="444" text-anchor="middle" fill="#e2e8f0" font-size="8.5" font-weight="500">Vectorize</text>
+  <text x="910" y="460" fill="#94a3b8" font-size="7">Verse embeddings</text>
+  <text x="910" y="474" fill="#94a3b8" font-size="7">Sermon embeddings (new)</text>
+  <text x="910" y="488" fill="#94a3b8" font-size="7">Topic embeddings (new)</text>
+  <text x="910" y="502" fill="#94a3b8" font-size="7">Version-tracked</text>
+
+  <rect x="1035" y="426" width="130" height="96" rx="4" fill="#0f172a"/>
+  <rect x="1035" y="426" width="130" height="96" rx="4" fill="rgba(251,146,60,0.2)" stroke="#fb923c" stroke-width="1"/>
+  <text x="1100" y="444" text-anchor="middle" fill="#e2e8f0" font-size="8.5" font-weight="500">Workers AI</text>
+  <text x="1045" y="460" fill="#94a3b8" font-size="7">Llama 4 Scout (synthesis)</text>
+  <text x="1045" y="474" fill="#94a3b8" font-size="7">bge-base-en-v1.5 (embeddings)</text>
+  <text x="1045" y="488" fill="#94a3b8" font-size="7">Retry + timeout budgets</text>
+  <text x="1045" y="502" fill="#94a3b8" font-size="7">Gemini fallback (future)</text>
+
+  <rect x="1175" y="426" width="105" height="96" rx="4" fill="#0f172a"/>
+  <rect x="1175" y="426" width="105" height="96" rx="4" fill="rgba(30,41,59,0.5)" stroke="#fbbf24" stroke-width="1"/>
+  <text x="1227" y="444" text-anchor="middle" fill="#e2e8f0" font-size="8.5" font-weight="500">D1 · Roundtable</text>
+  <text x="1183" y="460" fill="#94a3b8" font-size="7">NEW — sermons, series</text>
+  <text x="1183" y="474" fill="#94a3b8" font-size="7">guides, responses</text>
+  <text x="1183" y="488" fill="#94a3b8" font-size="7">progress, badges</text>
+  <text x="1183" y="502" fill="#94a3b8" font-size="7">media refs (YT/Spotify)</text>
+
+  <!-- ============================================ -->
+  <!-- FUTURE STATE — LAYER 5: ECOSYSTEM APPS       -->
+  <!-- ============================================ -->
+  <line x1="850" y1="532" x2="850" y2="562" stroke="#d4af37" stroke-width="1.5" marker-end="url(#arw-future)"/>
+
+  <rect x="750" y="562" width="540" height="100" rx="8" fill="#0f172a"/>
+  <rect x="750" y="562" width="540" height="100" rx="8" fill="rgba(212,175,55,0.08)" stroke="#d4af37" stroke-width="1" stroke-dasharray="6,3"/>
+  <text x="1020" y="582" text-anchor="middle" fill="#d4af37" font-size="11" font-weight="500">LogOS Ecosystem — Products</text>
+
+  <rect x="760" y="592" width="160" height="58" rx="4" fill="#0f172a"/>
+  <rect x="760" y="592" width="160" height="58" rx="4" fill="rgba(8,51,68,0.3)" stroke="#22d3ee" stroke-width="1"/>
+  <text x="840" y="612" text-anchor="middle" fill="#22d3ee" font-size="9" font-weight="500">Hub Portal</text>
+  <text x="770" y="630" fill="#64748b" font-size="7">Vite React SPA · Bible study</text>
+  <text x="770" y="644" fill="#64748b" font-size="7">Nav sections · Ecosystem links</text>
+
+  <rect x="935" y="592" width="160" height="58" rx="4" fill="#0f172a"/>
+  <rect x="935" y="592" width="160" height="58" rx="4" fill="rgba(6,78,59,0.3)" stroke="#34d399" stroke-width="1"/>
+  <text x="1015" y="612" text-anchor="middle" fill="#34d399" font-size="9" font-weight="500">LogOS Shepherd</text>
+  <text x="945" y="630" fill="#64748b" font-size="7">Kids ministry · Static SPA</text>
+  <text x="945" y="644" fill="#64748b" font-size="7">Consumes Core API</text>
+
+  <rect x="1110" y="592" width="170" height="58" rx="4" fill="#0f172a"/>
+  <rect x="1110" y="592" width="170" height="58" rx="4" fill="rgba(251,146,60,0.2)" stroke="#fb923c" stroke-width="1"/>
+  <text x="1195" y="612" text-anchor="middle" fill="#fb923c" font-size="9" font-weight="500">LogOS Roundtable</text>
+  <text x="1120" y="630" fill="#64748b" font-size="7">Sermon knowledge system</text>
+  <text x="1120" y="644" fill="#64748b" font-size="7">Worker + D1 + Vectorize + AI</text>
+
+  <!-- ============================================ -->
+  <!-- FUTURE STATE — LAYER 6: MCP GATEWAY          -->
+  <!-- ============================================ -->
+  <line x1="1080" y1="540" x2="1080" y2="562" stroke="#d4af37" stroke-width="1.5" marker-end="url(#arw-future)"/>
+
+  <rect x="750" y="670" width="540" height="44" rx="4" fill="#0f172a"/>
+  <rect x="750" y="670" width="540" height="44" rx="4" fill="rgba(251,146,60,0.25)" stroke="#fb923c" stroke-width="1.5"/>
+  <text x="1020" y="689" text-anchor="middle" fill="#fb923c" font-size="10" font-weight="500">MCP Gateway — NEW</text>
+  <text x="1020" y="704" text-anchor="middle" fill="#64748b" font-size="8">Exposes all LogOS products as MCP tools · logos:// URI scheme · Wired to Hermes Agent</text>
+
+  <!-- ============================================ -->
+  <!-- GSLOGIMAKER REFERENCE CORNER                  -->
+  <!-- ============================================ -->
+  <rect x="750" y="726" width="540" height="64" rx="4" fill="#0f172a"/>
+  <rect x="750" y="726" width="540" height="64" rx="4" fill="rgba(30,41,59,0.4)" stroke="#94a3b8" stroke-width="1" stroke-dasharray="2,2"/>
+  <text x="1020" y="744" text-anchor="middle" fill="#94a3b8" font-size="9" font-weight="500">Reference Pattern — gslogimaker / My Bible Plugin (Obsidian)</text>
+  <text x="765" y="762" fill="#64748b" font-size="7.5">Dynamic code-block rendering: ```verse → /api/explain → togglable layers (KJV, BSB, Greek, morphology)</text>
+  <text x="765" y="778" fill="#64748b" font-size="7.5">Adopted for LogOS Hub Portal frontend · Replaces bolls.life dependency</text>
+
+</svg>
+
+<!-- Summary Cards -->
+<div class="summary-grid">
+  <div class="card">
+    <h3><span class="dot cyan"></span> Current State</h3>
+    <ul>
+      <li><strong>7,959</strong> verses ingested (KJV + BSB + Greek NT)</li>
+      <li><strong>139,476</strong> morphology records (lemma, POS, parsing)</li>
+      <li><strong>9 endpoints</strong> — mixed public/private on same Worker</li>
+      <li><code>llama-4-scout-17b</code> for AI synthesis</li>
+      <li><code>bge-base-en-v1.5</code> for 768-dim embeddings</li>
+      <li><strong>⚠ ZERO auth</strong> on any endpoint — critical blocker</li>
+      <li><strong>⚠ Serial upload</strong> — D1, AI, Vectorize can drift</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3><span class="dot gold"></span> Future — LogOS</h3>
+    <ul>
+      <li><strong>Auth Gateway</strong> — Cloudflare Access or JWT on AI-cost endpoints</li>
+      <li><strong>Endpoint split</strong> — public-read / AI-cost / admin (separated by auth level)</li>
+      <li><strong>New endpoints</strong> — <code>GET /api/verses/:ref</code>, <code>GET /api/verses/chapter</code>, paginated search</li>
+      <li><strong>Batch ingestion</strong> — queued, resumable, with content hashes + embedding versioning</li>
+      <li><strong>FTS Greek search</strong> — normalized token table replaces <code>LIKE '%...%'</code></li>
+      <li><strong>Rate limiting</strong> — per-key, per-endpoint budgets</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3><span class="dot amber"></span> Ecosystem Additions</h3>
+    <ul>
+      <li><strong>Hub Portal</strong> — central navigation: Bible study, search, Q&A, ecosystem links</li>
+      <li><strong>Shepherd API</strong> — Scripture Explorer consuming Core API at build + runtime</li>
+      <li><strong>Roundtable Backend</strong> — new Worker + D1 + Vectorize for sermon knowledge system</li>
+      <li><strong>MCP Gateway</strong> — one Worker exposing all LogOS tools for Hermes agents</li>
+      <li><strong>gslogimaker pattern</strong> — dynamic verse rendering with togglable translation layers</li>
+      <li><strong>Content pipeline</strong> — NA28 XML ingestion, automated sermon mapping</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Endpoint Migration Table -->
+<div class="endpoint-section">
+  <h2>API Endpoint Migration</h2>
+  <table class="endpoint-table">
+    <thead>
+      <tr>
+        <th>Status</th>
+        <th>Verb</th>
+        <th>Path (Current → Future)</th>
+        <th>Auth</th>
+        <th>Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="status-badge status-evolving">EVOLVING</span></td>
+        <td><span class="verb-get">GET</span></td>
+        <td class="path">/api/status → /api/status</td>
+        <td>Public</td>
+        <td class="note">Add cache, batch D1 counts. Quick win.</td>
+      </tr>
+      <tr>
+        <td><span class="status-badge status-evolving">EVOLVING</span></td>
+        <td><span class="verb-get">GET</span></td>
+        <td class="path">/api/verses/search → /api/verses/search?q=&book=&chapter=&limit=&offset=</td>
+        <td>Public</td>
+        <td class="note">Add pagination (offset/cursor). Add total count. Quick win.</td>
+      </tr>
+      <tr>
+        <td><span class="status-badge status-new">NEW</span></td>
+        <td><span class="verb-get">GET</span></td>
+        <td class="path">/api/verses/:reference</td>
+        <td>Public</td>
+        <td class="note">Single verse by ref (e.g., John+3:16). Structured response for UI code blocks.</td>
+      </tr>
+      <tr>
+        <td><span class="status-badge status-new">NEW</span></td>
+        <td><span class="verb-get">GET</span></td>
+        <td class="path">/api/verses/chapter?book=&chapter=</td>
+        <td>Public</td>
+        <td class="note">Chapter endpoint for morphology upload script — eliminates N+1 lookups.</td>
+      </tr>
+      <tr>
+        <td><span class="status-badge status-evolving">EVOLVING</span></td>
+        <td><span class="verb-post">POST</span></td>
+        <td class="path">/api/verses/semantic → /api/verses/semantic</td>
+        <td>Auth</td>
+        <td class="note">Add rate limit, max query length. No architectural change.</td>
+      </tr>
+      <tr>
+        <td><span class="status-badge status-evolving">EVOLVING</span></td>
+        <td><span class="verb-post">POST</span></td>
+        <td class="path">/api/verse/morphology → /api/verses/:ref/morphology</td>
+        <td>Public</td>
+        <td class="note">RESTful path. Add surface token to morphology for position-independent alignment.</td>
+      </tr>
+      <tr>
+        <td><span class="status-badge status-current">MOVED</span></td>
+        <td><span class="verb-post">POST</span></td>
+        <td class="path">/api/ask → /api/ai/ask</td>
+        <td>Auth required</td>
+        <td class="note">Moved under /api/ai/ namespace. Auth gate. Deep mode retained.</td>
+      </tr>
+      <tr>
+        <td><span class="status-badge status-current">MOVED</span></td>
+        <td><span class="verb-post">POST</span></td>
+        <td class="path">/api/explain → /api/ai/explain</td>
+        <td>Auth required</td>
+        <td class="note">Moved under /api/ai/ namespace. Auth gate. Add direct verse query, not full chapter load.</td>
+      </tr>
+      <tr>
+        <td><span class="status-badge status-current">MOVED</span></td>
+        <td><span class="verb-post">POST</span></td>
+        <td class="path">/api/parse/greek → /api/ai/parse/greek</td>
+        <td>Auth required</td>
+        <td class="note">Moved under /api/ai/ namespace. Cache key includes parser version.</td>
+      </tr>
+      <tr>
+        <td><span class="status-badge status-deprecated">MOVED</span></td>
+        <td><span class="verb-post">POST</span></td>
+        <td class="path">/api/upload/chapter → /api/admin/upload/chapter</td>
+        <td>Admin key</td>
+        <td class="note">Admin namespace. Batch + queue. Embedding status tracking. Content hashes.</td>
+      </tr>
+      <tr>
+        <td><span class="status-badge status-deprecated">MOVED</span></td>
+        <td><span class="verb-post">POST</span></td>
+        <td class="path">/api/upload/morphology → /api/admin/upload/morphology</td>
+        <td>Admin key</td>
+        <td class="note">Admin namespace. Verify verse exists. Cap word count.</td>
+      </tr>
+      <tr>
+        <td><span class="status-badge status-new">NEW</span></td>
+        <td><span class="verb-post">POST</span></td>
+        <td class="path">/api/admin/reindex</td>
+        <td>Admin key</td>
+        <td class="note">Repair job: rebuild embeddings for stale content hashes.</td>
+      </tr>
+      <tr>
+        <td><span class="status-badge status-new">NEW</span></td>
+        <td><span class="verb-get">GET</span></td>
+        <td class="path">/api/admin/jobs/:id</td>
+        <td>Admin key</td>
+        <td class="note">Async job status for batch ingestion.</td>
+      </tr>
+      <tr>
+        <td><span class="status-badge status-new">NEW</span></td>
+        <td><span class="verb-get">GET</span></td>
+        <td class="path">/shepherd/topics</td>
+        <td>Public</td>
+        <td class="note">Shepherd topic listing for ecosystem consumption.</td>
+      </tr>
+      <tr>
+        <td><span class="status-badge status-new">NEW</span></td>
+        <td><span class="verb-get">GET</span></td>
+        <td class="path">/shepherd/topics/:id</td>
+        <td>Public</td>
+        <td class="note">Single topic with verses + age-tier content.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Legend -->
+<div class="legend">
+  <div class="legend-item"><span class="legend-swatch" style="background:rgba(34,211,238,0.4);border-color:#22d3ee;"></span> Frontend / User-facing</div>
+  <div class="legend-item"><span class="legend-swatch" style="background:rgba(6,78,59,0.4);border-color:#34d399;"></span> Backend / API Worker</div>
+  <div class="legend-item"><span class="legend-swatch" style="background:rgba(76,29,149,0.4);border-color:#a78bfa;"></span> Database / Storage</div>
+  <div class="legend-item"><span class="legend-swatch" style="background:rgba(251,146,60,0.3);border-color:#fb923c;"></span> AI / Cost-sensitive</div>
+  <div class="legend-item"><span class="legend-swatch" style="background:rgba(136,19,55,0.4);border-color:#fb7185;"></span> Security / Auth</div>
+  <div class="legend-item"><span class="legend-swatch" style="background:rgba(30,41,59,0.5);border-color:#94a3b8;"></span> External / Reference</div>
+  <div class="legend-item"><span class="legend-swatch" style="background:rgba(212,175,55,0.08);border-color:#d4af37;"></span> LogOS Ecosystem</div>
+</div>
+
+<div class="footer">
+  LogOS API Landscape · Generated from Codex Architecture Review + LogOS Ecosystem Handoff · May 2026
+</div>
+
+</div>
+</body>
+</html>

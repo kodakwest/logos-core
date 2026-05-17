@@ -1,4 +1,4 @@
-import { BookOpen, Search, TextCursorInput } from "lucide-react";
+import { Search, TextCursorInput } from "lucide-react";
 import { createRoot } from "react-dom/client";
 import { useEffect, useMemo, useState } from "react";
 import { ParserView } from "./parser";
@@ -41,10 +41,14 @@ function App() {
   return (
     <main className="app-shell">
       <aside className="sidebar">
-        <a className="brand" href="#search" aria-label="Bible AI Search">
-          <BookOpen size={26} />
-          <span>Bible AI Search</span>
+        <a className="brand" href="#search" aria-label="LogOS Core">
+          <OpenPathLogo />
+          <span className="brand-copy">
+            <span className="brand-name">LogOS Core</span>
+            <span className="brand-tagline">The Operating System for Truth</span>
+          </span>
         </a>
+        <LogoLoadingCycle />
         <nav className="nav-list" aria-label="Primary">
           {navItems.map((item) => {
             const Icon = item.icon;
@@ -62,6 +66,35 @@ function App() {
         <View />
       </section>
     </main>
+  );
+}
+
+function OpenPathLogo() {
+  return (
+    <svg className="open-path-logo" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M20,80 Q50,40 50,20 Q50,40 80,80" />
+      <path d="M50,20 L50,80" strokeDasharray="8 8" />
+      <path d="M10,20 Q30,10 50,20 Q70,10 90,20 L90,80 Q70,70 50,80 Q30,70 10,80 Z" strokeWidth="3" />
+    </svg>
+  );
+}
+
+function LogoLoadingCycle() {
+  return (
+    <div className="logo-cycle" aria-label="LogOS identity cycle">
+      <span className="logo-fade">
+        <strong>LógOS</strong>
+        <span>The Illuminated Word</span>
+      </span>
+      <span className="logo-fade">
+        <strong>ΛogOS</strong>
+        <span>The Upward Path</span>
+      </span>
+      <span className="logo-fade">
+        <strong>LogOΣ</strong>
+        <span>The Foundational System</span>
+      </span>
+    </div>
   );
 }
 

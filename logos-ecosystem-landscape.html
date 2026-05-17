@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LogOS Ecosystem Landscape</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #0b0d0e;
+  color: #f4f4f5;
+  font-family: 'Inter', sans-serif;
+  line-height: 1.6;
+  padding: 40px 20px;
+}
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* Header */
+.brand-header {
+  text-align: center;
+  padding: 40px 0 30px;
+  border-bottom: 1px solid #1f2a2e;
+  margin-bottom: 40px;
+}
+.brand-lockup {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 16px;
+}
+.brand-icon svg {
+  width: 64px;
+  height: 64px;
+  stroke: #d4af37;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.brand-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 3.5rem;
+  font-weight: 700;
+  letter-spacing: 4px;
+  color: #d4af37;
+}
+.brand-tagline {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 1.1rem;
+  color: #82828b;
+  letter-spacing: 2px;
+}
+
+h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #d4af37;
+  margin-top: 50px;
+  margin-bottom: 20px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #1f2a2e;
+}
+h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #f4f4f5;
+  margin-bottom: 12px;
+}
+
+/* Architecture SVG */
+.arch-wrap {
+  background: #0a0c0d;
+  border: 1px solid #1f2a2e;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 32px;
+  overflow-x: auto;
+}
+
+/* Cards */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  margin-bottom: 32px;
+}
+.card {
+  background: #131618;
+  border: 1px solid #1f2a2e;
+  border-radius: 10px;
+  padding: 24px;
+}
+.card h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.4rem;
+  color: #d4af37;
+  margin-bottom: 8px;
+}
+.card .role {
+  font-size: 0.8rem;
+  color: #4da8da;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 12px;
+}
+.card p {
+  font-size: 0.9rem;
+  color: #a0a0a8;
+  margin-bottom: 8px;
+}
+.card .tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  margin-right: 4px;
+  margin-bottom: 4px;
+}
+.tag-green { background: rgba(34,197,94,0.15); color: #22c55e; }
+.tag-yellow { background: rgba(234,179,8,0.15); color: #eab308; }
+.tag-blue { background: rgba(59,130,246,0.15); color: #3b82f6; }
+.tag-red { background: rgba(239,68,68,0.15); color: #ef4444; }
+
+/* Variant cycle */
+.variant-row {
+  display: flex;
+  gap: 16px;
+  margin: 20px 0;
+  flex-wrap: wrap;
+}
+.variant-card {
+  flex: 1;
+  min-width: 200px;
+  background: #131618;
+  border: 1px solid #1f2a2e;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+}
+.variant-card .word {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.2rem;
+  font-weight: 600;
+  letter-spacing: 3px;
+  margin-bottom: 6px;
+}
+.variant-card .meaning {
+  font-size: 0.8rem;
+  color: #82828b;
+  font-style: italic;
+}
+.variant-card .tagline {
+  font-size: 0.75rem;
+  color: #4da8da;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-top: 8px;
+}
+
+/* Task table */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0 32px;
+  font-size: 0.9rem;
+}
+th {
+  text-align: left;
+  padding: 10px 12px;
+  background: #0f1113;
+  color: #82828b;
+  font-weight: 500;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-bottom: 1px solid #1f2a2e;
+}
+td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #1a1e1f;
+}
+tr:hover td { background: #0f1113; }
+
+.prio { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; }
+.prio-critical { color: #ef4444; }
+.prio-high { color: #eab308; }
+.prio-medium { color: #3b82f6; }
+
+/* Principles */
+.principles {
+  display: grid;
+  gap: 10px;
+  margin: 16px 0 32px;
+}
+.principles li {
+  padding: 12px 16px;
+  background: #0f1113;
+  border-left: 3px solid #d4af37;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  list-style: none;
+  color: #c0c0c8;
+}
+.principles li strong { color: #d4af37; }
+
+/* Decisions */
+.decision-grid {
+  display: grid;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+.decision-card {
+  background: #0f1113;
+  border: 1px solid #1f2a2e;
+  border-radius: 8px;
+  padding: 18px;
+}
+.decision-card h4 { color: #f4f4f5; font-weight: 600; margin-bottom: 4px; font-size: 1rem; }
+.decision-card p { color: #82828b; font-size: 0.85rem; }
+
+.footer {
+  text-align: center;
+  padding: 24px 0;
+  border-top: 1px solid #1f2a2e;
+  color: #4a4a4a;
+  font-size: 0.75rem;
+  letter-spacing: 1px;
+  margin-top: 40px;
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="brand-header">
+  <div class="brand-lockup">
+    <div class="brand-icon">
+      <svg viewBox="0 0 100 100">
+        <path d="M20,80 Q50,40 50,20 Q50,40 80,80" stroke-width="4"/>
+        <path d="M50,20 L50,80" stroke-width="4" stroke-dasharray="4 4"/>
+        <path d="M10,20 Q30,10 50,20 Q70,10 90,20 L90,80 Q70,70 50,80 Q30,70 10,80 Z" stroke="#4da8da" stroke-width="2"/>
+      </svg>
+    </div>
+    <div class="brand-name">LogOS</div>
+  </div>
+  <div class="brand-tagline">"The Operating System for Truth"</div>
+</div>
+
+<!-- Ecosystem Architecture -->
+<h2>Ecosystem Architecture</h2>
+<div class="arch-wrap">
+<svg viewBox="0 0 840 500" width="100%" style="max-width:840px;display:block;margin:0 auto;" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <pattern id="g" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1a1e1f" stroke-width="0.5"/>
+    </pattern>
+    <marker id="ar" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#3b4a4e"/>
+    </marker>
+    <marker id="ag" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#d4af37"/>
+    </marker>
+  </defs>
+  <rect width="840" height="500" fill="url(#g)"/>
+
+  <!-- User -->
+  <rect x="320" y="20" width="200" height="40" rx="6" fill="#0f172a"/>
+  <rect x="320" y="20" width="200" height="40" rx="6" fill="rgba(8,51,68,0.4)" stroke="#22d3ee" stroke-width="1.5"/>
+  <text x="420" y="45" text-anchor="middle" fill="#f4f4f5" font-family="Inter,sans-serif" font-size="12" font-weight="500">User</text>
+
+  <line x1="420" y1="60" x2="420" y2="90" stroke="#d4af37" stroke-width="1.5" marker-end="url(#ag)"/>
+
+  <!-- LogOS Core Hub -->
+  <rect x="80" y="90" width="680" height="260" rx="10" fill="none" stroke="#d4af37" stroke-width="1" stroke-dasharray="6,3"/>
+  <text x="100" y="112" fill="#d4af37" font-family="Playfair Display,serif" font-size="14" font-weight="600">LogOS Core</text>
+
+  <!-- Auth -->
+  <rect x="110" y="124" width="160" height="44" rx="4" fill="#0f172a"/>
+  <rect x="110" y="124" width="160" height="44" rx="4" fill="rgba(136,19,55,0.4)" stroke="#fb7185" stroke-width="1.5"/>
+  <text x="190" y="144" text-anchor="middle" fill="#f4f4f5" font-family="Inter,sans-serif" font-size="11" font-weight="500">Auth Layer</text>
+  <text x="190" y="158" text-anchor="middle" fill="#fb7185" font-family="Inter,sans-serif" font-size="8">Phase 1 · TBD</text>
+
+  <!-- Portal -->
+  <rect x="300" y="124" width="440" height="120" rx="4" fill="#0f172a"/>
+  <rect x="300" y="124" width="440" height="120" rx="4" fill="rgba(8,51,68,0.4)" stroke="#4da8da" stroke-width="1.5"/>
+  <text x="520" y="144" text-anchor="middle" fill="#4da8da" font-family="Inter,sans-serif" font-size="11" font-weight="500">Hub Portal (Vite React SPA)</text>
+
+  <rect x="318" y="154" width="130" height="44" rx="3" fill="#0f172a"/>
+  <rect x="318" y="154" width="130" height="44" rx="3" fill="rgba(8,51,68,0.3)" stroke="#22d3ee" stroke-width="1" stroke-dasharray="2,2"/>
+  <text x="383" y="174" text-anchor="middle" fill="#f4f4f5" font-family="Inter,sans-serif" font-size="9" font-weight="500">Bible Study</text>
+  <text x="383" y="188" text-anchor="middle" fill="#82828b" font-family="Inter,sans-serif" font-size="7">Search · Parse · Q&A · Explain</text>
+
+  <rect x="460" y="154" width="130" height="44" rx="3" fill="#0f172a"/>
+  <rect x="460" y="154" width="130" height="44" rx="3" fill="rgba(8,51,68,0.3)" stroke="#22d3ee" stroke-width="1" stroke-dasharray="2,2"/>
+  <text x="525" y="174" text-anchor="middle" fill="#f4f4f5" font-family="Inter,sans-serif" font-size="9" font-weight="500">Kids Ministry</text>
+  <text x="525" y="188" text-anchor="middle" fill="#82828b" font-family="Inter,sans-serif" font-size="7">Link → Shepherd</text>
+
+  <rect x="602" y="154" width="120" height="44" rx="3" fill="#0f172a"/>
+  <rect x="602" y="154" width="120" height="44" rx="3" fill="rgba(8,51,68,0.3)" stroke="#eab308" stroke-width="1" stroke-dasharray="2,2"/>
+  <text x="662" y="174" text-anchor="middle" fill="#f4f4f5" font-family="Inter,sans-serif" font-size="9" font-weight="500">Sermon Study</text>
+  <text x="662" y="188" text-anchor="middle" fill="#eab308" font-family="Inter,sans-serif" font-size="7">Coming Soon → Roundtable</text>
+
+  <!-- Loading animation note -->
+  <text x="520" y="230" text-anchor="middle" fill="#82828b" font-family="Inter,sans-serif" font-size="8">Loading State: LógOS → ΛogOS → LogOΣ fade cycle</text>
+
+  <!-- API Layer -->
+  <rect x="110" y="260" width="630" height="44" rx="4" fill="#0f172a"/>
+  <rect x="110" y="260" width="630" height="44" rx="4" fill="rgba(6,78,59,0.3)" stroke="#34d399" stroke-width="1"/>
+  <text x="130" y="286" fill="#34d399" font-family="JetBrains Mono,monospace" font-size="9">GET  /api/verses/*  (public) </text>
+  <text x="350" y="286" fill="#eab308" font-family="JetBrains Mono,monospace" font-size="9">POST /api/ask  (auth)</text>
+  <text x="540" y="286" fill="#eab308" font-family="JetBrains Mono,monospace" font-size="9">POST /api/explain  (auth)</text>
+  <text x="130" y="298" fill="#ef4444" font-family="JetBrains Mono,monospace" font-size="9">POST /api/upload/*  (admin)</text>
+  <text x="350" y="298" fill="#22c55e" font-family="JetBrains Mono,monospace" font-size="9">POST /api/parse/greek  (public)</text>
+  <text x="570" y="298" fill="#22c55e" font-family="JetBrains Mono,monospace" font-size="9">GET  /api/status  (public)</text>
+
+  <!-- Data layer -->
+  <line x1="420" y1="304" x2="420" y2="330" stroke="#3b4a4e" stroke-width="1" marker-end="url(#ar)"/>
+  <text x="420" y="320" text-anchor="middle" fill="#82828b" font-family="Inter,sans-serif" font-size="7">Data</text>
+
+  <rect x="120" y="340" width="140" height="44" rx="4" fill="#0f172a"/>
+  <rect x="120" y="340" width="140" height="44" rx="4" fill="rgba(76,29,149,0.4)" stroke="#a78bfa" stroke-width="1.5"/>
+  <text x="190" y="360" text-anchor="middle" fill="#f4f4f5" font-family="Inter,sans-serif" font-size="10" font-weight="500">D1 Database</text>
+  <text x="190" y="374" text-anchor="middle" fill="#a78bfa" font-family="Inter,sans-serif" font-size="7">7,959 verses · 139K morphology</text>
+
+  <rect x="290" y="340" width="130" height="44" rx="4" fill="#0f172a"/>
+  <rect x="290" y="340" width="130" height="44" rx="4" fill="rgba(76,29,149,0.4)" stroke="#a78bfa" stroke-width="1.5"/>
+  <text x="355" y="360" text-anchor="middle" fill="#f4f4f5" font-family="Inter,sans-serif" font-size="10" font-weight="500">Vectorize</text>
+  <text x="355" y="374" text-anchor="middle" fill="#a78bfa" font-family="Inter,sans-serif" font-size="7">15.9K vectors · 768-dim</text>
+
+  <rect x="450" y="340" width="130" height="44" rx="4" fill="#0f172a"/>
+  <rect x="450" y="340" width="130" height="44" rx="4" fill="rgba(120,53,15,0.3)" stroke="#fbbf24" stroke-width="1.5"/>
+  <text x="515" y="360" text-anchor="middle" fill="#f4f4f5" font-family="Inter,sans-serif" font-size="10" font-weight="500">Workers AI</text>
+  <text x="515" y="374" text-anchor="middle" fill="#fbbf24" font-family="Inter,sans-serif" font-size="7">Llama 4 Scout</text>
+
+  <rect x="610" y="340" width="130" height="44" rx="4" fill="#0f172a"/>
+  <rect x="610" y="340" width="130" height="44" rx="4" fill="rgba(30,41,59,0.4)" stroke="#94a3b8" stroke-width="1.5"/>
+  <text x="675" y="360" text-anchor="middle" fill="#f4f4f5" font-family="Inter,sans-serif" font-size="10" font-weight="500">Auth</text>
+  <text x="675" y="374" text-anchor="middle" fill="#94a3b8" font-family="Inter,sans-serif" font-size="7">TBD (Phase 1)</text>
+
+  <!-- Shepherd -->
+  <rect x="160" y="410" width="220" height="60" rx="6" fill="#0f172a"/>
+  <rect x="160" y="410" width="220" height="60" rx="6" fill="rgba(8,51,68,0.4)" stroke="#22d3ee" stroke-width="1.5"/>
+  <text x="270" y="434" text-anchor="middle" fill="#f4f4f5" font-family="Inter,sans-serif" font-size="12" font-weight="600">LogOS Shepherd</text>
+  <text x="270" y="450" text-anchor="middle" fill="#22d3ee" font-family="Inter,sans-serif" font-size="8">Kids Ministry · LIVE</text>
+  <text x="270" y="462" text-anchor="middle" fill="#82828b" font-family="Inter,sans-serif" font-size="7">shepherdparentcompanion.pages.dev</text>
+
+  <line x1="420" y1="390" x2="270" y2="407" stroke="#22d3ee" stroke-width="1" marker-end="url(#ag)" stroke-dasharray="4,2"/>
+  <text x="350" y="402" fill="#22d3ee" font-family="Inter,sans-serif" font-size="7">Link</text>
+
+  <!-- Roundtable -->
+  <rect x="460" y="410" width="220" height="60" rx="6" fill="#0f172a"/>
+  <rect x="460" y="410" width="220" height="60" rx="6" fill="rgba(30,41,59,0.5)" stroke="#eab308" stroke-width="1.5" stroke-dasharray="4,4"/>
+  <text x="570" y="434" text-anchor="middle" fill="#eab308" font-family="Inter,sans-serif" font-size="12" font-weight="600">LogOS Roundtable ⏳</text>
+  <text x="570" y="450" text-anchor="middle" fill="#82828b" font-family="Inter,sans-serif" font-size="8">Sermon Study · Coming Soon</text>
+  <text x="570" y="462" text-anchor="middle" fill="#82828b" font-family="Inter,sans-serif" font-size="7">Not yet deployed</text>
+
+  <line x1="420" y1="390" x2="570" y2="407" stroke="#eab308" stroke-width="1" marker-end="url(#ar)" stroke-dasharray="4,2"/>
+  <text x="500" y="402" fill="#eab308" font-family="Inter,sans-serif" font-size="7">Phase 2</text>
+
+  <!-- Legend -->
+  <rect x="690" y="410" width="140" height="80" rx="4" fill="#0f1113" stroke="#1f2a2e" stroke-width="1"/>
+  <text x="700" y="428" fill="#82828b" font-family="Inter,sans-serif" font-size="7" font-weight="600">Legend</text>
+  <rect x="700" y="436" width="6" height="6" rx="1" fill="rgba(34,211,238,0.6)"/><text x="712" y="443" fill="#82828b" font-family="Inter,sans-serif" font-size="7">Frontend</text>
+  <rect x="700" y="448" width="6" height="6" rx="1" fill="rgba(76,29,149,0.6)"/><text x="712" y="455" fill="#82828b" font-family="Inter,sans-serif" font-size="7">Database</text>
+  <rect x="700" y="460" width="6" height="6" rx="1" fill="rgba(136,19,55,0.6)"/><text x="712" y="467" fill="#82828b" font-family="Inter,sans-serif" font-size="7">Security/Auth</text>
+  <rect x="700" y="472" width="6" height="6" rx="1" fill="rgba(120,53,15,0.6)"/><text x="712" y="479" fill="#82828b" font-family="Inter,sans-serif" font-size="7">AI Service</text>
+</svg>
+</div>
+
+<!-- Products -->
+<h2>Products</h2>
+<div class="card-grid">
+  <div class="card">
+    <h3>LogOS Core</h3>
+    <div class="role">Central Hub</div>
+    <p>Bible search, AI Q&A, Greek parsing, verse deep-dive. Cloudflare Workers + D1 + Vectorize + Workers AI.</p>
+    <p><span class="tag tag-green">7,959 verses</span><span class="tag tag-blue">15.9K vectors</span><span class="tag tag-yellow">Rebranding</span></p>
+  </div>
+  <div class="card">
+    <h3>LogOS Shepherd</h3>
+    <div class="role">Kids Ministry</div>
+    <p>13 parenting topics, 98 verses, 7 age tiers. Full lesson system with print, export, journal, tracks.</p>
+    <p><span class="tag tag-green">Deployed</span><span class="tag tag-blue">Static SPA</span><span class="tag tag-yellow">Rebranding</span></p>
+  </div>
+  <div class="card">
+    <h3>LogOS Roundtable</h3>
+    <div class="role">Sermon Study</div>
+    <p>Small group discussion guides. 4 samples built, same stack as Shepherd. Not yet deployed.</p>
+    <p><span class="tag tag-red">Not Deployed</span><span class="tag tag-blue">Static SPA</span><span class="tag tag-yellow">Phase 2</span></p>
+  </div>
+</div>
+
+<!-- Loading Animation -->
+<h2>Brand Identity</h2>
+<div style="margin-bottom:32px;">
+  <div style="font-family:'Playfair Display',serif;font-size:2.5rem;font-weight:600;letter-spacing:4px;color:#d4af37;margin-bottom:16px;">
+    <span style="color:#d4af37;">L</span><span style="color:#4da8da;">ó</span><span style="color:#d4af37;">gOS</span>
+    &nbsp;·&nbsp;
+    <span style="color:#d4af37;">Λ</span><span style="color:#d4af37;">ogOS</span>
+    &nbsp;·&nbsp;
+    <span style="color:#d4af37;">LogO</span><span style="color:#4da8da;">Σ</span>
+  </div>
+  <div class="variant-row">
+    <div class="variant-card">
+      <div class="word"><span style="color:#d4af37;">L</span><span style="color:#4da8da;">ó</span><span style="color:#d4af37;">gOS</span></div>
+      <div class="tagline">The Illuminated Word</div>
+      <div class="meaning">Greek tonos accent — spark of divine inspiration</div>
+    </div>
+    <div class="variant-card">
+      <div class="word"><span style="color:#d4af37;">Λ</span><span style="color:#d4af37;">ogOS</span></div>
+      <div class="tagline">The Upward Path</div>
+      <div class="meaning">Greek Lambda — mountain peak, path forward</div>
+    </div>
+    <div class="variant-card">
+      <div class="word"><span style="color:#d4af37;">LogO</span><span style="color:#4da8da;">Σ</span></div>
+      <div class="tagline">The Foundational System</div>
+      <div class="meaning">Greek Sigma — structure, completeness</div>
+    </div>
+  </div>
+  <p style="color:#82828b;font-size:0.85rem;text-align:center;">Loading state: 7.5s fade cycle — only the letters that change transition</p>
+</div>
+
+<!-- Guiding Principles -->
+<h2>Principles</h2>
+<ol class="principles">
+  <li><strong>No deep integration</strong> — each app stands on its own. The hub links to them.</li>
+  <li><strong>Bible data from one source</strong> — LogOS Core D1 DB is the single source of truth for scripture.</li>
+  <li><strong>Sermon data from one source (future)</strong> — plan unified sermon content model.</li>
+  <li><strong>Shepherd is ready now</strong> — links go live immediately from the hub.</li>
+  <li><strong>Roundtable comes later</strong> — Coming Soon until ready.</li>
+</ol>
+
+<!-- Task Overview -->
+<h2>Phase 1 — LogOS Core Rebrand & Hub</h2>
+<table>
+  <tr><th>#</th><th>Task</th><th>Priority</th></tr>
+  <tr><td>1.1</td><td>Rename repo + Workers project to <strong>logos-core</strong></td><td><span class="prio prio-high">High</span></td></tr>
+  <tr><td>1.2</td><td>Apply brand identity — gold accent, Open Path logo, Playfair typography</td><td><span class="prio prio-high">High</span></td></tr>
+  <tr><td>1.3</td><td><span class="prio prio-critical">Auth layer</span> on AI-cost endpoints</td><td><span class="prio prio-critical">Critical</span></td></tr>
+  <tr><td>1.4</td><td>Rate limiting + CORS hardening</td><td><span class="prio prio-high">High</span></td></tr>
+  <tr><td>1.5</td><td>Redesign frontend as LogOS Core portal with sections</td><td><span class="prio prio-high">High</span></td></tr>
+  <tr><td>1.6</td><td>Add Q&A interface (/api/ask frontend)</td><td><span class="prio prio-high">High</span></td></tr>
+  <tr><td>1.7</td><td>Add verse deep-dive UI (/api/explain frontend)</td><td><span class="prio prio-medium">Medium</span></td></tr>
+  <tr><td>1.8</td><td>Kids Ministry section → Shepherd link</td><td><span class="prio prio-medium">Medium</span></td></tr>
+  <tr><td>1.9</td><td>Replace loading spinner with 3-variant fade animation</td><td><span class="prio prio-medium">Medium</span></td></tr>
+  <tr><td>1.10</td><td>Sermon Study Coming Soon + vision/roadmap page</td><td><span class="prio prio-medium">Medium</span></td></tr>
+  <tr><td>1.11</td><td>Update README, AGENTS.md, meta tags</td><td><span class="prio prio-medium">Medium</span></td></tr>
+</table>
+
+<h2>Phase 2 — Roundtable & Shepherd</h2>
+<table>
+  <tr><th>#</th><th>Task</th><th>Priority</th></tr>
+  <tr><td>2.1</td><td>Finish Roundtable features (export, deeperDive, guides)</td><td><span class="prio prio-high">High</span></td></tr>
+  <tr><td>2.2</td><td><strong>Deploy LogOS Roundtable</strong> to CF Pages</td><td><span class="prio prio-high">High</span></td></tr>
+  <tr><td>2.3</td><td>Apply LogOS brand family to Roundtable</td><td><span class="prio prio-medium">Medium</span></td></tr>
+  <tr><td>2.4</td><td>Apply LogOS brand family to Shepherd</td><td><span class="prio prio-medium">Medium</span></td></tr>
+  <tr><td>2.5</td><td>Update hub — replace Coming Soon with live Roundtable links</td><td><span class="prio prio-medium">Medium</span></td></tr>
+</table>
+
+<h2>Future</h2>
+<table>
+  <tr><th>Item</th><th>Trigger</th></tr>
+  <tr><td>OT Hebrew ingestion</td><td>After auth + hub are solid</td></tr>
+  <tr><td>BibleFlow → Roundtable pipeline</td><td>After Roundtable is deployed</td></tr>
+  <tr><td>Unified sermon knowledge source</td><td>Design needed first</td></tr>
+  <tr><td>Analytics</td><td>After launch</td></tr>
+  <tr><td>Custom domain (logos.bible?)</td><td>When ready for public</td></tr>
+  <tr><td>OpenText NA28 ingestion</td><td>After pipeline is solid</td></tr>
+</table>
+
+<!-- Decisions -->
+<h2>Decisions Needed</h2>
+<div class="decision-grid">
+  <div class="decision-card">
+    <h4>1. Auth Model</h4>
+    <p>Cloudflare Access (Zero Trust) or lightweight JWT? Public read on verse data + auth on AI endpoints?</p>
+  </div>
+  <div class="decision-card">
+    <h4>2. GitHub Repos</h4>
+    <p>Create fresh repos (logos-core, logos-shepherd, logos-roundtable) or rename existing ones?</p>
+  </div>
+  <div class="decision-card">
+    <h4>3. Domain</h4>
+    <p>Keep Workers.dev subdomains for now or pursue a custom domain (logos.bible)?</p>
+  </div>
+  <div class="decision-card">
+    <h4>4. Roundtable Timeline</h4>
+    <p>Weeks or months? Affects how Coming Soon messaging frames it on the hub.</p>
+  </div>
+</div>
+
+<div class="footer">
+  LogOS Ecosystem Landscape · TARS · May 16 2026
+</div>
+
+</div>
+</body>
+</html>

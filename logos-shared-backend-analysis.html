@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LogOS — Shared Backend Analysis</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #0b0d0e;
+  color: #f4f4f5;
+  font-family: 'Inter', sans-serif;
+  line-height: 1.6;
+  padding: 40px 20px;
+}
+.container { max-width: 960px; margin: 0 auto; }
+
+h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #d4af37;
+  margin-bottom: 6px;
+}
+.subtitle {
+  color: #82828b;
+  font-size: 0.95rem;
+  margin-bottom: 36px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #1f2a2e;
+}
+
+h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #d4af37;
+  margin-top: 44px;
+  margin-bottom: 16px;
+}
+h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #f4f4f5;
+  margin-top: 28px;
+  margin-bottom: 10px;
+}
+
+.card {
+  background: #131618;
+  border: 1px solid #1f2a2e;
+  border-radius: 10px;
+  padding: 24px;
+  margin-bottom: 20px;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.cols-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+@media (max-width: 640px) { .cols-2 { grid-template-columns: 1fr; } }
+
+.stack-block {
+  background: #0f1113;
+  border: 1px solid #1f2a2e;
+  border-radius: 6px;
+  padding: 16px;
+  margin-bottom: 10px;
+}
+.stack-block h4 {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.stack-block p {
+  font-size: 0.85rem;
+  color: #82828b;
+}
+.stack-tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  margin-right: 4px;
+}
+.st-inuse { background: rgba(34,197,94,0.15); color: #22c55e; }
+.st-ready { background: rgba(59,130,246,0.15); color: #3b82f6; }
+.st-planned { background: rgba(234,179,8,0.15); color: #eab308; }
+.st-na { background: rgba(239,68,68,0.15); color: #ef4444; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0 20px;
+  font-size: 0.85rem;
+}
+th {
+  text-align: left;
+  padding: 8px 10px;
+  background: #0f1113;
+  color: #82828b;
+  font-weight: 500;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-bottom: 1px solid #1f2a2e;
+}
+td {
+  padding: 8px 10px;
+  border-bottom: 1px solid #1a1e1f;
+}
+tr:hover td { background: #0f1113; }
+
+.pro-con {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 12px 0;
+}
+.pro { background: rgba(34,197,94,0.08); border-left: 3px solid #22c55e; padding: 12px; border-radius: 4px; }
+.con { background: rgba(239,68,68,0.08); border-left: 3px solid #ef4444; padding: 12px; border-radius: 4px; }
+.pro h5 { color: #22c55e; margin-bottom: 4px; font-size: 0.85rem; }
+.con h5 { color: #ef4444; margin-bottom: 4px; font-size: 0.85rem; }
+.pro p, .con p { font-size: 0.85rem; color: #a0a0a8; }
+
+.verdict-box {
+  background: linear-gradient(135deg, rgba(212,175,55,0.08), rgba(212,175,55,0.02));
+  border: 1px solid rgba(212,175,55,0.2);
+  border-radius: 8px;
+  padding: 20px;
+  margin: 20px 0;
+}
+.verdict-box h4 { color: #d4af37; margin-bottom: 8px; }
+.verdict-box p { font-size: 0.9rem; color: #c0c0c8; }
+
+.data-flow {
+  background: #0a0c0d;
+  border: 1px solid #1f2a2e;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 16px 0;
+  overflow-x: auto;
+}
+
+.footer {
+  text-align: center;
+  padding: 24px 0;
+  border-top: 1px solid #1f2a2e;
+  color: #4a4a4a;
+  font-size: 0.75rem;
+  margin-top: 40px;
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>LogOS — Shared Backend Analysis</h1>
+<div class="subtitle">What deeper integration looks like across Core · Shepherd · Roundtable given the stack, data, and audience</div>
+
+<!-- Current Architecture -->
+<h2>Current Architecture</h2>
+<div class="card">
+  <table>
+    <tr><th>Product</th><th>Backend</th><th>Data</th><th>AI</th><th>Status</th></tr>
+    <tr>
+      <td><strong>LogOS Core</strong></td>
+      <td>Workers + D1</td>
+      <td>7,959 verses + 139K morphology</td>
+      <td>Workers AI (Llama 4 Scout)</td>
+      <td><span class="stack-tag st-inuse">Active</span></td>
+    </tr>
+    <tr>
+      <td><strong>LogOS Shepherd</strong></td>
+      <td><em>None (static SPA)</em></td>
+      <td>Static JSON (13 topics, 98 verses)</td>
+      <td><em>None</em></td>
+      <td><span class="stack-tag st-ready">No Backend</span></td>
+    </tr>
+    <tr>
+      <td><strong>LogOS Roundtable</strong></td>
+      <td><em>None (static SPA)</em></td>
+      <td>Static JSON (4 guides)</td>
+      <td><em>None</em></td>
+      <td><span class="stack-tag st-na">Not Deployed</span></td>
+    </tr>
+  </table>
+</div>
+
+<h2>What the Stack Enables</h2>
+<div class="card-grid">
+  <div class="stack-block">
+    <h4><span class="stack-tag st-inuse">✔ In Use</span> D1 Database</h4>
+    <p>SQLite at the edge. Already stores 7,959 verses + 139K morphology records. Single source for all Bible data.</p>
+  </div>
+  <div class="stack-block">
+    <h4><span class="stack-tag st-inuse">✔ In Use</span> Vectorize</h4>
+    <p>Semantic vector search (768-dim bge embeddings). 15.9K verse vectors. Can index ANY content type — Bible verses, Shepherd topics, Roundtable guides.</p>
+  </div>
+  <div class="stack-block">
+    <h4><span class="stack-tag st-inuse">✔ In Use</span> Workers AI</h4>
+    <p>Llama 4 Scout for Q&A, Greek parsing, verse analysis. Free tier is generous. One binding covers the entire ecosystem.</p>
+  </div>
+  <div class="stack-block">
+    <h4><span class="stack-tag st-ready">⚡ Available</span> AI Search (Managed RAG)</h4>
+    <p>Cloudflare's managed RAG. Create one instance, upload docs from all three products, single search endpoint returns cross-product results. Costs neurons but no infrastructure.</p>
+  </div>
+  <div class="stack-block">
+    <h4><span class="stack-tag st-ready">⚡ Available</span> Shared D1 Tables</h4>
+    <p>Add new tables to existing D1: shepherd_topics, roundtable_guides, cross_product_index. One database serves all three.</p>
+  </div>
+  <div class="stack-block">
+    <h4><span class="stack-tag st-ready">⚡ Available</span> Shared Auth</h4>
+    <p>Cloudflare Access or simple JWT. One auth config protects all AI-cost endpoints across the ecosystem.</p>
+  </div>
+</div>
+
+<!-- Integration Options -->
+<h2>Integration Options</h2>
+
+<h3>Option A: Shared Vectorize Index</h3>
+<div class="card">
+  <p style="color:#c0c0c8;">Add Shepherd topic content + Roundtable guide content to the existing Vectorize index. A single semantic search across the hub returns Bible verses + parenting topics + sermon guides.</p>
+  <div class="data-flow">
+    <pre style="color:#82828b;font-family:'JetBrains Mono',monospace;font-size:0.8rem;line-height:1.8;">
+User Search Query
+      │
+      ▼
+LogOS Core /api/verses/semantic
+      │
+      ├── Vectorize: "bible-verse-embeddings" (15.9K verse vectors)
+      └── NEW: Vectorize: "logos-content" (verses + shepherd + roundtable)
+                    │
+                    ▼
+      Results: [verse, topic, guide] sorted by relevance</pre>
+  </div>
+  <div class="pro-con">
+    <div class="pro">
+      <h5>✅ Pros</h5>
+      <p>Unified search across all content. Shepherd/Roundtable don't need their own backends — just indexed metadata. Low dev cost.</p>
+    </div>
+    <div class="con">
+      <h5>⚠️ Cons</h5>
+      <p>Shepherd content is already baked into static JSON — this adds a maintenance step to keep the vector index in sync.</p>
+    </div>
+  </div>
+</div>
+
+<h3>Option B: Shepherd Gets API Endpoints on Core</h3>
+<div class="card">
+  <p style="color:#c0c0c8;">Instead of Shepherd baking all 98 verses into static JSON, it fetches scripture via LogOS Core API at build time — or at runtime for dynamic features.</p>
+  <div class="data-flow">
+    <pre style="color:#82828b;font-family:'JetBrains Mono',monospace;font-size:0.8rem;line-height:1.8;">
+Current:  Shepherd builds with 98 verses baked into static JSON files
+Future:   Shepherd calls LogOS Core /api/verses/reference at build time
+          (or at runtime for real-time lookups, age-adaptation)
+
+New endpoint: POST /api/shepherd/advice
+  Input: {"issue": "anger", "ageTier": "grades-2-3", "childContext": "..."}
+  Output: {"verses": [...], "lessonId": "anger", "parentingTip": "..."}
+  AI: Workers AI adapts biblical wisdom to the child's age + situation</pre>
+  </div>
+  <div class="pro-con">
+    <div class="pro">
+      <h5>✅ Pros</h5>
+      <p>Shepherd content is no longer stale at build time. AI-powered parenting advice per age tier. Single Bible data source.</p>
+    </div>
+    <div class="con">
+      <h5>⚠️ Cons</h5>
+      <p>Shepherd loses offline capability. Needs auth on new endpoints. More complex than current static approach.</p>
+    </div>
+  </div>
+</div>
+
+<h3>Option C: Cloudflare AI Search (Managed RAG)</h3>
+<div class="card">
+  <p style="color:#c0c0c8;">Create one AI Search instance. Upload Bible study data, Shepherd topics, and Roundtable guides as documents. Single API endpoint searches ALL content. No Vectorize management, no embedding pipeline to maintain.</p>
+  <div class="data-flow">
+    <pre style="color:#82828b;font-family:'JetBrains Mono',monospace;font-size:0.8rem;line-height:1.8;">
+AI Search Instance: "logos-knowledge"
+  ├── Docs: Bible study content (from Core)
+  ├── Docs: Parenting topics + verses (from Shepherd)
+  └── Docs: Sermon guides + series (from Roundtable)
+
+Query: "What does the Bible say about fear?"
+  │
+  ▼
+Results:
+  [1] Verse: Isaiah 41:10 — "Fear not, for I am with you"
+  [2] Topic: Fear & Anxiety (Shepherd) — Lesson for grades 2-3
+  [3] Guide: Battle of the Mind (Roundtable) — Session 3</pre>
+  </div>
+  <div class="pro-con">
+    <div class="pro">
+      <h5>✅ Pros</h5>
+      <p>Zero infrastructure. Single search across all content. No embedding code to maintain. Built-in reranking.</p>
+    </div>
+    <div class="con">
+      <h5>⚠️ Cons</h5>
+      <p>Neuron costs per query. Can't customize the embedding model. Less control than Vectorize. Duplicates existing Vectorize index.</p>
+    </div>
+  </div>
+</div>
+
+<h3>Option E: Common MCP Gateway</h3>
+<div class="card">
+  <p style="color:#c0c0c8;">Deploy an MCP (Model Context Protocol) server as a Cloudflare Worker alongside LogOS Core. This exposes the entire ecosystem as a set of tools that ANY AI agent can call — TARS, Jules, Codex, or future agents. No REST endpoints to remember, no auth headers to manage — just MCP tool discovery.</p>
+  <div class="data-flow">
+    <pre style="color:#82828b;font-family:'JetBrains Mono',monospace;font-size:0.8rem;line-height:1.8;">
+Any AI Agent (TARS, Jules, Codex)
+        │
+        ▼  MCP Protocol (stdio or HTTP)
+┌──────────────────────────────────┐
+│  LogOS MCP Gateway                │
+│  Cloudflare Worker                │
+│                                  │
+│  Tools:                          │
+│  ┌──────────────────────────────┐│
+│  │ get_verse(ref)               ││  ← verse text by reference
+│  │ search_verses(query)         ││  ← semantic search
+│  │ ask_bible(query, deep)       ││  ← AI Q&A
+│  │ explain_verse(ref)           ││  ← verse deep-dive
+│  │ parse_greek(text)            ││  ← morphology analysis
+│  │ get_shepherd_topic(id)       ││  ← parenting topic
+│  │ search_all(query)            ││  ← cross-product search
+│  └──────────────────────────────┘│
+│                                  │
+│  Resources:                      │
+│  ┌──────────────────────────────┐│
+│  │ logos://verses/{ref}         ││
+│  │ logos://shepherd/topics/{id} ││
+│  │ logos://roundtable/guides/{id}││
+│  └──────────────────────────────┘│
+└──────────┬───────────────────────┘
+           │
+           ▼
+    ┌──────────────┐
+    │  LogOS Core   │
+    │  (existing)   │
+    └──────────────┘
+
+How it connects to Hermes Agent:
+  hermes-mcp-servers:
+    logos:
+      command: "wrangler"
+      args: ["dev", "--port", 3001]
+      # or HTTP transport:
+      url: "https://logos-mcp.kodakwest.workers.dev"</pre>
+  </div>
+  <div class="pro-con">
+    <div class="pro">
+      <h5>✅ Pros</h5>
+      <p>Any AI agent can discover and call LogOS tools without writing REST client code. TARS gets native Bible tools. Jules can pull verse context when building content. Single auth point. MCP is the standard Hermes already uses.</p>
+    </div>
+    <div class="con">
+      <h5>⚠️ Cons</h5>
+      <p>MCP on Cloudflare Workers has transport considerations (HTTP vs stdio). Need to decide which tools are agent-facing vs user-facing. Adds another service to maintain.</p>
+    </div>
+  </div>
+</div>
+
+<h3>Option D: Lightweight — Verse API for Shepherd Build</h3>
+<div class="card">
+  <p style="color:#c0c0c8;">Minimum viable integration. Shepherd keeps its static JSON but uses LogOS Core's `/api/verses/reference` endpoint as the source of truth for scripture text at build time. A build script fetches verse data from Core instead of parsing BTB files.</p>
+  <div class="data-flow">
+    <pre style="color:#82828b;font-family:'JetBrains Mono',monospace;font-size:0.8rem;line-height:1.8;">
+Shepherd Build Process:
+  1. Read topic JSON (local, defines which verses are needed)
+  2. Fetch verse text from LogOS Core /api/verses/reference (batch)
+  3. Populate topic JSON with fetched text
+  4. Build static SPA as before
+
+Single source of truth for verse text = LogOS Core D1
+Shepherd stays fully static at runtime
+</pre>
+  </div>
+  <div class="pro-con">
+    <div class="pro">
+      <h5>✅ Pros</h5>
+      <p>Shepherd stays static. Single Bible data source. Low effort. No runtime dependencies.</p>
+    </div>
+    <div class="con">
+      <h5>⚠️ Cons</h5>
+      <p>Build-time dependency on Core API. No runtime dynamic features.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Analysis -->
+<h2>Analysis by Dimension</h2>
+
+<div class="card">
+  <h3 style="margin-top:0;">Data Cohesion</h3>
+  <p style="color:#c0c0c8;">Right now each product has its own copy of verse data:</p>
+  <ul style="color:#82828b;font-size:0.9rem;margin:10px 0 0 20px;">
+    <li><strong>Core</strong> — D1 database, canonical</li>
+    <li><strong>Shepherd</strong> — 98 verses baked into static JSON files</li>
+    <li><strong>Roundtable</strong> — Anchor verses baked into guide JSON files</li>
+  </ul>
+  <p style="color:#c0c0c8;margin-top:10px;">Option D solves this for build-time. Option B solves it for runtime. Options A/C solve it for search.</p>
+</div>
+
+<div class="card">
+  <h3 style="margin-top:0;">AI Cost Exposure</h3>
+  <p style="color:#c0c0c8;">Workers AI is pay-per-call. If Shepherd and Roundtable start making AI calls, costs multiply. A shared auth + rate-limiting layer on Core prevents one product from burning the budget. Keep all AI calls routed through LogOS Core where they can be monitored and throttled.</p>
+</div>
+
+<div class="card">
+  <h3 style="margin-top:0;">Audience Needs</h3>
+  <p style="color:#c0c0c8;">The unified vision is "church members come to one place." But:</p>
+  <ul style="color:#82828b;font-size:0.9rem;margin:10px 0 0 20px;">
+    <li><strong>A parent looking for parenting help</strong> doesn't need Greek morphology — they need Shepherd topics surfaced when they search</li>
+    <li><strong>A small group leader</strong> needs sermon guides linked to the Bible passages being studied</li>
+    <li><strong>A Bible student</strong> needs deep search and Greek tools</li>
+  </ul>
+  <p style="color:#c0c0c8;margin-top:10px;">This argues for <strong>discovery integration</strong> (cross-product search) more than data integration. Each product serves a different job; the hub helps people find the right product.</p>
+</div>
+
+<!-- Recommendation -->
+<h2>Recommendation</h2>
+<div class="verdict-box">
+  <h4>Start with Options A + D — then evaluate C</h4>
+  <p><strong>Option D (Verse API for Shepherd build)</strong> is the quickest win. Shepherd stops baking its own copy of verse data. At build time it fetches from LogOS Core. Single Bible data source, zero architectural change to either app.</p>
+  <p style="margin-top:10px;"><strong>Option A (Shared Vectorize index)</strong> extends the existing Vectorize to include Shepherd topics + Roundtable guides. The hub's semantic search then returns cross-product results. This doesn't require Shepherd or Roundtable to change — just an indexing pipeline.</p>
+  <p style="margin-top:10px;"><strong>Option C (AI Search)</strong> is worth evaluating after launch when there's traffic. It could replace Vectorize entirely if the cost/benefit works. For now, Vectorize is already built and paid for.</p>
+  <p><strong>Evaluating Option E (MCP Gateway)</strong> — This is the most architecturally interesting path. It turns LogOS from a collection of apps into a <em>platform</em> that any AI agent can talk to. Hermes already uses MCP natively — wiring this in means TARS can query the Bible directly, Jules can pull verse context while building content, and future agents get instant access. Worth prototyping alongside Options A/D.</p>
+</div>
+
+<!-- Data Flow Diagram -->
+<h2>Target Architecture</h2>
+<div class="data-flow">
+<pre style="font-family:'JetBrains Mono',monospace;font-size:0.8rem;line-height:1.7;color:#c0c0c8;">
+┌─────────────────────────────────────────────────────────────────┐
+│                       LogOS Core (API)                           │
+│                                                                  │
+│  D1 (source of truth) ──── Vectorize (15.9K verse vectors)       │
+│       │                              │                           │
+│       ▼                              ▼                           │
+│  /api/verses/*  ◄────┐        /api/verses/semantic              │
+│  /api/ask            │               │                          │
+│  /api/explain        │               ▼                          │
+│  /api/parse/greek    │        Cross-product results              │
+│       │              │        (verses + topics + guides)         │
+│       │              │                                           │
+│       │              │                                           │
+│       ▼              │                                           │
+│  NEW: /api/verses/by-ref (batch verse lookup for build tools)    │
+└───────┬─────────────────────────────────────────────────────────┘
+        │                 │                │
+        │ Build-time      │ Runtime        │ Runtime
+        ▼                 ▼                ▼
+┌──────────────┐  ┌──────────────┐  ┌──────────────┐
+│  Shepherd     │  │   Hub Portal  │  │  Roundtable   │
+│  (static SPA) │  │   (Core SPA)  │  │  (static SPA) │
+│               │  │               │  │               │
+│  Fetches      │  │  Cross-search │  │  Fetches      │
+│  verse text   │  │  from all     │  │  verse text   │
+│  at build     │  │  sources      │  │  at build     │
+└──────────────┘  └──────────────┘  └──────────────┘
+</pre>
+</div>
+
+<!-- Summary -->
+<h2>What This Unlocks</h2>
+<div class="card-grid" style="margin-top:16px;">
+  <div class="stack-block" style="border-left:3px solid #22c55e;">
+    <h4 style="color:#22c55e;">Single Bible Source</h4>
+    <p>Shepherd and Roundtable both pull verse text from LogOS Core. One correction fixes all three.</p>
+  </div>
+  <div class="stack-block" style="border-left:3px solid #3b82f6;">
+    <h4 style="color:#3b82f6;">Cross-Product Discovery</h4>
+    <p>Search from the hub returns Bible verses, parenting topics, AND sermon guides. Users find what they need regardless of which product it lives in.</p>
+  </div>
+  <div class="stack-block" style="border-left:3px solid #d4af37;">
+    <h4 style="color:#d4af37;">Products Stay Independent</h4>
+    <p>Shepherd and Roundtable remain static SPAs. No runtime coupling. No shared deployment. The hub links + indexes, it doesn't control.</p>
+  </div>
+  <div class="stack-block" style="border-left:3px solid #4da8da;">
+    <h4 style="color:#4da8da;">AI Sits Behind Auth</h4>
+    <p>All AI calls route through LogOS Core where auth, rate limits, and monitoring live. Shepherd and Roundtable never make direct AI calls.</p>
+  </div>
+</div>
+
+<div class="footer">
+  LogOS Shared Backend Analysis · TARS · May 16 2026
+</div>
+
+</div>
+</body>
+</html>
