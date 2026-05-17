@@ -1,0 +1,237 @@
+:root {
+  --bg-color: #0b0d0e;
+  --panel-color: #131618;
+  --text-color: #e8e6e1;
+  --accent-gold: #d4af37;
+  --accent-frontend: #22d3ee;
+  --accent-backend: #34d399;
+  --accent-database: #a78bfa;
+  --accent-security: #fb7185;
+  --accent-aiml: #fb923c;
+  --accent-external: #94a3b8;
+  
+  --font-heading: 'Playfair Display', serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: var(--font-body);
+  line-height: 1.6;
+  display: flex;
+  min-height: 100vh;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  color: var(--accent-gold);
+  margin-bottom: 1rem;
+}
+
+a {
+  color: var(--accent-gold);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+code {
+  font-family: var(--font-mono);
+  background: #1e2226;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+pre {
+  background: #1e2226;
+  padding: 1rem;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin-bottom: 1rem;
+}
+
+pre code {
+  background: none;
+  padding: 0;
+}
+
+/* Layout */
+.sidebar {
+  width: 280px;
+  background-color: var(--panel-color);
+  padding: 2rem;
+  position: fixed;
+  height: 100vh;
+  overflow-y: auto;
+  border-right: 1px solid #2a2e33;
+}
+
+.sidebar h2 {
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.nav-links {
+  list-style: none;
+}
+
+.nav-links li {
+  margin-bottom: 0.5rem;
+}
+
+.nav-links a {
+  color: #a1a1aa;
+  display: block;
+  padding: 0.5rem;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.nav-links a:hover, .nav-links a.active {
+  background-color: rgba(212, 175, 55, 0.1);
+  color: var(--accent-gold);
+}
+
+.main-content {
+  margin-left: 280px;
+  padding: 3rem;
+  flex: 1;
+  max-width: 1200px;
+}
+
+.search-container {
+  margin-bottom: 2rem;
+}
+
+.search-input {
+  width: 100%;
+  padding: 1rem;
+  background-color: var(--panel-color);
+  border: 1px solid #2a2e33;
+  color: var(--text-color);
+  border-radius: 8px;
+  font-family: var(--font-body);
+  font-size: 1rem;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--accent-gold);
+}
+
+section {
+  margin-bottom: 4rem;
+  scroll-margin-top: 2rem;
+}
+
+section.hidden {
+  display: none;
+}
+
+/* Callout Cards */
+.cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.card {
+  background-color: var(--panel-color);
+  padding: 1.5rem;
+  border-radius: 8px;
+  border-top: 3px solid var(--accent-gold);
+}
+
+/* Table */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+  background-color: var(--panel-color);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+th, td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid #2a2e33;
+}
+
+th {
+  background-color: rgba(212, 175, 55, 0.1);
+  color: var(--accent-gold);
+}
+
+/* Architecture Diagram */
+.diagram-container {
+  background-color: var(--panel-color);
+  padding: 2rem;
+  border-radius: 8px;
+  overflow-x: auto;
+}
+
+/* API Candidates */
+.api-candidate {
+  background-color: var(--panel-color);
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  border-left: 4px solid var(--accent-external);
+}
+
+.api-candidate.recommended {
+  border-left-color: var(--accent-backend);
+}
+
+.api-candidate.future {
+  border-left-color: var(--accent-aiml);
+}
+
+.api-candidate.rejected {
+  border-left-color: var(--accent-security);
+}
+
+/* Checklists */
+.checklist {
+  list-style: none;
+}
+
+.checklist li {
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  body {
+    flex-direction: column;
+  }
+  
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+    padding: 1.5rem;
+    border-right: none;
+    border-bottom: 1px solid #2a2e33;
+  }
+  
+  .main-content {
+    margin-left: 0;
+    padding: 1.5rem;
+  }
+}

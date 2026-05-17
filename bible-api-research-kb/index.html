@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LogOS: Bible API Research Knowledge Base</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <aside class="sidebar">
+        <h2>LogOS KB</h2>
+        <ul class="nav-links">
+            <li><a href="#overview" class="active">Overview</a></li>
+            <li><a href="#architecture">Architecture Diagram</a></li>
+            <li><a href="#runtime">Runtime Config</a></li>
+            <li><a href="#api-candidates">API Candidates</a></li>
+            <li><a href="#gslogimaker-reference">gslogimaker Reference</a></li>
+            <li><a href="#pipeline">Pipeline Architecture</a></li>
+            <li><a href="#troubleshooting">Troubleshooting</a></li>
+            <li><a href="#commands">Commands</a></li>
+            <li><a href="#patches">Patches Timeline</a></li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+        <div class="search-container">
+            <input type="text" id="search" class="search-input" placeholder="Search knowledge base...">
+        </div>
+
+        <section id="overview" data-keywords="overview research sessions apis conclusion gslogimaker plugin pattern ao lab btb pipeline architecture">
+            <h2>Overview</h2>
+            <div class="cards-container">
+                <div class="card">
+                    <h3>Research Sessions</h3>
+                    <p>Conducted 3 research sessions analyzing external Bible APIs. <strong>Conclusion:</strong> Build on our own D1/Vectorize stack (BTB interlinear data is superior), use external APIs as secondary sync sources.</p>
+                </div>
+                <div class="card">
+                    <h3>gslogimaker Plugin</h3>
+                    <p>Adopted the gslogimaker plugin reference pattern for dynamic code-block rendering and layered toggles for translations and morphology.</p>
+                </div>
+                <div class="card">
+                    <h3>Pipeline Architecture</h3>
+                    <p>Recommendation: Leverage AO Lab for breadth (1,000+ translations) and our BTB (D1/Vectorize) stack for depth (interlinear & morphology).</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="architecture" data-keywords="architecture diagram svg current state future state logos ecosystem auth gateway cloudflare access split endpoints vector search d1 worker">
+            <h2>Architecture Diagram</h2>
+            <p>Current Bible AI Search vs Future LogOS ecosystem.</p>
+            <div class="diagram-container">
+                <!-- Inline SVG Architecture Diagram -->
+                <svg width="1000" height="600" viewBox="0 0 1000 600" xmlns="http://www.w3.org/2000/svg" style="font-family: 'Inter', sans-serif;">
+                    <defs>
+                        <!-- Gradients and Masks -->
+                        <linearGradient id="gradCurrent" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#131618;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#0b0d0e;stop-opacity:1" />
+                        </linearGradient>
+                        <linearGradient id="gradFuture" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#131618;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#0b0d0e;stop-opacity:1" />
+                        </linearGradient>
+                        
+                        <mask id="doubleRectMask">
+                            <rect x="0" y="0" width="1000" height="600" fill="white" />
+                        </mask>
+                    </defs>
+
+                    <!-- Backgrounds -->
+                    <rect x="0" y="0" width="480" height="600" fill="url(#gradCurrent)" rx="8" mask="url(#doubleRectMask)" stroke="#2a2e33" stroke-width="2" />
+                    <rect x="520" y="0" width="480" height="600" fill="url(#gradFuture)" rx="8" mask="url(#doubleRectMask)" stroke="#d4af37" stroke-width="2" />
+
+                    <!-- Titles -->
+                    <text x="240" y="40" fill="#22d3ee" font-size="20" font-weight="bold" text-anchor="middle" font-family="'Playfair Display', serif">LEFT: Current (Bible AI Search)</text>
+                    <text x="760" y="40" fill="#d4af37" font-size="20" font-weight="bold" text-anchor="middle" font-family="'Playfair Display', serif">RIGHT: Future (LogOS)</text>
+
+                    <!-- LEFT SIDE: Current State -->
+                    <rect x="40" y="80" width="400" height="480" fill="none" stroke="#34d399" stroke-width="2" stroke-dasharray="4" rx="8" />
+                    <text x="240" y="110" fill="#34d399" font-size="16" font-weight="bold" text-anchor="middle">Bible AI Search Worker</text>
+                    
+                    <g fill="#e8e6e1" font-size="12">
+                        <text x="60" y="140">• 9 endpoints grouped by tier</text>
+                        <text x="60" y="160" fill="#fb7185">⚠ No auth</text>
+                        <text x="60" y="180" fill="#fb7185">⚠ Blanket CORS</text>
+                        <text x="60" y="200" fill="#fb7185">⚠ Serial upload</text>
+                        <text x="60" y="220" fill="#fb7185">⚠ LIKE% Greek search</text>
+                    </g>
+
+                    <!-- DBs Current -->
+                    <rect x="60" y="260" width="160" height="80" fill="#a78bfa" fill-opacity="0.2" stroke="#a78bfa" stroke-width="2" rx="4" />
+                    <text x="140" y="290" fill="#a78bfa" font-size="14" font-weight="bold" text-anchor="middle">D1</text>
+                    <text x="140" y="310" fill="#e8e6e1" font-size="10" text-anchor="middle">7,959 verses</text>
+                    <text x="140" y="325" fill="#e8e6e1" font-size="10" text-anchor="middle">139K morphology</text>
+
+                    <rect x="260" y="260" width="160" height="80" fill="#fb923c" fill-opacity="0.2" stroke="#fb923c" stroke-width="2" rx="4" />
+                    <text x="340" y="290" fill="#fb923c" font-size="14" font-weight="bold" text-anchor="middle">Vectorize</text>
+                    <text x="340" y="315" fill="#e8e6e1" font-size="10" text-anchor="middle">16K vectors</text>
+
+                    <rect x="160" y="380" width="160" height="40" fill="#fb923c" fill-opacity="0.2" stroke="#fb923c" stroke-width="2" rx="4" />
+                    <text x="240" y="405" fill="#fb923c" font-size="14" font-weight="bold" text-anchor="middle">Workers AI</text>
+
+                    <!-- RIGHT SIDE: Future State -->
+                    <rect x="560" y="80" width="400" height="480" fill="none" stroke="#d4af37" stroke-width="2" rx="8" />
+                    <text x="760" y="110" fill="#d4af37" font-size="16" font-weight="bold" text-anchor="middle">LogOS Worker</text>
+
+                    <!-- Security/Gateway -->
+                    <rect x="600" y="140" width="320" height="40" fill="#fb7185" fill-opacity="0.2" stroke="#fb7185" stroke-width="2" rx="4" />
+                    <text x="760" y="165" fill="#fb7185" font-size="14" font-weight="bold" text-anchor="middle">Auth Gateway (Cloudflare Access)</text>
+
+                    <!-- Split Endpoints -->
+                    <g fill="#e8e6e1" font-size="12">
+                        <text x="580" y="210">Split endpoint namespaces:</text>
+                        <text x="600" y="230">• /api/ = public</text>
+                        <text x="600" y="250">• /api/ai/ = auth</text>
+                        <text x="600" y="270">• /api/admin/ = key</text>
+                        <text x="580" y="300">New Endpoints:</text>
+                        <text x="600" y="320">• GET /api/verses/:ref</text>
+                        <text x="600" y="340">• GET /api/verses/chapter</text>
+                        <text x="600" y="360">• Pagination, Admin Reindex, Async jobs</text>
+                    </g>
+
+                    <!-- Ecosystem -->
+                    <rect x="580" y="400" width="360" height="140" fill="#d4af37" fill-opacity="0.1" stroke="#d4af37" stroke-width="1" stroke-dasharray="4" rx="4" />
+                    <text x="760" y="425" fill="#d4af37" font-size="14" font-weight="bold" text-anchor="middle">Ecosystem</text>
+
+                    <rect x="600" y="440" width="150" height="30" fill="#22d3ee" fill-opacity="0.2" stroke="#22d3ee" stroke-width="1" rx="4" />
+                    <text x="675" y="460" fill="#22d3ee" font-size="12" text-anchor="middle">Hub Portal</text>
+
+                    <rect x="770" y="440" width="150" height="30" fill="#22d3ee" fill-opacity="0.2" stroke="#22d3ee" stroke-width="1" rx="4" />
+                    <text x="845" y="460" fill="#22d3ee" font-size="12" text-anchor="middle">Shepherd API</text>
+
+                    <rect x="600" y="490" width="150" height="30" fill="#34d399" fill-opacity="0.2" stroke="#34d399" stroke-width="1" rx="4" />
+                    <text x="675" y="510" fill="#34d399" font-size="12" text-anchor="middle">Roundtable Backend</text>
+
+                    <rect x="770" y="490" width="150" height="30" fill="#94a3b8" fill-opacity="0.2" stroke="#94a3b8" stroke-width="1" rx="4" />
+                    <text x="845" y="510" fill="#94a3b8" font-size="12" text-anchor="middle">MCP Gateway</text>
+
+                    <!-- gslogimaker Reference Corner -->
+                    <rect x="40" y="460" width="400" height="100" fill="#94a3b8" fill-opacity="0.1" stroke="#94a3b8" stroke-width="1" rx="4" />
+                    <text x="240" y="480" fill="#94a3b8" font-size="14" font-weight="bold" text-anchor="middle">Ref: gslogimaker pattern</text>
+                    <text x="240" y="500" fill="#e8e6e1" font-size="11" text-anchor="middle">Dynamic code-block rendering</text>
+                </svg>
+            </div>
+        </section>
+
+        <section id="runtime" data-keywords="runtime canonical values url github db d1 vectorize workers ai data">
+            <h2>Table of Canonical Values</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Resource</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Live URL</strong></td>
+                        <td><code>bible-ai-api.kodakwest.workers.dev</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>GitHub</strong></td>
+                        <td><code>kodakwest/bible-ai-search</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>D1 Database</strong></td>
+                        <td><code>bible-ai-db (1a732bfd-cee0-4d89-b1a2-6940b8417e5d)</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Vectorize Index</strong></td>
+                        <td><code>bible-verse-embeddings (768-dim, bge-base-en-v1.5)</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Workers AI Models</strong></td>
+                        <td><code>@cf/meta/llama-4-scout-17b</code>, <code>@cf/baai/bge-base-en-v1.5</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Data Stats</strong></td>
+                        <td>7,959 verses, 139,476 morphology, ~15,920 vectors</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="api-candidates" data-keywords="api candidates ao lab bibleql bible-api getbible api.bible esv api bolls.life">
+            <h2>API Candidates</h2>
+            
+            <div class="api-candidate recommended">
+                <h3>✅ AO Lab (bible.helloao.org)</h3>
+                <p><strong>Findings:</strong> 1,000+ translations, no auth, no limits. Best bulk sync source. Includes commentary and audio. ★</p>
+            </div>
+
+            <div class="api-candidate recommended">
+                <h3>✅ BibleQL (bibleql.dev)</h3>
+                <p><strong>Findings:</strong> GraphQL, 43 translations, free/open-source. Ideal for Roundtable sermon system.</p>
+            </div>
+
+            <div class="api-candidate recommended">
+                <h3>✅ bible-api.com</h3>
+                <p><strong>Findings:</strong> KJV+WEB, clean JSON, no key. Quick lookups only.</p>
+            </div>
+
+            <div class="api-candidate recommended">
+                <h3>✅ getbible.net</h3>
+                <p><strong>Findings:</strong> 40+ translations, no key. Multi-translation candidate.</p>
+            </div>
+
+            <div class="api-candidate future">
+                <h3>🔜 api.bible (Life.Church)</h3>
+                <p><strong>Findings:</strong> 50+ translations, free key. Future addition.</p>
+            </div>
+
+            <div class="api-candidate future">
+                <h3>🔜 ESV API</h3>
+                <p><strong>Findings:</strong> ESV only, free key. Niche.</p>
+            </div>
+
+            <div class="api-candidate rejected">
+                <h3>❌ bolls.life</h3>
+                <p><strong>Findings:</strong> React SPA, no REST API, Cloudflare blocks. Dead end.</p>
+            </div>
+        </section>
+
+        <section id="gslogimaker-reference" data-keywords="gslogimaker reference plugin architecture dynamic code block rendering bolls.life hub portal">
+            <h2>gslogimaker Plugin Reference</h2>
+            <ul>
+                <li><strong>Dynamic code-block rendering:</strong> <code>```verse</code> → API fetch → togglable KJV/BSB/Greek/morphology layers</li>
+                <li>Plugin's bolls.life backend rejected</li>
+                <li>Pattern <strong>ADOPTED</strong> for LogOS Hub Portal frontend hitting our own <code>/api/ai/explain</code></li>
+            </ul>
+        </section>
+
+        <section id="pipeline" data-keywords="pipeline architecture recommendation ascii diagram">
+            <h2>Pipeline Architecture Recommendation</h2>
+            <pre><code>AO Lab (1,000+ tr.) ──→ LogOS Core Worker ──→ Hub Portal
+BibleQL (GraphQL)    ──→                    ──→ Roundtable
+                          ├─ D1 (BTB + sync)
+                          ├─ Vectorize
+                          └─ Workers AI</code></pre>
+        </section>
+
+        <section id="troubleshooting" data-keywords="troubleshooting checklist finding research knowledge base">
+            <h2>Troubleshooting Checklist</h2>
+            <ul class="checklist">
+                <li><input type="checkbox" disabled> Can't find research findings → check <code>knowledge/bible-api-research.md</code> in vault</li>
+                <li><input type="checkbox" disabled> Need current state API docs → check <code>knowledge/bible-ai-search-kb/README.md</code></li>
+                <li><input type="checkbox" disabled> Need architecture review → check <code>knowledge/bible-ai-search-kb/architecture-review.md</code></li>
+            </ul>
+        </section>
+
+        <section id="commands" data-keywords="commands btb morphology upload deploy worker quick api test curl python3 npm">
+            <h2>Commands</h2>
+            <pre><code># BTB morphology upload
+python3 parse_btb_morph.py --delay 0.02
+
+# Deploy worker
+npm run deploy
+
+# Quick API test
+curl https://bible-ai-api.kodakwest.workers.dev/api/status</code></pre>
+        </section>
+
+        <section id="patches" data-keywords="patches timeline may 15 may 17 codex architecture review rebranding assets">
+            <h2>Patches Timeline</h2>
+            <ul>
+                <li><strong>May 15:</strong> Initial gslogimaker research, BTB morphology pipeline built</li>
+                <li><strong>May 15:</strong> deploy Bible AI Search worker, Codex architecture review (23 findings)</li>
+                <li><strong>May 17:</strong> AO Lab + BibleQL discovery, LogOS rebranding assets</li>
+                <li><strong>May 17:</strong> Consolidated research into <code>knowledge/bible-api-research.md</code></li>
+            </ul>
+        </section>
+
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
