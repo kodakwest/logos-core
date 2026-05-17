@@ -6,7 +6,7 @@
   <title>LogOS Core - Login</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
   <style>
     :root {
       /* Base */
@@ -34,6 +34,7 @@
       --brand-gold: #d4af37;
       --brand-primary: #d4af37;
       --brand-dim: rgba(212, 175, 55, 0.2);
+      --brand-blue: #4da8da;
     }
 
     * {
@@ -43,18 +44,25 @@
     }
 
     body {
-      background-color: var(--bg-base);
+      background:
+        linear-gradient(135deg, rgba(212, 175, 55, 0.12), transparent 38%),
+        linear-gradient(315deg, rgba(77, 168, 218, 0.08), transparent 36%),
+        var(--bg-base);
       color: var(--ink-primary);
       font-family: var(--font-sans);
+      line-height: 1.5;
+      min-width: 320px;
       min-height: 100vh;
+      min-height: 100svh;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      padding: 16px;
     }
 
     .card {
-      background-color: var(--bg-panel);
+      background: rgba(19, 22, 24, 0.9);
       border: 1px solid var(--border-subtle);
       border-radius: var(--radius-lg);
       padding: 48px;
@@ -62,6 +70,8 @@
       max-width: 420px;
       text-align: center;
       position: relative;
+      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.34);
+      backdrop-filter: blur(18px);
     }
 
     .logo-container {
@@ -69,15 +79,17 @@
     }
 
     .logo-mark {
-      width: 40px;
-      height: 40px;
+      width: 56px;
+      height: 56px;
       margin-bottom: 16px;
+      color: var(--brand-primary);
     }
 
     h1 {
       font-family: var(--font-serif);
-      font-size: 1.8rem;
-      font-weight: 600;
+      font-size: 1.45rem;
+      font-weight: 700;
+      line-height: 1;
       color: var(--brand-primary);
       margin-bottom: 4px;
     }
@@ -86,7 +98,15 @@
       font-family: var(--font-sans);
       font-size: 0.85rem;
       color: var(--ink-secondary);
-      margin-bottom: 32px;
+      margin-bottom: 0;
+    }
+
+    .brand-divider {
+      width: 72px;
+      height: 1px;
+      margin: 18px auto 0;
+      background: linear-gradient(90deg, transparent, var(--brand-primary), transparent);
+      opacity: 0.85;
     }
 
     .input-wrapper {
@@ -112,7 +132,7 @@
       padding: 12px 16px;
       color: var(--ink-primary);
       font-family: var(--font-sans);
-      font-size: 1rem;
+      font-size: 16px;
       outline: none;
       transition: all 0.2s ease;
     }
@@ -138,6 +158,7 @@
       border: none;
       border-radius: var(--radius-md);
       padding: 12px;
+      min-height: 44px;
       font-family: var(--font-sans);
       font-size: 1rem;
       font-weight: 600;
@@ -146,10 +167,21 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      -webkit-tap-highlight-color: transparent;
     }
 
     button:hover:not(:disabled) {
       background-color: #e5c455;
+    }
+
+    button:active:not(:disabled) {
+      background-color: #c89f29;
+    }
+
+    button:focus-visible,
+    .send-again:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 1px var(--brand-primary);
     }
 
     button:disabled {
@@ -194,6 +226,9 @@
       width: 48px;
       height: 48px;
       margin-bottom: 16px;
+      stroke-dasharray: 80;
+      stroke-dashoffset: 80;
+      animation: drawCheck 0.7s ease forwards;
     }
 
     .success-title {
@@ -206,8 +241,20 @@
     .success-desc {
       font-size: 0.95rem;
       color: var(--ink-secondary);
-      margin-bottom: 24px;
+      margin-bottom: 14px;
       line-height: 1.5;
+    }
+
+    .success-email {
+      display: block;
+      margin-bottom: 24px;
+      padding: 10px 12px;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      background: rgba(11, 13, 14, 0.5);
+      color: var(--ink-primary);
+      font-size: 0.95rem;
+      overflow-wrap: anywhere;
     }
 
     .send-again {
@@ -217,9 +264,12 @@
       transition: opacity 0.2s;
       background: none;
       border: none;
-      padding: 0;
+      min-height: 44px;
+      padding: 0 12px;
       width: auto;
-      display: inline;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .send-again:hover {
@@ -274,26 +324,37 @@
       display: none;
     }
 
+    @keyframes drawCheck {
+      to {
+        stroke-dashoffset: 0;
+      }
+    }
+
     /* Mobile */
     @media (max-width: 480px) {
+      body {
+        padding: 0;
+      }
+
       .card {
-        padding: 24px;
+        padding: 28px 24px;
         border-radius: 0;
         border-left: none;
         border-right: none;
         min-height: 100vh;
+        min-height: 100svh;
         display: flex;
         flex-direction: column;
         justify-content: center;
       }
 
       .logo-mark {
-        width: 32px;
-        height: 32px;
+        width: 52px;
+        height: 52px;
       }
 
       h1 {
-        font-size: 1.5rem;
+        font-size: 1.45rem;
       }
     }
   </style>
@@ -302,13 +363,14 @@
 
   <div class="card">
     <div class="logo-container">
-      <svg class="logo-mark" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-        <path d="M20,80 Q50,40 50,20 Q50,40 80,80" stroke="#d4af37" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M50,20 L50,80" stroke="#d4af37" stroke-width="4" stroke-dasharray="8 8" fill="none"/>
-        <path d="M10,20 Q30,10 50,20 Q70,10 90,20 L90,80 Q70,70 50,80 Q30,70 10,80 Z" stroke="#d4af37" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <svg class="logo-mark" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20,80 Q50,40 50,20 Q50,40 80,80" />
+        <path d="M50,20 L50,80" stroke-dasharray="8 8" />
+        <path d="M10,20 Q30,10 50,20 Q70,10 90,20 L90,80 Q70,70 50,80 Q30,70 10,80 Z" stroke-width="3" />
       </svg>
       <h1>LogOS Core</h1>
       <div class="tagline">The Operating System for Truth</div>
+      <div class="brand-divider" aria-hidden="true"></div>
     </div>
 
     <!-- State 1: Initial -->
@@ -340,6 +402,7 @@
       </svg>
       <div class="success-title">Check your email</div>
       <div class="success-desc">We sent a login link to your email address.</div>
+      <span id="success-email" class="success-email"></span>
       <button class="send-again" type="button" data-reset>Send again</button>
     </div>
 
@@ -361,6 +424,7 @@
     const form = document.getElementById('state-initial');
     const emailInput = document.getElementById('email-input');
     const sendingEmail = document.getElementById('sending-email');
+    const successEmail = document.getElementById('success-email');
     const formError = document.getElementById('form-error');
 
     function switchState(stateId) {
@@ -382,6 +446,7 @@
 
       const email = emailInput.value.trim();
       sendingEmail.value = email;
+      successEmail.textContent = email;
       switchState('state-sending');
 
       try {

@@ -1,4 +1,4 @@
-import { Search, TextCursorInput } from "lucide-react";
+import { Menu, Search, TextCursorInput } from "lucide-react";
 import { createRoot } from "react-dom/client";
 import { useEffect, useMemo, useState } from "react";
 import { ParserView } from "./parser";
@@ -16,9 +16,13 @@ const navItems: Array<{ route: Route; label: string; icon: typeof Search }> = [
 function App() {
   const [route, setRoute] = useState<Route>(readRoute());
   const [status, setStatus] = useState<string>("Checking status");
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    const onHash = () => setRoute(readRoute());
+    const onHash = () => {
+      setRoute(readRoute());
+      setMenuOpen(false);
+    };
     window.addEventListener("hashchange", onHash);
     return () => window.removeEventListener("hashchange", onHash);
   }, []);
@@ -48,8 +52,11 @@ function App() {
             <span className="brand-tagline">The Operating System for Truth</span>
           </span>
         </a>
+        <button className="hamburger" type="button" aria-label="Toggle navigation" aria-expanded={menuOpen} onClick={() => setMenuOpen((open) => !open)}>
+          <Menu size={22} />
+        </button>
         <LogoLoadingCycle />
-        <nav className="nav-list" aria-label="Primary">
+        <nav className={`nav-list${menuOpen ? " open" : ""}`} aria-label="Primary">
           {navItems.map((item) => {
             const Icon = item.icon;
             return (

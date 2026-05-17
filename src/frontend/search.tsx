@@ -1,5 +1,5 @@
 import { ChevronDown, ChevronUp, Search as SearchIcon } from "lucide-react";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 
 interface VerseResult {
   id: number;
@@ -21,6 +21,11 @@ export function SearchView() {
   const [expanded, setExpanded] = useState<Set<number>>(new Set());
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("Enter a query or filter by book and chapter.");
+  const queryInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    queryInputRef.current?.focus();
+  }, []);
 
   async function submit(event: FormEvent) {
     event.preventDefault();
@@ -58,16 +63,18 @@ export function SearchView() {
       <form className="tool-panel" onSubmit={submit}>
         <label className="field wide">
           <span>Query</span>
-          <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="shepherds watching their flocks" />
+          <input ref={queryInputRef} value={query} onChange={(event) => setQuery(event.target.value)} placeholder="shepherds watching their flocks" />
         </label>
-        <label className="field">
-          <span>Book</span>
-          <input value={book} onChange={(event) => setBook(event.target.value)} placeholder="Luke" disabled={semantic} />
-        </label>
-        <label className="field small">
-          <span>Chapter</span>
-          <input value={chapter} onChange={(event) => setChapter(event.target.value)} inputMode="numeric" placeholder="2" disabled={semantic} />
-        </label>
+        <div className="field-row">
+          <label className="field">
+            <span>Book</span>
+            <input value={book} onChange={(event) => setBook(event.target.value)} placeholder="Luke" disabled={semantic} />
+          </label>
+          <label className="field small">
+            <span>Chapter</span>
+            <input value={chapter} onChange={(event) => setChapter(event.target.value)} inputMode="numeric" placeholder="2" disabled={semantic} />
+          </label>
+        </div>
         <label className="toggle-row">
           <input type="checkbox" checked={semantic} onChange={(event) => setSemantic(event.target.checked)} />
           <span>Semantic</span>
