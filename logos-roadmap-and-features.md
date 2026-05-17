@@ -159,7 +159,7 @@ User → logos-core.workers.dev
 | # | Task | Details | Effort | Priority |
 |---|------|---------|--------|----------|
 | 1.1 | **Auth Layer** | Cloudflare Access (admin UI) + API key (service-to-service). Restrict CORS to specific origins. Rate limiting (AI: 10/min, search: 30/min). | **High** (450-850 LOC) | **P0** |
-| 1.2 | **Rename GitHub repo** | `bible-ai-search` → `logos-core` | Low (config) | P1 |
+| 1.2 | **Rename GitHub repo** | Completed transition to `logos-core` | Low (config) | P1 |
 | 1.3 | **Rename Workers project** | Update `wrangler.toml` name, redeploy to `logos-core.kodakwest.workers.dev` | Low (config) | P1 |
 | 1.4 | **Hub Portal frontend** | Redesign as portal with nav sections. Add Q&A UI (POST /api/ask), verse deep-dive UI (POST /api/explain), Kids Ministry section (→ Shepherd link), Sermon Study Coming Soon. Apply LogOS brand. Add loading animation. | **Med-High** (1,200-2,000 LOC) | P1 |
 | 1.5 | **API improvements** | New endpoints: GET /api/verses/:ref, GET /api/verses/chapter. Pagination (offset/cursor). Batch verse lookup for Shepherd. | Medium (300-600 LOC) | P1 |
@@ -368,7 +368,7 @@ progress (id, user_session, series_id, sermon_id, guide_id, completed, last_upda
 |----------|---------|-------------|-------|
 | **Auth model** | Cloudflare Access vs lightweight JWT | Cloudflare Access for admin UI, API key for service-to-service | Manual dashboard setup needed for Access |
 | **Domain strategy** | Workers.dev subdomains vs custom domain | Keep Workers.dev for now, acquire `logos.bible` later | Custom domain = trust signal |
-| **GitHub repos** | Rename existing vs create new | Rename `bible-ai-search` → `logos-core`. Create new `logos-roundtable` | Shepherd can keep current repo |
+| **GitHub repos** | Rename existing vs create new | Core repo now uses `logos-core`. Create new `logos-roundtable` | Shepherd can keep current repo |
 | **Roundtable timeline** | Weeks vs months | Weeks for backend scaffold, months for full frontend + gamification | Affects Coming Soon messaging |
 | **Static site API key** | Pages Proxy vs Pages Function vs expose public reads | Pages Proxy (clean, no cold start) | Don't put API key in client bundle |
 
