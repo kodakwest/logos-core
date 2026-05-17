@@ -187,12 +187,23 @@ async function sendMagicLinkEmail(env: Env, to: string, loginUrl: string): Promi
     "This link expires in 15 minutes. If you didn't request this, ignore this email."
   ].join("\n");
 
-  await env.EMAIL.send({
-    from,
-    to,
-    subject: "Your LogOS Core login link",
-    text
-  });
+  if (!env.EMAIL || typeof env.EMAIL.send !== "function") {
+    console.error("Magic link email binding is not configured.");
+    return;
+  }
+
+  try {
+    await env.EMAIL.send({
+      from,
+      to,
+      subject: "Your LogOS Core login link",
+      text
+    });
+  } catch (err) {
+    // Email send is best-effort; log and continue.
+    // Setup: verify sender domain in Cloudflare Email dashboard.
+    console.error("Failed to send magic link email:", err);
+  }
 }
 
 function generateToken(): string {

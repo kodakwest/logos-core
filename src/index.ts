@@ -45,7 +45,7 @@ export default {
       if (url.pathname === "/api/status" && request.method === "GET") return json(await getStatus(env.DB));
       if (url.pathname === "/api/upload/chapter" && request.method === "POST") return withAuth(request, env, () => handleUpload(request, env));
       if (url.pathname === "/api/upload/morphology" && request.method === "POST") return withAuth(request, env, () => handleUploadMorphology(request, env));
-      if (url.pathname === "/api/auth/send" && request.method === "POST") return handleAuthSend(request, env);
+      if (url.pathname === "/api/auth/send" && request.method === "POST") return await handleAuthSend(request, env);
       if (url.pathname === "/api/auth/login" && request.method === "GET") return handleAuthLogin(url, env);
       if (url.pathname === "/api/verses/search" && request.method === "GET") return handleKeywordSearch(url, env);
       if ((url.pathname === "/api/verses/morphology" || url.pathname === "/api/verse/morphology") && request.method === "POST") {
@@ -70,7 +70,14 @@ async function handleAuthSend(request: Request, env: Env): Promise<Response> {
 
   if (!email) return json({ success: true });
 
-  const result = await requestMagicLink(env, email, request);
+  let result: Awaited<ReturnType<typeof requestMagicLink>>;
+  try {
+    result = await requestMagicLink(env, email, request);
+  } catch (error) {
+    console.error("Failed to request magic link:", error);
+    return json({ error: "Unable to send login link. Try again later." }, 500);
+  }
+
   if (result === "rate_limited") return json({ error: "Too many login requests. Try again later." }, 429);
 
   return json({ success: true });
