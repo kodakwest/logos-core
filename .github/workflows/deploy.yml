@@ -6,9 +6,10 @@ on:
     paths-ignore:
       - '**.md'
       - '.github/**'
+  workflow_dispatch:
 
 jobs:
-  deploy:
+  typecheck:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -17,8 +18,22 @@ jobs:
           node-version: 22
       - run: npm ci
       - run: npm run typecheck
+
+  deploy:
+    needs: typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci
       - run: npm run build
       - name: Deploy to Cloudflare
         uses: cloudflare/wrangler-action@v3
+        continue-on-error: false
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      - name: Notify on Failure
+        if: failure()
+        run: echo "Deploy failed! Please check GitHub Actions logs."

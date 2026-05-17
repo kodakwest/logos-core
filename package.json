@@ -9,7 +9,8 @@
     "preview": "vite preview --host 0.0.0.0",
     "typecheck": "tsc --noEmit",
     "deploy:backup": "bash scripts/deploy.sh",
-    "deploy": "npm run build && npx wrangler deploy"
+    "deploy": "npm run build && npx wrangler deploy",
+    "rollback": "bash scripts/rollback.sh"
   },
   "dependencies": {
     "@vitejs/plugin-react": "^5.0.0",
