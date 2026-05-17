@@ -6,7 +6,7 @@ from pathlib import Path
 BASE = Path("/home/tsrwest/BTB/interlinear")
 YAML_RE = re.compile(r"^---\s*\n(.*?)\n---", re.DOTALL)
 BATCH_SIZE = 3
-API = "https://bible-ai-api.kodakwest.workers.dev/api/upload/chapter"
+API = "https://logos-core.kodakwest.workers.dev/api/upload/chapter"
 
 # Chapters that failed with 503
 FAILED = [

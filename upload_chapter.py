@@ -51,7 +51,7 @@ for i in range(0, len(all_verses), BATCH):
     batch = all_verses[i:i+BATCH]
     payload = json.dumps({"verses": batch}).encode()
     req = urllib.request.Request(
-        "https://bible-ai-api.kodakwest.workers.dev/api/upload/chapter",
+        "https://logos-core.kodakwest.workers.dev/api/upload/chapter",
         data=payload,
         headers={"Content-Type": "application/json", "User-Agent": "bible-ai-uploader/1.0"},
         method="POST"

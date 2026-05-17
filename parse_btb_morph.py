@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Parse BTB interlinear markdown tables and upload morphology to bible-ai-api.
+"""Parse BTB interlinear markdown tables and upload morphology to LogOS Core.
 
 Extracts per-word: Greek text, Strong's number, morphology code (N-NSF, V-PAI-3S, etc.)
 from the interlinear table in each NT verse file.
@@ -15,7 +15,7 @@ import argparse, json, os, re, sys, time, urllib.request, urllib.error
 from pathlib import Path
 
 BTB_DIR = Path("/mnt/s/Resources/Bible/BTB/interlinear")
-API = "https://bible-ai-api.kodakwest.workers.dev"
+API = "https://logos-core.kodakwest.workers.dev"
 
 # NT books: (directory_number, book_name)
 NT_BOOKS = [
@@ -208,7 +208,7 @@ def upload_morphology(api, verse_id, words):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Parse BTB interlinear morphology and upload to bible-ai-api.")
+    parser = argparse.ArgumentParser(description="Parse BTB interlinear morphology and upload to LogOS Core.")
     parser.add_argument("--api", default=API)
     parser.add_argument("--book", help="Upload one book by name, e.g. 'Matthew'")
     parser.add_argument("--dry-run", action="store_true", help="Parse and summarize without uploading")

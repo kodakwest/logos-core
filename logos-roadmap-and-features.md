@@ -89,13 +89,13 @@ Three variants cycle via slow fade (7.5s loop, 2.5s each):
 | **Data** | ✅ 7,959 NT verses, 139K morphology, 15.9K vectors | ✅ 13 topics, 98 verses, 7 age tiers | ❌ No data (needs sermon map import) |
 | **Auth** | ❌ **None** — critical blocker | ⚠️ N/A (static site) | ⚠️ N/A (not deployed) |
 | **CORS** | ❌ Wildcard `*` on all endpoints | ✅ N/A | ✅ N/A |
-| **Deployment** | ✅ `bible-ai-api.kodakwest.workers.dev` | ✅ `shepherdparentcompanion.pages.dev` | ❌ Not deployed |
+| **Deployment** | ✅ `logos-core.kodakwest.workers.dev` | ✅ `shepherdparentcompanion.pages.dev` | ❌ Not deployed |
 | **Cross-linking** | ❌ None | ❌ None | ❌ None |
 
 ### Current Architecture
 
 ```
-User → bible-ai-api.workers.dev
+User → logos-core.workers.dev
          │
          ├─ /api/ask              POST   RAG Q&A          ⚠ No auth
          ├─ /api/explain          POST   Verse deep-dive   ⚠ No auth
@@ -135,7 +135,7 @@ User → bible-ai-api.workers.dev
 
 ### 🟡 High (blocks unification)
 
-4. **No hub frontend** — Bible AI Search has no landing page, no nav to Shepherd/Roundtable
+4. **No hub frontend** — LogOS Core has no landing page, no nav to Shepherd/Roundtable
 5. **Shepherd has no API** — Can't query or surface Shepherd content programmatically
 6. **Roundtable not deployed** — Can't link to something that doesn't exist at a URL
 7. **No shared content layer** — Search across products isn't possible

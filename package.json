@@ -8,7 +8,8 @@
     "build": "vite build",
     "preview": "vite preview --host 0.0.0.0",
     "typecheck": "tsc --noEmit",
-    "deploy": "npm run build && wrangler deploy"
+    "deploy:backup": "bash scripts/deploy.sh",
+    "deploy": "npm run build && npx wrangler deploy"
   },
   "dependencies": {
     "@vitejs/plugin-react": "^5.0.0",

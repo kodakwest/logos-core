@@ -7,11 +7,11 @@ Rebrand "Bible AI Search" → **LogOS Core**, unify with **LogOS Shepherd** (kid
 
 ## Workstream 1: LogOS Core Rebrand
 
-**Current state:** Workers project at bible-ai-api.kodakwest.workers.dev, repo kodakwest/bible-ai-search, Vite React frontend with 3 views (search, parse, upload).
+**Current state:** Workers project at logos-core.kodakwest.workers.dev, repo kodakwest/bible-ai-search, Vite React frontend with 3 views (search, parse, upload).
 
 ### Tasks
 1.1 Rename GitHub repo to `logos-core` (or create new + migrate)
-1.2 Update wrangler.toml `name` from `bible-ai-api` to `logos-core`
+1.2 Update wrangler.toml `name` to `logos-core`
 1.3 Re-deploy to Cloudflare Workers under new name
 1.4 Update frontend: title, favicon, meta tags, app name
 1.5 Apply brand colors (gold #d4af37 accent, teal/blue secondary, dark #0b0d0e bg)

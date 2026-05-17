@@ -1,20 +1,20 @@
 ---
-title: "Bible AI Search — Project State & Handoff"
+title: "LogOS Core — Project State & Handoff"
 artifact_type: Handoff
 domain: "Cloudflare Workers; D1; TypeScript; Edge API"
-systems: ["bible-ai-api", "cloudflare-workers", "d1", "ai-search", "word_morphology"]
+systems: ["logos-core", "cloudflare-workers", "d1", "ai-search", "word_morphology"]
 primary_entities: ["parse/greek endpoint", "word_morphology table", "verses table", "greek_cache", "src/greek.ts"]
 last_updated: "2026-05-15"
 status: active
 ---
 
-# Bible AI Search — Project Handoff
+# LogOS Core — Project Handoff
 
 ## Project Location
 `/mnt/s/Projects/bible-ai-search/` — git repo on `main`, 2 commits, no remote
 
 ## Live URL
-https://bible-ai-api.kodakwest.workers.dev
+https://logos-core.kodakwest.workers.dev
 
 ## What This Is
 A Cloudflare Workers app (Workers + D1 + Vectorize + Workers AI) serving a Bible study API with semantic search, verse text, Greek morphology, and an AI-powered assistant. Frontend SPA at the root URL.
@@ -90,7 +90,7 @@ The parse handler now has a **data-first pipeline**:
 
 ## Infrastructure
 - **Account:** Cloudflare enterprise (kodakwest)
-- **Worker:** `bible-ai-api` — deployed via `wrangler deploy` from S: drive
+- **Worker:** `logos-core` — deployed via `wrangler deploy` from S: drive
 - **D1:** `bible-ai-db` — 7,959 verses, 139K morphology rows, greek_cache
 - **Vectorize:** `bible-verse-embeddings` — 768-dim (bge-base-en-v1.5)
 - **AI:** Workers AI with `@cf/meta/llama-4-scout-17b-16e-instruct`

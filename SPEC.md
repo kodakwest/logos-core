@@ -1,9 +1,9 @@
-# Bible AI Search — Build Spec
+# LogOS Core — Build Spec
 
 > **Goal:** Deployable Cloudflare Workers + Pages app that ingests Bible chapters from local BTB data, enables semantic search, and performs Greek parsing via Workers AI.
 >
 > **Project root:** `S:\Projects\bible-ai-search\` (mounts at `/mnt/s/Projects/bible-ai-search/` in WSL)
-> **Workers subdomain:** `bible-ai-search` (will deploy to `bible-ai-search.kodakwest.workers.dev` or Pages)
+> **Workers subdomain:** `logos-core` (deploys to `logos-core.kodakwest.workers.dev`)
 > **Deploy target:** Cloudflare Workers (not Pages for the API; static frontend served by Worker or Pages)
 
 ---
@@ -20,7 +20,7 @@
 └──────────┬───────────────────┘
            │ fetch()
 ┌──────────▼───────────────────┐
-│  Worker (bible-ai-api)      │  ← wrangler deploy
+│  Worker (logos-core)        │  ← wrangler deploy
 │  POST /api/upload/chapter   │  ← reads BTB interlinear files
 │  GET  /api/verses/search    │  ← keyword + semantic search
 │  POST /api/parse/greek      │  ← Workers AI Greek parsing
@@ -242,7 +242,7 @@ Response:
 ## Wrangler Config
 
 ```toml
-name = "bible-ai-api"
+name = "logos-core"
 compatibility_date = "2026-05-13"
 main = "src/index.ts"
 
@@ -274,7 +274,7 @@ vars = { BTB_PATH = "/home/tsrwest/BTB" }
 5. Apply D1 migrations
 6. `npm run build` (frontend)
 7. `wrangler deploy` (worker)
-8. Test: `curl https://bible-ai-api.kodakwest.workers.dev/api/status`
+8. Test: `curl https://logos-core.kodakwest.workers.dev/api/status`
 9. Upload a chapter via the upload UI
 10. Search + parse test
 

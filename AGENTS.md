@@ -33,7 +33,7 @@ User → logos-core.workers.dev
          └─ /api/upload/morphology POST Ingest morphology (admin)
 ```
 
-The Worker project is being renamed from `bible-ai-api` to `logos-core`; service bindings remain D1, Vectorize, Workers AI, and static assets.
+The Worker project is named `logos-core`; service bindings remain D1, Vectorize, Workers AI, and static assets.
 
 ## Visual Identity
 

@@ -2,6 +2,7 @@ name = "logos-core"
 compatibility_date = "2026-05-13"
 compatibility_flags = ["nodejs_compat"]
 main = "src/index.ts"
+workers_dev = true
 
 [observability]
 enabled = true

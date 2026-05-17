@@ -225,7 +225,7 @@ tr:hover td { background: #0f1113; }
 
 <h1>Bible Ecosystem Unification Strategy</h1>
 <div class="subtitle">
-  Bible AI Search → Shepherd → Roundtable &bull; May 16 2026
+  LogOS Core → Shepherd → Roundtable &bull; May 16 2026
 </div>
 
 <!-- Guiding Principles -->
@@ -233,7 +233,7 @@ tr:hover td { background: #0f1113; }
 <div class="section-card">
   <ol class="principle-list">
     <li><strong>No deep integration</strong> — each app stands on its own. The hub links to them, doesn't absorb them.</li>
-    <li><strong>Bible knowledge from one source</strong> — Bible AI Search D1 DB is the single source of truth for scripture data.</li>
+    <li><strong>Bible knowledge from one source</strong> — LogOS Core D1 DB is the single source of truth for scripture data.</li>
     <li><strong>Sermon knowledge from one source (future)</strong> — all sermon content eventually comes from a unified source. Plan for it, don't overbuild yet.</li>
     <li><strong>Shepherd is ready now</strong> — links go live immediately from the hub.</li>
     <li><strong>Roundtable comes later</strong> — Coming Soon placeholder with vision/roadmap page until ready.</li>
@@ -246,7 +246,7 @@ tr:hover td { background: #0f1113; }
   <table>
     <tr><th>Project</th><th>Status</th><th>Role</th><th>What's Ready</th><th>What's Missing</th></tr>
     <tr>
-      <td>Bible AI Search</td>
+      <td>LogOS Core</td>
       <td><span class="tag tag-yellow">Hub</span></td>
       <td>Central portal + API</td>
       <td>9 API endpoints, D1+Vectorize+AI, 7,959 verses, 139K morphology</td>
@@ -275,7 +275,7 @@ tr:hover td { background: #0f1113; }
   <div class="gap-item">
     <div class="gap-dot red"></div>
     <div class="gap-content">
-      <strong>No auth on Bible AI Search</strong>
+      <strong>No auth on LogOS Core</strong>
       <span>Every endpoint is public — upload, Workers AI, verse data. CORS is *. Blocks public launch.</span>
     </div>
   </div>
@@ -290,7 +290,7 @@ tr:hover td { background: #0f1113; }
     <div class="gap-dot yellow"></div>
     <div class="gap-content">
       <strong>No hub frontend</strong>
-      <span>Bible AI Search has 3 basic views (search, parse, upload). No portal navigation, no landing page.</span>
+      <span>LogOS Core has 3 basic views (search, parse, upload). No portal navigation, no landing page.</span>
     </div>
   </div>
   <div class="gap-item">
@@ -324,11 +324,11 @@ tr:hover td { background: #0f1113; }
 </div>
 
 <!-- Phase 1 -->
-<h2>Phase 1: Harden &amp; Hub-ify Bible AI Search</h2>
+<h2>Phase 1: Harden &amp; Hub-ify LogOS Core</h2>
 <div class="section-card">
   <div class="phase-header">
     <span class="phase-badge phase-1">PHASE 1</span>
-    <span style="color:#8a8a84;font-size:0.9rem;">Bible AI Search becomes the central portal with secure endpoints</span>
+    <span style="color:#8a8a84;font-size:0.9rem;">LogOS Core becomes the central portal with secure endpoints</span>
   </div>
   <ol class="task-list">
     <li><span class="task-num">1.1</span> <strong>Auth layer on API endpoints</strong> — Protect AI-cost endpoints (/api/ask, /api/explain, /api/upload/*). Public read on verse search data.</li>
@@ -406,7 +406,7 @@ tr:hover td { background: #0f1113; }
 
   <!-- HUB Boundary -->
   <rect x="80" y="100" width="720" height="380" rx="12" fill="none" stroke="#2a3a3e" stroke-width="1.5" stroke-dasharray="8,4"/>
-  <text x="100" y="120" fill="#8a8a84" font-family="JetBrains Mono,monospace" font-size="9">Cloudflare Workers — bible-ai-api.kodakwest.workers.dev</text>
+  <text x="100" y="120" fill="#8a8a84" font-family="JetBrains Mono,monospace" font-size="9">Cloudflare Workers — logos-core.kodakwest.workers.dev</text>
 
   <!-- Auth Layer -->
   <rect x="110" y="130" width="180" height="50" rx="6" fill="#0f172a"/>

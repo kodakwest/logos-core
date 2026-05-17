@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Upload ALL New Testament books to bible-ai-api, chapter by chapter."""
+"""Upload ALL New Testament books to LogOS Core, chapter by chapter."""
 import json, os, sys, re, glob, urllib.request, urllib.error, time
 from pathlib import Path
 
@@ -17,7 +17,7 @@ NT_BOOKS = [
 BASE = Path("/home/tsrwest/BTB/interlinear")
 YAML_RE = re.compile(r"^---\s*\n(.*?)\n---", re.DOTALL)
 BATCH_SIZE = 10
-API = "https://bible-ai-api.kodakwest.workers.dev/api/upload/chapter"
+API = "https://logos-core.kodakwest.workers.dev/api/upload/chapter"
 
 def parse_verse(fpath):
     text = open(fpath).read()

@@ -6,7 +6,7 @@ from pathlib import Path
 BASE = Path("/home/tsrwest/BTB/interlinear")
 YAML_RE = re.compile(r"^---\s*\n(.*?)\n---", re.DOTALL)
 BATCH_SIZE = 10
-API_BASE = "https://bible-ai-api.kodakwest.workers.dev"
+API_BASE = "https://logos-core.kodakwest.workers.dev"
 UPLOAD_API = f"{API_BASE}/api/upload/chapter"
 
 NT_BOOKS = [

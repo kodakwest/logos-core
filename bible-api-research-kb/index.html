@@ -49,7 +49,7 @@
 
         <section id="architecture" data-keywords="architecture diagram svg current state future state logos ecosystem auth gateway cloudflare access split endpoints vector search d1 worker">
             <h2>Architecture Diagram</h2>
-            <p>Current Bible AI Search vs Future LogOS ecosystem.</p>
+            <p>Current LogOS Core vs Future LogOS ecosystem.</p>
             <div class="diagram-container">
                 <!-- Inline SVG Architecture Diagram -->
                 <svg width="1000" height="600" viewBox="0 0 1000 600" xmlns="http://www.w3.org/2000/svg" style="font-family: 'Inter', sans-serif;">
@@ -74,12 +74,12 @@
                     <rect x="520" y="0" width="480" height="600" fill="url(#gradFuture)" rx="8" mask="url(#doubleRectMask)" stroke="#d4af37" stroke-width="2" />
 
                     <!-- Titles -->
-                    <text x="240" y="40" fill="#22d3ee" font-size="20" font-weight="bold" text-anchor="middle" font-family="'Playfair Display', serif">LEFT: Current (Bible AI Search)</text>
+                    <text x="240" y="40" fill="#22d3ee" font-size="20" font-weight="bold" text-anchor="middle" font-family="'Playfair Display', serif">LEFT: Current (LogOS Core)</text>
                     <text x="760" y="40" fill="#d4af37" font-size="20" font-weight="bold" text-anchor="middle" font-family="'Playfair Display', serif">RIGHT: Future (LogOS)</text>
 
                     <!-- LEFT SIDE: Current State -->
                     <rect x="40" y="80" width="400" height="480" fill="none" stroke="#34d399" stroke-width="2" stroke-dasharray="4" rx="8" />
-                    <text x="240" y="110" fill="#34d399" font-size="16" font-weight="bold" text-anchor="middle">Bible AI Search Worker</text>
+                    <text x="240" y="110" fill="#34d399" font-size="16" font-weight="bold" text-anchor="middle">LogOS Core Worker</text>
                     
                     <g fill="#e8e6e1" font-size="12">
                         <text x="60" y="140">• 9 endpoints grouped by tier</text>
@@ -158,7 +158,7 @@
                 <tbody>
                     <tr>
                         <td><strong>Live URL</strong></td>
-                        <td><code>bible-ai-api.kodakwest.workers.dev</code></td>
+                        <td><code>logos-core.kodakwest.workers.dev</code></td>
                     </tr>
                     <tr>
                         <td><strong>GitHub</strong></td>
@@ -259,14 +259,14 @@ python3 parse_btb_morph.py --delay 0.02
 npm run deploy
 
 # Quick API test
-curl https://bible-ai-api.kodakwest.workers.dev/api/status</code></pre>
+curl https://logos-core.kodakwest.workers.dev/api/status</code></pre>
         </section>
 
         <section id="patches" data-keywords="patches timeline may 15 may 17 codex architecture review rebranding assets">
             <h2>Patches Timeline</h2>
             <ul>
                 <li><strong>May 15:</strong> Initial gslogimaker research, BTB morphology pipeline built</li>
-                <li><strong>May 15:</strong> deploy Bible AI Search worker, Codex architecture review (23 findings)</li>
+                <li><strong>May 15:</strong> deploy LogOS Core worker, Codex architecture review (23 findings)</li>
                 <li><strong>May 17:</strong> AO Lab + BibleQL discovery, LogOS rebranding assets</li>
                 <li><strong>May 17:</strong> Consolidated research into <code>knowledge/bible-api-research.md</code></li>
             </ul>

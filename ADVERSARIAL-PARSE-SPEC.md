@@ -1,8 +1,8 @@
 ---
-title: "Bible AI Search — Parse Tool Upgrade: Data-Driven Greek Parsing"
+title: "LogOS Core — Parse Tool Upgrade: Data-Driven Greek Parsing"
 artifact_type: Implementation_Plan
 domain: "Cloudflare Workers; D1; TypeScript; Edge API"
-systems: ["bible-ai-api", "cloudflare-workers", "d1", "word_morphology"]
+systems: ["logos-core", "cloudflare-workers", "d1", "word_morphology"]
 primary_entities: ["parse/greek endpoint", "word_morphology table", "verses table", "greek_cache"]
 last_updated: "2026-05-15"
 status: ready
@@ -309,7 +309,7 @@ After implementation, test with:
 
 ### Basic test (exact verse Greek)
 ```bash
-curl -s -X POST https://bible-ai-api.kodakwest.workers.dev/api/parse/greek \
+curl -s -X POST https://logos-core.kodakwest.workers.dev/api/parse/greek \
   -H "Content-Type: application/json" \
   -d '{"greek":"Ἐν ἀρχῇ ἦν ὁ λόγος"}' | jq '{ cached, source, wordCount: (.words | length) }'
 ```
@@ -317,7 +317,7 @@ Expected: `{ "cached": true, "source": "morphology", "wordCount": N }` — respo
 
 ### Partial verse test  
 ```bash
-curl -s -X POST https://bible-ai-api.kodakwest.workers.dev/api/parse/greek \
+curl -s -X POST https://logos-core.kodakwest.workers.dev/api/parse/greek \
   -H "Content-Type: application/json" \
   -d '{"greek":"Ἐν ἀρχῇ"}' | jq '{ cached, source, wordCount: (.words | length) }'
 ```
@@ -325,7 +325,7 @@ Expected: Matches John 1:1, returns morphology for that verse
 
 ### Normalized matching test (no diacritics)
 ```bash
-curl -s -X POST https://bible-ai-api.kodakwest.workers.dev/api/parse/greek \
+curl -s -X POST https://logos-core.kodakwest.workers.dev/api/parse/greek \
   -H "Content-Type: application/json" \
   -d '{"greek":"Εν αρχη ην ο λογος"}' | jq '{ cached, source, wordCount: (.words | length) }'
 ```
@@ -333,7 +333,7 @@ Expected: Still matches John 1:1 (normalized input matches normalized verse)
 
 ### Non-NT Greek (should fall through to LLM)
 ```bash
-curl -s -X POST https://bible-ai-api.kodakwest.workers.dev/api/parse/greek \
+curl -s -X POST https://logos-core.kodakwest.workers.dev/api/parse/greek \
   -H "Content-Type: application/json" \
   -d '{"greek":"Κύριε ἐλέησον"}' | jq '{ cached, source }'
 ```
@@ -341,19 +341,19 @@ Expected: `{ "cached": false }` — falls through to LLM (or may match a verse c
 
 ### Word field population
 ```bash
-curl -s -X POST https://bible-ai-api.kodakwest.workers.dev/api/parse/greek \
+curl -s -X POST https://logos-core.kodakwest.workers.dev/api/parse/greek \
   -H "Content-Type: application/json" \
   -d '{"greek":"Ἐν ἀρχῇ ἦν ὁ λόγος"}' | jq '.words[0]'
 ```
 Expected: `{ "word": "Ἐν", "lemma": "G1722", "pos": "preposition", "parsing": "", "gloss": "" }`
 
 ### Frontend check
-Open https://bible-ai-api.kodakwest.workers.dev/#parse, enter Greek text, click Parse.
+Open https://logos-core.kodakwest.workers.dev/#parse, enter Greek text, click Parse.
 Expected: Response appears instantly. Word column shows Greek surface forms. Lemma shows Strong's numbers. Parsing shows case/number/gender. Gloss is empty (UI handles gracefully).
 
 ### Regression: LLM fallback still works
 ```bash
-curl -s -X POST https://bible-ai-api.kodakwest.workers.dev/api/parse/greek \
+curl -s -X POST https://logos-core.kodakwest.workers.dev/api/parse/greek \
   -H "Content-Type: application/json" \
   -d '{"greek":"τῇ τρίτῃ ἡμέρᾳ"}' | jq '.words[0]'
 ```

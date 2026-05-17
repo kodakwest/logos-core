@@ -16,7 +16,7 @@ NT_BOOKS = [
 BASE = Path("/home/tsrwest/BTB/interlinear")
 YAML_RE = re.compile(r"^---\s*\n(.*?)\n---", re.DOTALL)
 BATCH_SIZE = 3  # smaller batches = fewer timeouts
-API = "https://bible-ai-api.kodakwest.workers.dev/api/upload/chapter"
+API = "https://logos-core.kodakwest.workers.dev/api/upload/chapter"
 PROGRESS = Path("/home/tsrwest/.hermes/nt-upload-progress.json")
 
 def parse_verse(fpath):

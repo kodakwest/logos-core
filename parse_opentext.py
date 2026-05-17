@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Parse OpenText NA28 XML and upload word morphology to bible-ai-api."""
+"""Parse OpenText NA28 XML and upload word morphology to LogOS Core."""
 import argparse
 import json
 import re
@@ -11,7 +11,7 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 
 XML_DIR = Path("/mnt/s/Resources/Bible/OpenText NA28")
-API = "https://bible-ai-api.kodakwest.workers.dev"
+API = "https://logos-core.kodakwest.workers.dev"
 XML_ID = "{http://www.w3.org/XML/1998/namespace}id"
 WORD_ID_RE = re.compile(r"\.(\d+)\.(\d+)\.w(\d+)(?:\D|$)")
 
@@ -176,7 +176,7 @@ def selected_files(book_filter):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Upload OpenText NA28 morphology to bible-ai-api.")
+    parser = argparse.ArgumentParser(description="Upload OpenText NA28 morphology to LogOS Core.")
     parser.add_argument("--api", default=API, help=f"Worker base URL (default: {API})")
     parser.add_argument("--book", help="Upload one book by DB book name, e.g. 'Matthew'")
     parser.add_argument("--dry-run", action="store_true", help="Parse and summarize without uploading")
