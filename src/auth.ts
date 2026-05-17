@@ -6,7 +6,7 @@ const RATE_LIMIT_WINDOW_SECONDS = 60 * 60;
 const EMAIL_RATE_LIMIT = 3;
 const IP_RATE_LIMIT = 10;
 const SESSION_COOKIE_NAME = "__Host-session";
-const DEFAULT_EMAIL_FROM = "no-reply@logos-core.kodakwest.workers.dev";
+const DEFAULT_EMAIL_FROM = "no-reply@logos-core.com";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
