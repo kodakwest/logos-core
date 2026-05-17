@@ -3,6 +3,12 @@ export interface Env {
   AI: Ai;
   VECTORIZE: VectorizeIndex;
   ASSETS: Fetcher;
+  EMAIL: SendEmail;
+  AUTH_EMAIL_FROM?: string;
+}
+
+export interface AuthUser {
+  email: string;
 }
 
 export interface UploadChapterRequest {
