@@ -4,8 +4,7 @@ compatibility_flags = ["nodejs_compat"]
 main = "src/index.ts"
 workers_dev = true
 routes = [
-  { pattern = "logos-core.com", custom_domain = true },
-  { pattern = "logos-core.com/*", custom_domain = true }
+  { pattern = "logos-core.com", custom_domain = true }
 ]
 
 [observability]
