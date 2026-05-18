@@ -35,6 +35,8 @@ const ALLOWED_ORIGINS = [
   "https://logos-core.com",
   "https://roundtable-cz3.pages.dev",
   "https://shepherdparentcompanion.pages.dev",
+  "https://shepherd.logos-core.com",
+  "https://roundtable.logos-core.com",
 ];
 
 function corsHeaders(origin?: string | null): Record<string, string> {
