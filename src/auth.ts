@@ -11,7 +11,7 @@ const DEFAULT_EMAIL_FROM = "no-reply@logos-core.com";
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 type LoginResult =
-  | { status: "success"; sessionToken: string }
+  | { status: "success"; sessionToken: string; redirectUrl: string | null }
   | { status: "invalid" | "expired" | "consumed" };
 
 interface AuthTokenRow {
@@ -21,6 +21,7 @@ interface AuthTokenRow {
   issued_at: number;
   expires_at: number;
   consumed_at: number | null;
+  redirect_url: string | null;
 }
 
 interface RateLimitRow {
@@ -34,7 +35,7 @@ export function normalizeEmail(email: unknown): string | null {
   return normalized;
 }
 
-export async function requestMagicLink(env: Env, email: string, request: Request): Promise<"sent" | "rate_limited"> {
+export async function requestMagicLink(env: Env, email: string, request: Request, redirectUrl?: string | null): Promise<"sent" | "rate_limited"> {
   await ensureAuthSchema(env.DB);
 
   const allowed = await checkRateLimits(env, email, clientIp(request));
@@ -46,9 +47,9 @@ export async function requestMagicLink(env: Env, email: string, request: Request
   const expiresAt = now + MAGIC_LINK_TTL_SECONDS;
 
   await env.DB.prepare(
-    `INSERT INTO auth_tokens (token_hash, email, purpose, issued_at, expires_at, consumed_at)
-     VALUES (?, ?, 'magic', ?, ?, NULL)`
-  ).bind(tokenHash, email, now, expiresAt).run();
+    `INSERT INTO auth_tokens (token_hash, email, purpose, issued_at, expires_at, consumed_at, redirect_url)
+     VALUES (?, ?, 'magic', ?, ?, NULL, ?)`
+  ).bind(tokenHash, email, now, expiresAt, redirectUrl ?? null).run();
 
   const loginUrl = new URL("/api/auth/login", request.url);
   loginUrl.searchParams.set("token", token);
@@ -64,7 +65,7 @@ export async function consumeMagicLink(env: Env, token: string): Promise<LoginRe
   const tokenHash = await sha256(token);
   const now = unixSeconds();
   const row = await env.DB.prepare(
-    `SELECT token_hash, email, purpose, issued_at, expires_at, consumed_at
+    `SELECT token_hash, email, purpose, issued_at, expires_at, consumed_at, redirect_url
      FROM auth_tokens
      WHERE token_hash = ? AND purpose = 'magic'`
   ).bind(tokenHash).first<AuthTokenRow>();
@@ -84,17 +85,21 @@ export async function consumeMagicLink(env: Env, token: string): Promise<LoginRe
   const sessionToken = generateToken();
   const sessionHash = await sha256(sessionToken);
   await env.DB.prepare(
-    `INSERT INTO auth_tokens (token_hash, email, purpose, issued_at, expires_at, consumed_at)
-     VALUES (?, ?, 'session', ?, ?, NULL)`
+    `INSERT INTO auth_tokens (token_hash, email, purpose, issued_at, expires_at, consumed_at, redirect_url)
+     VALUES (?, ?, 'session', ?, ?, NULL, NULL)`
   ).bind(sessionHash, row.email, now, now + SESSION_TTL_SECONDS).run();
 
   await cleanupExpiredTokens(env.DB, now);
-  return { status: "success", sessionToken };
+  return { status: "success", sessionToken, redirectUrl: row.redirect_url };
 }
 
 export async function authenticateRequest(request: Request, env: Env): Promise<AuthUser | null> {
-  const sessionToken = getCookie(request.headers.get("Cookie"), SESSION_COOKIE_NAME);
+  const sessionToken = getSessionToken(request);
   if (!sessionToken) return null;
+  return getSessionAndUser(env, sessionToken);
+}
+
+export async function getSessionAndUser(env: Env, sessionToken: string): Promise<AuthUser | null> {
   await ensureAuthSchema(env.DB);
 
   const sessionHash = await sha256(sessionToken);
@@ -108,6 +113,20 @@ export async function authenticateRequest(request: Request, env: Env): Promise<A
   return email ? { email } : null;
 }
 
+export async function logoutSession(env: Env, request: Request): Promise<void> {
+  const sessionToken = getSessionToken(request);
+  if (!sessionToken) return;
+  await ensureAuthSchema(env.DB);
+
+  const now = unixSeconds();
+  const sessionHash = await sha256(sessionToken);
+  await env.DB.prepare(
+    `UPDATE auth_tokens
+     SET consumed_at = ?
+     WHERE token_hash = ? AND purpose = 'session' AND consumed_at IS NULL`
+  ).bind(now, sessionHash).run();
+}
+
 export function sessionCookie(sessionToken: string): string {
   return [
     `${SESSION_COOKIE_NAME}=${encodeURIComponent(sessionToken)}`,
@@ -116,6 +135,17 @@ export function sessionCookie(sessionToken: string): string {
     "SameSite=Lax",
     "Path=/",
     `Max-Age=${SESSION_TTL_SECONDS}`
+  ].join("; ");
+}
+
+export function clearSessionCookie(): string {
+  return [
+    `${SESSION_COOKIE_NAME}=`,
+    "Secure",
+    "HttpOnly",
+    "SameSite=Strict",
+    "Path=/",
+    "Max-Age=0"
   ].join("; ");
 }
 
@@ -140,6 +170,15 @@ async function ensureAuthSchema(db: D1Database): Promise<void> {
       )`
     )
   ]);
+  await ensureRedirectUrlColumn(db);
+}
+
+async function ensureRedirectUrlColumn(db: D1Database): Promise<void> {
+  const columns = await db.prepare("PRAGMA table_info(auth_tokens)").all<{ name: string }>();
+  const hasRedirectUrl = columns.results?.some((column) => column.name === "redirect_url");
+  if (!hasRedirectUrl) {
+    await db.prepare("ALTER TABLE auth_tokens ADD COLUMN redirect_url TEXT").run();
+  }
 }
 
 async function checkRateLimits(env: Env, email: string, ip: string): Promise<boolean> {
@@ -237,6 +276,10 @@ function getCookie(cookieHeader: string | null, name: string): string | null {
   }
 
   return null;
+}
+
+function getSessionToken(request: Request): string | null {
+  return getCookie(request.headers.get("Cookie"), SESSION_COOKIE_NAME);
 }
 
 function unixSeconds(): number {

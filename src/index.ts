@@ -1,5 +1,5 @@
 import { askAi, generateEmbedding, parseGreekWithAi, upsertVerseVector } from "./ai";
-import { authenticateRequest, consumeMagicLink, normalizeEmail, requestMagicLink, sessionCookie } from "./auth";
+import { authenticateRequest, clearSessionCookie, consumeMagicLink, logoutSession, normalizeEmail, requestMagicLink, sessionCookie } from "./auth";
 import { readBtbChapter } from "./btbutils";
 import {
   getGreekCache,
@@ -47,6 +47,7 @@ function corsHeaders(origin?: string | null): Record<string, string> {
     "Access-Control-Allow-Origin": allowOrigin,
     "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type",
+    ...(origin ? { "Access-Control-Allow-Credentials": "true" } : {}),
   };
 }
 
@@ -56,11 +57,15 @@ export default {
 
     const url = new URL(request.url);
     try {
-      if (url.pathname === "/api/status" && request.method === "GET") return json(await getStatus(env.DB));
+      const origin = request.headers.get("Origin");
+
+      if (url.pathname === "/api/status" && request.method === "GET") return json(await getStatus(env.DB), 200, origin);
       if (url.pathname === "/api/upload/chapter" && request.method === "POST") return withAuth(request, env, () => handleUpload(request, env));
       if (url.pathname === "/api/upload/morphology" && request.method === "POST") return withAuth(request, env, () => handleUploadMorphology(request, env));
       if (url.pathname === "/api/auth/send" && request.method === "POST") return await handleAuthSend(request, env);
       if (url.pathname === "/api/auth/login" && request.method === "GET") return handleAuthLogin(url, env);
+      if (url.pathname === "/api/auth/check" && request.method === "GET") return handleAuthCheck(request, env);
+      if (url.pathname === "/api/auth/logout" && request.method === "POST") return handleAuthLogout(request, env);
       if (url.pathname === "/api/verses/search" && request.method === "GET") return handleKeywordSearch(url, env);
       if ((url.pathname === "/api/verses/morphology" || url.pathname === "/api/verse/morphology") && request.method === "POST") {
         return handleVerseMorphology(request, env);
@@ -72,7 +77,7 @@ export default {
       if (url.pathname.startsWith("/api/")) return json({ error: "Not found" }, 404);
 
       if (url.pathname === "/login" || url.pathname === "/login.html") {
-        return html(LOGIN_HTML);
+        return html(loginHtml(url.searchParams.get("redirect")));
       }
       if (url.pathname.startsWith("/assets/")) return env.ASSETS.fetch(request);
 
@@ -96,37 +101,64 @@ export default {
 };
 
 async function handleAuthSend(request: Request, env: Env): Promise<Response> {
-  const body = await readJson<{ email?: string }>(request);
+  const origin = request.headers.get("Origin");
+  const body = await readJson<{ email?: string; redirect?: string }>(request);
   const email = normalizeEmail(body.email);
+  const redirectUrl = validateRedirectUrl(body.redirect);
 
-  if (!email) return json({ success: true });
+  if (!email) return json({ success: true }, 200, origin);
 
   let result: Awaited<ReturnType<typeof requestMagicLink>>;
   try {
-    result = await requestMagicLink(env, email, request);
+    result = await requestMagicLink(env, email, request, redirectUrl);
   } catch (error) {
     console.error("Failed to request magic link:", error);
-    return json({ error: "Unable to send login link. Try again later." }, 500);
+    return json({ error: "Unable to send login link. Try again later." }, 500, origin);
   }
 
-  if (result === "rate_limited") return json({ error: "Too many login requests. Try again later." }, 429);
+  if (result === "rate_limited") return json({ error: "Too many login requests. Try again later." }, 429, origin);
 
-  return json({ success: true });
+  return json({ success: true }, 200, origin);
 }
 
 async function handleAuthLogin(url: URL, env: Env): Promise<Response> {
   const result = await consumeMagicLink(env, url.searchParams.get("token") ?? "");
   if (result.status !== "success") return html(authErrorPage(result.status), 400);
+  const redirectUrl = validateRedirectUrl(result.redirectUrl) ?? new URL("/", url.origin).toString();
 
   return new Response(null, {
     status: 302,
     headers: {
       ...corsHeaders(),
-      "Location": new URL("/", url.origin).toString(),
+      "Location": redirectUrl,
       "Set-Cookie": sessionCookie(result.sessionToken),
       "Cache-Control": "no-store"
     }
   });
+}
+
+async function handleAuthCheck(request: Request, env: Env): Promise<Response> {
+  const origin = request.headers.get("Origin");
+  const user = await authenticateRequest(request, env);
+  if (!user) return json({ authenticated: false }, 401, origin);
+  return json({ authenticated: true, user }, 200, origin);
+}
+
+async function handleAuthLogout(request: Request, env: Env): Promise<Response> {
+  const origin = request.headers.get("Origin");
+  const user = await authenticateRequest(request, env);
+  if (user) await logoutSession(env, request);
+  return Response.json(
+    { success: true },
+    {
+      status: 200,
+      headers: {
+        ...corsHeaders(origin),
+        "Set-Cookie": clearSessionCookie(),
+        "Cache-Control": "no-store"
+      }
+    }
+  );
 }
 
 async function withAuth(request: Request, env: Env, handler: () => Promise<Response>): Promise<Response> {
@@ -355,19 +387,46 @@ async function readJson<T>(request: Request): Promise<T> {
   }
 }
 
-function json(body: unknown, status = 200): Response {
-  return Response.json(body, { status, headers: corsHeaders() });
+function json(body: unknown, status = 200, origin?: string | null): Response {
+  return Response.json(body, { status, headers: corsHeaders(origin) });
 }
 
-function html(body: string, status = 200): Response {
+function html(body: string, status = 200, origin?: string | null): Response {
   return new Response(body, {
     status,
     headers: {
-      ...corsHeaders(),
+      ...corsHeaders(origin),
       "Content-Type": "text/html; charset=utf-8",
       "Cache-Control": "no-store"
     }
   });
+}
+
+function loginHtml(redirect: string | null): string {
+  const redirectUrl = validateRedirectUrl(redirect);
+  const redirectScript = `<script>window.__LOGOS_REDIRECT=${JSON.stringify(redirectUrl)};</script>`;
+  return LOGIN_HTML
+    .replace("</head>", `${redirectScript}\n</head>`)
+    .replace("body: JSON.stringify({ email })", "body: JSON.stringify({ email, redirect: window.__LOGOS_REDIRECT || undefined })");
+}
+
+function validateRedirectUrl(value: unknown): string | null {
+  if (typeof value !== "string" || !value.trim()) return null;
+
+  try {
+    const redirect = new URL(value);
+    if (redirect.protocol !== "https:") return null;
+    if (redirect.username || redirect.password) return null;
+    if (redirect.port || redirect.hash) return null;
+
+    const allowedOrigins = ALLOWED_ORIGINS.map((origin) => origin.replace(/\/$/, ""));
+    if (!allowedOrigins.includes(redirect.origin.replace(/\/$/, ""))) return null;
+
+    redirect.hash = "";
+    return redirect.toString();
+  } catch {
+    return null;
+  }
 }
 
 function authErrorPage(status: "invalid" | "expired" | "consumed"): string {
