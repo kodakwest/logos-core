@@ -24,14 +24,15 @@ Rebrand "Bible AI Search" → **LogOS Core**, unify with **LogOS Shepherd** (kid
 
 ## Workstream 2: Auth Layer
 
-**Current state:** Zero auth on all endpoints. CORS is wildcard. Anybody can call any endpoint including /api/ask (costs AI credits) and /api/upload/* (data mutation).
+**Current state:** Auth implemented — magic link on AI endpoints via no-reply@logos-core.com, D1-backed sessions, rate-limited login. CORS is still wildcard `*` (remaining). No rate limiting on AI endpoints (remaining).
 
 ### Tasks
-2.1 Design auth strategy (recommend: public read on verse/status endpoints, auth required on /api/ask, /api/explain, /api/upload/*, /api/parse/greek)
-2.2 Implement auth middleware in src/index.ts
-2.3 Rate limiting on public endpoints
-2.4 CORS hardening (restrict from * to specific origins)
-2.5 Auth integration testing
+2.1 ~~Design auth strategy~~ ✅ Complete — magic link via no-reply@logos-core.com, public read on verse/status endpoints, auth required on AI/write endpoints
+2.2 ~~Implement auth middleware in src/index.ts~~ ✅ Complete — withAuth() wraps all AI/write endpoints
+2.3 ~~Rate limiting on auth requests~~ ✅ Complete — 3/email/hour, 10/IP/hour
+2.4 CORS hardening (restrict from * to specific origins) — ❌ Remaining
+2.5 Auth integration testing — ❌ Remaining
+2.6 Rate limiting on AI endpoints (ask/explain/semantic/parse) — ❌ Remaining
 
 **Files affected:** src/index.ts, wrangler.toml (maybe secrets), new auth helper module
 

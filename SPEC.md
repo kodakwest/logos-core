@@ -313,7 +313,7 @@ vars = { BTB_PATH = "/home/tsrwest/BTB" }
 
 ## Out of Scope (MVP Skip)
 
-- User auth / API keys
+~~- User auth / API keys~~ ✅ **Implemented as MVP 1.0** — magic link auth via `no-reply@logos-core.com`, D1-backed sessions, rate limiting. See `src/auth.ts`.
 - Multi-version comparison (KJV vs BSB vs ESV side-by-side)
 - Full-text search engine (LIKE is fine for MVP)
 - Batch upload all 66 books at once

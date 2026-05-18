@@ -87,7 +87,7 @@ Three variants cycle via slow fade (7.5s loop, 2.5s each):
 | **Backend** | ✅ Workers + D1 + Vectorize + AI — 9 API endpoints | ❌ None (fully static) | ❌ None (static scaffold) |
 | **Frontend** | ⚠️ Minimal — 3 views (search, parse, upload) | ✅ Gold MVP deployed | ⚠️ Scaffold — 4 sample guides |
 | **Data** | ✅ 7,959 NT verses, 139K morphology, 15.9K vectors | ✅ 13 topics, 98 verses, 7 age tiers | ❌ No data (needs sermon map import) |
-| **Auth** | ❌ **None** — critical blocker | ⚠️ N/A (static site) | ⚠️ N/A (not deployed) |
+| **Auth** | ✅ Magic-link auth via no-reply@logos-core.com on AI endpoints | ⚠️ N/A (static site) | ⚠️ N/A (not deployed) |
 | **CORS** | ❌ Wildcard `*` on all endpoints | ✅ N/A | ✅ N/A |
 | **Deployment** | ✅ `logos-core.kodakwest.workers.dev` | ✅ `shepherdparentcompanion.pages.dev` | ❌ Not deployed |
 | **Cross-linking** | ❌ None | ❌ None | ❌ None |
@@ -97,23 +97,23 @@ Three variants cycle via slow fade (7.5s loop, 2.5s each):
 ```
 User → logos-core.workers.dev
          │
-         ├─ /api/ask              POST   RAG Q&A          ⚠ No auth
-         ├─ /api/explain          POST   Verse deep-dive   ⚠ No auth
+         ├─ /api/ask              POST   RAG Q&A          Auth required
+         ├─ /api/explain          POST   Verse deep-dive   Auth required
          ├─ /api/status           GET    DB stats          Public
          ├─ /api/verses/search    GET    Keyword search    Public
-         ├─ /api/verses/semantic  POST   Vector search     ⚠ No auth
+         ├─ /api/verses/semantic  POST   Vector search     Auth required
          ├─ /api/verse/morphology POST   Word morphology   Public
-         ├─ /api/parse/greek      POST   Greek analysis    ⚠ No auth
-         ├─ /api/upload/chapter   POST   Ingest chapter    ⚠ PUBLIC — admin endpoint
-         └─ /api/upload/morphology POST  Ingest morphology ⚠ PUBLIC — admin endpoint
+         ├─ /api/parse/greek      POST   Greek analysis    Auth required
+         ├─ /api/upload/chapter   POST   Ingest chapter    Auth required
+         └─ /api/upload/morphology POST  Ingest morphology Auth required
 ```
 
 ### Critical Issues (Codex Architecture Review — May 15)
 
 | Severity | Issue | Details |
 |----------|-------|---------|
-| 🔴 Critical | No auth on AI-cost/admin endpoints | Anyone can mutate D1, burn AI credits |
 | 🔴 Critical | Blanket CORS `*` on POST endpoints | Any website can trigger browser-originated abuse |
+| 🟡 High | No rate limiting on AI endpoints | /api/ask, /api/explain, /api/verses/semantic, /api/parse/greek have no per-IP or per-key budget — Workers AI billing exposed |
 | 🟡 High | Serial upload (D1→AI→Vectorize per verse) | No rollback on partial failure — state drifts |
 | 🟡 High | Greek search uses `LIKE '%...%'` | Can't use prefix index — slow at scale |
 | 🟡 High | No timeout/retry around provider calls | Workers AI failures cascade silently |
@@ -129,8 +129,8 @@ User → logos-core.workers.dev
 
 ### 🔴 Critical (blocks public launch)
 
-1. **No auth on any endpoint** — Zero auth, wildcard CORS, unbounded inputs. Anyone can burn AI credits or mutate data.
-2. **No auth strategy decided** — Cloudflare Access vs lightweight JWT? Public read vs full auth?
+1. ~~**Auth absent on every endpoint** — Resolved. Magic link auth shipped with MVP 1.0 (May 17). D1-backed sessions, rate-limited login.~~ ✅
+2. ~~**Auth strategy undecided** — Resolved. Magic link via no-reply@logos-core.com, session cookies, public reads on verse endpoints, auth required on AI/write endpoints.~~ ✅
 3. **OpenRouter/Workers AI cost exposure** — Without auth, `/api/ask` is publicly callable.
 
 ### 🟡 High (blocks unification)
@@ -289,18 +289,17 @@ progress (id, user_session, series_id, sermon_id, guide_id, completed, last_upda
 | **Risks** | Workers URL change may break existing links. Coordinate deploy with DNS if custom domain. |
 | **Status** | ⏳ Not started |
 
-### WS2: Auth Layer
+### WS2: Auth Layer — ✅ Complete (MVP 1.0, shipped May 17)
 
 | Detail | Value |
 |--------|-------|
 | **Effort** | High (450-850 LOC) |
-| **Files** | `src/index.ts`, `wrangler.toml` (secrets), new auth helper module, all 3 workers |
-| **Dependencies** | Cloudflare Access dashboard config (manual step for Mike) |
-| **Risks** | API key distribution to static sites (use Pages Proxy). Cloudflare Access setup is manual. |
-| **Auth Model Recommendation** | Two-tier: Cloudflare Access (admin UI endpoints) + API key via `Authorization: Bearer` header (service-to-service). Public read endpoints open, AI/write endpoints require auth. API key delivered to Shepherd via Cloudflare Pages Proxy (rewrite `/api/*` → worker, adds key server-side). |
-| **Rate Limits** | AI endpoints: 10 req/min per IP. Search: 30 req/min. Use Cloudflare WAF or in-Worker KV sliding window. |
-| **CORS** | Restrict to: `shepherdparentcompanion.pages.dev`, `logos-core.pages.dev`, `tars-20q.pages.dev` |
-| **Status** | ⏳ Not started — **highest priority** |
+| **Files** | `src/auth.ts` (new), `src/index.ts` (routes + withAuth), `src/types.ts` (Env + AuthUser), `src/html-assets.ts` (LOGIN_HTML), `wrangler.toml` (send_email binding), D1 schemas (auth_tokens, rate_limits) |
+| **Dependencies** | Cloudflare Send Email binding (configured), sender domain verified in Cloudflare Email dashboard |
+| **Implementation** | Magic link via `no-reply@logos-core.com`, SHA-256 tokens, D1-backed sessions, `__Host-session` cookie (24hr TTL), rate-limited auth requests |
+| **Route gating** | `withAuth()` on: upload/chapter, upload/morphology, semantic search, parse/greek, ask, explain. Public: status, verse/search, verse/morphology. SPA at `/` redirects to `/login` if unauthenticated. |
+| **Status** | ✅ Complete — MVP 1.0 |
+| **Remaining** | 🔴 CORS still wildcard `*` — needs lockdown to specific origins. 🟡 No rate limiting on AI endpoints themselves (ask/explain/semantic/parse have no per-IP budget). |
 
 ### WS3: Hub Portal Frontend
 
@@ -366,8 +365,8 @@ progress (id, user_session, series_id, sermon_id, guide_id, completed, last_upda
 
 | Decision | Options | Recommended | Notes |
 |----------|---------|-------------|-------|
-| **Auth model** | Cloudflare Access vs lightweight JWT | Cloudflare Access for admin UI, API key for service-to-service | Manual dashboard setup needed for Access |
-| **Domain strategy** | Workers.dev subdomains vs custom domain | Keep Workers.dev for now, acquire `logos.bible` later | Custom domain = trust signal |
+| **Auth model** | Cloudflare Access vs lightweight JWT | ✅ Magic link auth shipped — D1-backed, no Cloudflare Access needed | RESOLVED — MVP 1.0 |
+| **Domain strategy** | Workers.dev subdomains vs custom domain | ✅ `logos-core.com` registered and live | RESOLVED |
 | **GitHub repos** | Rename existing vs create new | Core repo now uses `logos-core`. Create new `logos-roundtable` | Shepherd can keep current repo |
 | **Roundtable timeline** | Weeks vs months | Weeks for backend scaffold, months for full frontend + gamification | Affects Coming Soon messaging |
 | **Static site API key** | Pages Proxy vs Pages Function vs expose public reads | Pages Proxy (clean, no cold start) | Don't put API key in client bundle |

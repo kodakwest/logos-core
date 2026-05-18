@@ -7,6 +7,7 @@
   --ink-secondary: #a0a0a5;
   --ink-tertiary: #6e6e73;
   --border-subtle: #2a2d31;
+  --border-focus: #3d4148;
   --brand-gold: #d4af37;
   --brand-primary: #d4af37;
   --brand-gold-dim: rgba(212, 175, 55, 0.2);
@@ -29,10 +30,7 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background:
-    linear-gradient(135deg, rgba(212, 175, 55, 0.12), transparent 38%),
-    linear-gradient(315deg, rgba(77, 168, 218, 0.08), transparent 36%),
-    var(--bg-base);
+  background: var(--bg-base);
 }
 
 .app-core {
@@ -62,7 +60,7 @@ button {
   flex-direction: column;
   gap: 24px;
   padding: 28px 20px;
-  background: rgba(19, 22, 24, 0.9);
+  background: var(--bg-panel);
   border-right: 1px solid var(--border-subtle);
 }
 
@@ -106,7 +104,7 @@ button {
   padding: 12px;
   border: 1px solid var(--brand-gold-dim);
   border-radius: 8px;
-  background: rgba(212, 175, 55, 0.06);
+  background: var(--bg-elevated);
   overflow: hidden;
 }
 
@@ -119,7 +117,7 @@ button {
   margin-left: auto;
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
-  background: rgba(232, 230, 225, 0.08);
+  background: var(--bg-elevated);
   color: var(--ink-primary);
   cursor: pointer;
 }
@@ -233,7 +231,7 @@ button {
   padding: 18px;
   border: 1px solid var(--border-subtle);
   border-radius: 8px;
-  background: rgba(19, 22, 24, 0.82);
+  background: var(--bg-panel);
 }
 
 .field-row {
@@ -267,7 +265,7 @@ button {
   min-height: 44px;
   border: 1px solid var(--border-subtle);
   border-radius: 8px;
-  background: rgba(11, 13, 14, 0.72);
+  background: var(--bg-elevated);
   color: var(--ink-primary);
   padding: 10px 12px;
   outline: none;
@@ -282,8 +280,8 @@ button {
 .field input:focus,
 .field select:focus,
 .field textarea:focus {
-  border-color: var(--brand-gold);
-  box-shadow: 0 0 0 1px var(--brand-primary);
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 0 1px var(--border-focus), 0 0 0 3px rgba(212, 175, 55, 0.2);
 }
 
 .toggle-row {
@@ -325,7 +323,8 @@ button {
 
 .icon-button {
   min-width: 44px;
-  background: rgba(232, 230, 225, 0.12);
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-elevated);
   color: var(--ink-primary);
 }
 
@@ -347,7 +346,7 @@ button {
 .table-wrap {
   border: 1px solid var(--border-subtle);
   border-radius: 8px;
-  background: rgba(19, 22, 24, 0.84);
+  background: var(--bg-panel);
 }
 
 .verse-card {
@@ -488,7 +487,7 @@ td {
   padding: 16px;
   border: 1px solid var(--border-subtle);
   border-radius: 8px;
-  background: rgba(19, 22, 24, 0.84);
+  background: var(--bg-panel);
 }
 
 .parser-card h2 {
@@ -573,7 +572,7 @@ td {
     gap: 8px;
     padding: 16px;
     border-bottom: 1px solid var(--border-subtle);
-    background: rgba(19, 22, 24, 0.98);
+    background: var(--bg-panel);
     box-shadow: 0 16px 28px rgba(0, 0, 0, 0.24);
   }
 
