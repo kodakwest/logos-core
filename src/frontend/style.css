@@ -12,6 +12,9 @@
   --brand-primary: #d4af37;
   --brand-gold-dim: rgba(212, 175, 55, 0.2);
   --brand-blue: #4da8da;
+  --brand-blue-dim: rgba(77, 168, 218, 0.2);
+  --brand-green: #a3e635;
+  --brand-green-dim: rgba(163, 230, 53, 0.18);
   --radius-md: 8px;
   --radius-lg: 12px;
   --font-serif: "Playfair Display", serif;
@@ -51,7 +54,82 @@ button {
 .app-shell {
   display: grid;
   grid-template-columns: 280px minmax(0, 1fr);
+  margin-left: 72px;
   min-height: 100vh;
+}
+
+.ecosystem-nav {
+  position: fixed;
+  inset: 0 auto 0 0;
+  z-index: 100;
+  display: flex;
+  width: 72px;
+  min-height: 100vh;
+  padding: 24px 12px;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  background: var(--bg-panel);
+  border-right: 1px solid var(--border-subtle);
+}
+
+.ecosystem-nav-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  color: var(--ink-tertiary);
+  text-decoration: none;
+  transition:
+    background-color 0.18s ease,
+    border-color 0.18s ease,
+    color 0.18s ease;
+}
+
+.ecosystem-nav-link svg {
+  width: 32px;
+  height: 32px;
+}
+
+.ecosystem-nav-link:hover,
+.ecosystem-nav-link:focus-visible {
+  color: var(--ink-primary);
+  background: var(--bg-elevated);
+  border-color: var(--border-focus);
+  outline: none;
+}
+
+.ecosystem-nav-link.active::before {
+  position: absolute;
+  left: -12px;
+  top: 8px;
+  width: 4px;
+  height: 32px;
+  border-radius: 0 4px 4px 0;
+  background: currentColor;
+  content: "";
+}
+
+.ecosystem-nav-link.core.active {
+  color: var(--brand-gold);
+  background: var(--brand-gold-dim);
+  border-color: var(--brand-gold);
+}
+
+.ecosystem-nav-link.shepherd.active {
+  color: var(--brand-green);
+  background: var(--brand-green-dim);
+  border-color: var(--brand-green);
+}
+
+.ecosystem-nav-link.roundtable.active {
+  color: var(--brand-blue);
+  background: var(--brand-blue-dim);
+  border-color: var(--brand-blue);
 }
 
 .sidebar {
@@ -523,9 +601,35 @@ td {
 }
 
 @media (max-width: 767px) {
+  body {
+    padding-bottom: 72px;
+  }
+
+  .ecosystem-nav {
+    inset: auto 0 0 0;
+    width: 100%;
+    min-height: 72px;
+    height: 72px;
+    padding: 12px 20px;
+    flex-direction: row;
+    justify-content: center;
+    border-right: none;
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  .ecosystem-nav-link.active::before {
+    left: 8px;
+    top: auto;
+    bottom: -12px;
+    width: 32px;
+    height: 4px;
+    border-radius: 4px 4px 0 0;
+  }
+
   .app-shell {
     grid-template-columns: 1fr;
     grid-template-rows: auto 1fr;
+    margin-left: 0;
   }
 
   .sidebar {

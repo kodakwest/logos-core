@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { ParserView } from "./parser";
 import { SearchView } from "./search";
 import { UploadView } from "./upload";
+import { EcosystemNav } from "./components/EcosystemNav";
 import "./style.css";
 
 export type Route = "search" | "upload" | "parse";
@@ -43,36 +44,39 @@ function App() {
   }, [route]);
 
   return (
-    <main className="app-shell">
-      <aside className="sidebar">
-        <a className="brand" href="#search" aria-label="LogOS Core">
-          <OpenPathLogo />
-          <span className="brand-copy">
-            <span className="brand-name">LogOS Core</span>
-            <span className="brand-tagline">The Operating System for Truth</span>
-          </span>
-        </a>
-        <button className="hamburger" type="button" aria-label="Toggle navigation" aria-expanded={menuOpen} onClick={() => setMenuOpen((open) => !open)}>
-          <Menu size={22} />
-        </button>
-        <LogoLoadingCycle />
-        <nav className={`nav-list${menuOpen ? " open" : ""}`} aria-label="Primary">
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            return (
-              <a key={item.route} className={route === item.route ? "active" : ""} href={`#${item.route}`}>
-                <Icon size={18} />
-                <span>{item.label}</span>
-              </a>
-            );
-          })}
-        </nav>
-        <p className="status-pill">{status}</p>
-      </aside>
-      <section className="workspace">
-        <View />
-      </section>
-    </main>
+    <>
+      <EcosystemNav activeApp="core" />
+      <main className="app-shell">
+        <aside className="sidebar">
+          <a className="brand" href="#search" aria-label="LogOS Core">
+            <OpenPathLogo />
+            <span className="brand-copy">
+              <span className="brand-name">LogOS Core</span>
+              <span className="brand-tagline">The Operating System for Truth</span>
+            </span>
+          </a>
+          <button className="hamburger" type="button" aria-label="Toggle navigation" aria-expanded={menuOpen} onClick={() => setMenuOpen((open) => !open)}>
+            <Menu size={22} />
+          </button>
+          <LogoLoadingCycle />
+          <nav className={`nav-list${menuOpen ? " open" : ""}`} aria-label="Primary">
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              return (
+                <a key={item.route} className={route === item.route ? "active" : ""} href={`#${item.route}`}>
+                  <Icon size={18} />
+                  <span>{item.label}</span>
+                </a>
+              );
+            })}
+          </nav>
+          <p className="status-pill">{status}</p>
+        </aside>
+        <section className="workspace">
+          <View />
+        </section>
+      </main>
+    </>
   );
 }
 

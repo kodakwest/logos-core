@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LogOS Core - Login</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%230b0d0e'/%3E%3Ccircle cx='50' cy='50' r='40' fill='none' stroke='%23d4af37' stroke-width='4'/%3E%3Cg fill='none' stroke='%23d4af37' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20,80 Q50,40 50,20 Q50,40 80,80'/%3E%3Cpath d='M50,20 L50,80' stroke-dasharray='8 8'/%3E%3Cpath d='M10,20 Q30,10 50,20 Q70,10 90,20 L90,80 Q70,70 50,80 Q30,70 10,80 Z' stroke-width='3'/%3E%3C/g%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
@@ -36,6 +37,9 @@
       --brand-primary: #d4af37;
       --brand-dim: rgba(212, 175, 55, 0.2);
       --brand-blue: #4da8da;
+      --brand-blue-dim: rgba(77, 168, 218, 0.2);
+      --brand-green: #a3e635;
+      --brand-green-dim: rgba(163, 230, 53, 0.18);
     }
 
     * {
@@ -56,7 +60,78 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 16px;
+      padding: 16px 16px 16px 88px;
+    }
+
+    .ecosystem-nav {
+      position: fixed;
+      inset: 0 auto 0 0;
+      z-index: 100;
+      display: flex;
+      width: 72px;
+      min-height: 100vh;
+      padding: 24px 12px;
+      flex-direction: column;
+      align-items: center;
+      gap: 32px;
+      background: var(--bg-panel);
+      border-right: 1px solid var(--border-subtle);
+    }
+
+    .ecosystem-nav-link {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      border: 1px solid transparent;
+      border-radius: 12px;
+      color: var(--ink-tertiary);
+      text-decoration: none;
+      transition: background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+    }
+
+    .ecosystem-nav-link svg {
+      width: 32px;
+      height: 32px;
+    }
+
+    .ecosystem-nav-link:hover,
+    .ecosystem-nav-link:focus-visible {
+      color: var(--ink-primary);
+      background: var(--bg-elevated);
+      border-color: var(--border-focus);
+      outline: none;
+    }
+
+    .ecosystem-nav-link.active::before {
+      position: absolute;
+      left: -12px;
+      top: 8px;
+      width: 4px;
+      height: 32px;
+      border-radius: 0 4px 4px 0;
+      background: currentColor;
+      content: "";
+    }
+
+    .ecosystem-nav-link.core.active {
+      color: var(--brand-gold);
+      background: var(--brand-dim);
+      border-color: var(--brand-gold);
+    }
+
+    .ecosystem-nav-link.shepherd.active {
+      color: var(--brand-green);
+      background: var(--brand-green-dim);
+      border-color: var(--brand-green);
+    }
+
+    .ecosystem-nav-link.roundtable.active {
+      color: var(--brand-blue);
+      background: var(--brand-blue-dim);
+      border-color: var(--brand-blue);
     }
 
     .card {
@@ -331,7 +406,28 @@
     /* Mobile */
     @media (max-width: 480px) {
       body {
-        padding: 0;
+        padding: 0 0 72px;
+      }
+
+      .ecosystem-nav {
+        inset: auto 0 0 0;
+        width: 100%;
+        min-height: 72px;
+        height: 72px;
+        padding: 12px 20px;
+        flex-direction: row;
+        justify-content: center;
+        border-right: none;
+        border-top: 1px solid var(--border-subtle);
+      }
+
+      .ecosystem-nav-link.active::before {
+        left: 8px;
+        top: auto;
+        bottom: -12px;
+        width: 32px;
+        height: 4px;
+        border-radius: 4px 4px 0 0;
       }
 
       .card {
@@ -358,6 +454,38 @@
   </style>
 </head>
 <body>
+  <nav class="ecosystem-nav" aria-label="LogOS ecosystem">
+    <a class="ecosystem-nav-link core active" href="/" aria-label="LogOS Core" aria-current="page" title="LogOS Core">
+      <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M20,80 Q50,40 50,20 Q50,40 80,80"></path>
+        <path d="M50,20 L50,80" stroke-dasharray="8 8"></path>
+        <path d="M10,20 Q30,10 50,20 Q70,10 90,20 L90,80 Q70,70 50,80 Q30,70 10,80 Z" stroke-width="3"></path>
+      </svg>
+    </a>
+    <a class="ecosystem-nav-link shepherd" href="https://shepherd.logos-core.com/" aria-label="Shepherd" title="Shepherd">
+      <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M20,90 Q50,60 40,40 T60,20"></path>
+        <circle cx="65" cy="15" r="8" fill="currentColor"></circle>
+        <circle cx="35" cy="75" r="4" fill="currentColor" stroke="none"></circle>
+        <circle cx="48" cy="65" r="4" fill="currentColor" stroke="none"></circle>
+        <circle cx="42" cy="50" r="4" fill="currentColor" stroke="none"></circle>
+      </svg>
+    </a>
+    <a class="ecosystem-nav-link roundtable" href="https://roundtable.logos-core.com/" aria-label="Roundtable" title="Roundtable">
+      <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="50" cy="50" r="10"></circle>
+        <circle cx="50" cy="20" r="6" fill="currentColor" stroke="none"></circle>
+        <circle cx="50" cy="80" r="6" fill="currentColor" stroke="none"></circle>
+        <circle cx="20" cy="50" r="6" fill="currentColor" stroke="none"></circle>
+        <circle cx="80" cy="50" r="6" fill="currentColor" stroke="none"></circle>
+        <line x1="50" y1="30" x2="50" y2="40"></line>
+        <line x1="50" y1="60" x2="50" y2="70"></line>
+        <line x1="30" y1="50" x2="40" y2="50"></line>
+        <line x1="60" y1="50" x2="70" y2="50"></line>
+        <circle cx="50" cy="50" r="35" stroke-dasharray="6 6" stroke-width="2"></circle>
+      </svg>
+    </a>
+  </nav>
 
   <div class="card">
     <div class="logo-container">
