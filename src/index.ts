@@ -31,15 +31,26 @@ import type {
   VerseRecord
 } from "./types";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type"
-};
+const ALLOWED_ORIGINS = [
+  "https://logos-core.com",
+  "https://roundtable-cz3.pages.dev",
+  "https://shepherdparentcompanion.pages.dev",
+];
+
+function corsHeaders(origin?: string | null): Record<string, string> {
+  const allowOrigin = origin && ALLOWED_ORIGINS.includes(origin)
+    ? origin
+    : "https://logos-core.com";
+  return {
+    "Access-Control-Allow-Origin": allowOrigin,
+    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type",
+  };
+}
 
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
-    if (request.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
+    if (request.method === "OPTIONS") return new Response(null, { headers: corsHeaders(request.headers.get("Origin")) });
 
     const url = new URL(request.url);
     try {
@@ -108,7 +119,7 @@ async function handleAuthLogin(url: URL, env: Env): Promise<Response> {
   return new Response(null, {
     status: 302,
     headers: {
-      ...corsHeaders,
+      ...corsHeaders(),
       "Location": new URL("/", url.origin).toString(),
       "Set-Cookie": sessionCookie(result.sessionToken),
       "Cache-Control": "no-store"
@@ -343,14 +354,14 @@ async function readJson<T>(request: Request): Promise<T> {
 }
 
 function json(body: unknown, status = 200): Response {
-  return Response.json(body, { status, headers: corsHeaders });
+  return Response.json(body, { status, headers: corsHeaders() });
 }
 
 function html(body: string, status = 200): Response {
   return new Response(body, {
     status,
     headers: {
-      ...corsHeaders,
+      ...corsHeaders(),
       "Content-Type": "text/html; charset=utf-8",
       "Cache-Control": "no-store"
     }
