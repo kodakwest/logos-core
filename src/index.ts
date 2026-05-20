@@ -1,5 +1,5 @@
 import { askAi, generateEmbedding, parseGreekWithAi, upsertVerseVector } from "./ai";
-import { authenticateRequest, clearSessionCookie, consumeMagicLink, logoutSession, normalizeEmail, requestMagicLink, sessionCookie } from "./auth";
+import { authenticateRequest, checkApiRateLimit, clearSessionCookie, consumeMagicLink, logoutSession, normalizeEmail, requestMagicLink, sessionCookie } from "./auth";
 import { readBtbChapter } from "./btbutils";
 import {
   getGreekCache,
@@ -31,6 +31,8 @@ import type {
   VerseRecord
 } from "./types";
 
+const SECURITY_TXT = "Contact: mailto:no-reply@logos-core.com\nPreferred-Languages: en\nCanonical: https://logos-core.com/.well-known/security.txt\nExpires: 2027-05-20T00:00:00Z\n";
+
 const ALLOWED_ORIGINS = [
   "https://logos-core.com",
   "https://roundtable-cz3.pages.dev",
@@ -58,6 +60,11 @@ export default {
     const url = new URL(request.url);
     try {
       const origin = request.headers.get("Origin");
+      const apiRateLimit = getApiRateLimit(url, request.method);
+      if (apiRateLimit) {
+        const result = await checkApiRateLimit(env, request, apiRateLimit.tier, apiRateLimit.maxRequests);
+        if (!result.allowed) return rateLimitExceeded(result.retryAfterSeconds, origin);
+      }
 
       if (url.pathname === "/api/status" && request.method === "GET") return json(await getStatus(env.DB), 200, origin);
       if (url.pathname === "/api/upload/chapter" && request.method === "POST") return withAuth(request, env, () => handleUpload(request, env));
@@ -75,6 +82,12 @@ export default {
       if (url.pathname === "/api/ask" && request.method === "POST") return withAuth(request, env, () => handleAsk(request, env));
       if (url.pathname === "/api/explain" && request.method === "POST") return withAuth(request, env, () => handleExplain(request, env));
       if (url.pathname.startsWith("/api/")) return json({ error: "Not found" }, 404);
+
+      if (url.pathname === "/.well-known/security.txt" && request.method === "GET") {
+        return new Response(SECURITY_TXT, {
+          headers: { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "public, max-age=86400" }
+        });
+      }
 
       if (url.pathname === "/login" || url.pathname === "/login.html") {
         return html(loginHtml(url.searchParams.get("redirect")));
@@ -165,6 +178,39 @@ async function withAuth(request: Request, env: Env, handler: () => Promise<Respo
   const user = await authenticateRequest(request, env);
   if (!user) return json({ error: "Unauthorized" }, 401);
   return handler();
+}
+
+function getApiRateLimit(url: URL, method: string): { tier: string; maxRequests: number } | null {
+  if (!url.pathname.startsWith("/api/") || url.pathname.startsWith("/api/auth/")) return null;
+  if (url.pathname === "/api/status" && method === "GET") return { tier: "public-read", maxRequests: 120 };
+  if (url.pathname === "/api/verses/search" && method === "GET") return { tier: "public-read", maxRequests: 120 };
+  if ((url.pathname === "/api/verses/morphology" || url.pathname === "/api/verse/morphology") && method === "POST") {
+    return { tier: "public-write", maxRequests: 30 };
+  }
+  if (
+    (url.pathname === "/api/ask"
+      || url.pathname === "/api/explain"
+      || url.pathname === "/api/verses/semantic"
+      || url.pathname === "/api/parse/greek")
+    && method === "POST"
+  ) {
+    return { tier: "auth-ai", maxRequests: 60 };
+  }
+  if (url.pathname.startsWith("/api/upload/")) return { tier: "auth-write", maxRequests: 120 };
+  return null;
+}
+
+function rateLimitExceeded(retryAfterSeconds: number, origin?: string | null): Response {
+  return Response.json(
+    { error: "Rate limit exceeded" },
+    {
+      status: 429,
+      headers: {
+        ...corsHeaders(origin),
+        "Retry-After": String(Math.max(1, retryAfterSeconds))
+      }
+    }
+  );
 }
 
 async function handleUpload(request: Request, env: Env): Promise<Response> {

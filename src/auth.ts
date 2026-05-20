@@ -3,6 +3,7 @@ import type { AuthUser, Env } from "./types";
 const MAGIC_LINK_TTL_SECONDS = 15 * 60;
 const SESSION_TTL_SECONDS = 24 * 60 * 60;
 const RATE_LIMIT_WINDOW_SECONDS = 60 * 60;
+const API_RATE_LIMIT_WINDOW_SECONDS = 60;
 const EMAIL_RATE_LIMIT = 3;
 const IP_RATE_LIMIT = 10;
 const SESSION_COOKIE_NAME = "__Host-session";
@@ -26,7 +27,13 @@ interface AuthTokenRow {
 
 interface RateLimitRow {
   count: number;
+  window_start?: number;
 }
+
+export type ApiRateLimitResult = {
+  allowed: boolean;
+  retryAfterSeconds: number;
+};
 
 export function normalizeEmail(email: unknown): string | null {
   if (typeof email !== "string") return null;
@@ -127,6 +134,14 @@ export async function logoutSession(env: Env, request: Request): Promise<void> {
   ).bind(now, sessionHash).run();
 }
 
+export async function checkApiRateLimit(env: Env, request: Request, tier: string, maxRequests: number): Promise<ApiRateLimitResult> {
+  await ensureAuthSchema(env.DB);
+
+  const ipHash = await sha256(clientIp(request));
+  const bucketKey = `api:${tier}:${ipHash}`;
+  return incrementRateLimitWithRetry(env.DB, bucketKey, maxRequests, API_RATE_LIMIT_WINDOW_SECONDS);
+}
+
 export function sessionCookie(sessionToken: string): string {
   return [
     `${SESSION_COOKIE_NAME}=${encodeURIComponent(sessionToken)}`,
@@ -193,8 +208,18 @@ async function checkRateLimits(env: Env, email: string, ip: string): Promise<boo
 }
 
 async function incrementRateLimit(db: D1Database, bucketKey: string, maxAttempts: number): Promise<boolean> {
+  const result = await incrementRateLimitWithRetry(db, bucketKey, maxAttempts, RATE_LIMIT_WINDOW_SECONDS);
+  return result.allowed;
+}
+
+async function incrementRateLimitWithRetry(
+  db: D1Database,
+  bucketKey: string,
+  maxAttempts: number,
+  windowSeconds: number
+): Promise<ApiRateLimitResult> {
   const now = unixSeconds();
-  const windowStart = Math.floor(now / RATE_LIMIT_WINDOW_SECONDS) * RATE_LIMIT_WINDOW_SECONDS;
+  const windowStart = Math.floor(now / windowSeconds) * windowSeconds;
   const row = await db.prepare(
     `INSERT INTO rate_limits (bucket_key, count, window_start)
      VALUES (?, 1, ?)
@@ -207,10 +232,16 @@ async function incrementRateLimit(db: D1Database, bucketKey: string, maxAttempts
          WHEN rate_limits.window_start < excluded.window_start THEN excluded.window_start
          ELSE rate_limits.window_start
        END
-     RETURNING count`
+     RETURNING count, window_start`
   ).bind(bucketKey, windowStart).first<RateLimitRow>();
 
-  return (row?.count ?? maxAttempts + 1) <= maxAttempts;
+  const count = row?.count ?? maxAttempts + 1;
+  const activeWindowStart = row?.window_start ?? windowStart;
+  const retryAfterSeconds = Math.max(0, activeWindowStart + windowSeconds - now);
+  return {
+    allowed: count <= maxAttempts,
+    retryAfterSeconds: count <= maxAttempts ? 0 : retryAfterSeconds
+  };
 }
 
 async function cleanupExpiredTokens(db: D1Database, now: number): Promise<void> {
